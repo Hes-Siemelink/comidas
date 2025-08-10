@@ -20,6 +20,8 @@ At this stage, we need to prototype quickly to get an ide where to go with the a
 
 One requirement also is to make the app multilingual. We are a Mexican-Dutch family so it would also be nice to have the app in Spanish and Dutch.
 
+See [architecture.md](architecture.md) for the current technology and architecture choices.
+
 ## Main app structure
 
 When opening the application, there are three main sections

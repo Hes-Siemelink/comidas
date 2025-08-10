@@ -1,10 +1,6 @@
-# Agent Template
+# Agent name
 
 *Use this template as a starting point for defining new agents in the project. Replace all italicized explanatory text with your agent's specific details.*
-
-## Agent Name
-
-*The name of the agent (e.g., "Data Analyst Agent").*
 
 ## Responsibilities
 
