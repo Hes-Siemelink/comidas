@@ -14,7 +14,7 @@ Install and configure Chakra UI for styling and i18next for multilingual support
 - Created i18n.ts configuration with English, Spanish, and Dutch translations
 - Updated main.tsx to include ChakraProvider with defaultSystem
 - Updated App.tsx to use Chakra UI components (Box, Button, Heading, Text, VStack, HStack)
-- Added language switcher using buttons instead of select dropdown
+- Added language switcher using buttons with bold text to indicate current language (better visibility than solid variant)
 - Verified project builds successfully
 
 ## Ready for Acceptance
@@ -25,6 +25,6 @@ Product Owner: Please review the implementation. Chakra UI and i18next are confi
 2. Start the development server: `npm run dev`
 3. Open your browser to the URL shown (typically http://localhost:5173)
 4. You should see the app using Chakra UI styling with "Hello World" and "Welcome" messages
-5. Test the language switching buttons (English, Español, Nederlands) - text should change accordingly
+5. Test the language switching buttons (English, Español, Nederlands) - text should change accordingly and current language should be shown in bold
 
 Ready to move to Done?

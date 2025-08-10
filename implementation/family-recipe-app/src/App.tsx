@@ -30,21 +30,24 @@ function App() {
         <HStack gap={2}>
           <Button 
             size="sm"
-            variant={i18n.language === 'en' ? 'solid' : 'outline'}
+            variant="outline"
+            fontWeight={i18n.language === 'en' ? 'bold' : 'normal'}
             onClick={() => changeLanguage('en')}
           >
             English
           </Button>
           <Button 
             size="sm"
-            variant={i18n.language === 'es' ? 'solid' : 'outline'}
+            variant="outline"
+            fontWeight={i18n.language === 'es' ? 'bold' : 'normal'}
             onClick={() => changeLanguage('es')}
           >
             Español
           </Button>
           <Button 
             size="sm"
-            variant={i18n.language === 'nl' ? 'solid' : 'outline'}
+            variant="outline"
+            fontWeight={i18n.language === 'nl' ? 'bold' : 'normal'}
             onClick={() => changeLanguage('nl')}
           >
             Nederlands
