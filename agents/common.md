@@ -7,7 +7,7 @@
 ## Git Commits
 
 - Commit messages: Title ≤50 characters, concise and descriptive. Skip trivial details.
-- Start commit message with your role, for example `(Planner)`, `(Architect)`, `(Coder)`. This goes on top of the 50 characters allowed
+- Use `--author` flag to identify the agent making the commit: `git commit --author="Agent Name <agent@family-recipe-app>" -m "Commit message"`
 - Add a blank line after the title, then a detailed body if needed.
 - Stage with `git add`, commit with `git commit -m`. Amend with `git commit --amend -m`.
 - Always keep commit messages clear and practical.
