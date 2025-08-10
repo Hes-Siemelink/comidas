@@ -7,10 +7,15 @@
 ## Git Commits
 
 - Commit messages: Title ≤50 characters, concise and descriptive. Skip trivial details.
+- Focus on value and intent, not mechanical actions. Diffs show what changed.
+
 - Use `--author` flag to identify the agent making the commit: `git commit --author="Agent Name <agent@family-recipe-app>" -m "Commit message"`
 - Add a blank line after the title, then a detailed body if needed.
 - Stage with `git add`, commit with `git commit -m`. Amend with `git commit --amend -m`.
-- Always keep commit messages clear and practical.
+
+**Examples:**
+- ✅ Good: "Complete story add-chakra-ui-i18next"
+- ❌ Avoid: "Move accepted story to done folder, story was accepted by Product Owner"
 
 ## Moving Files
 

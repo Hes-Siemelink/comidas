@@ -27,4 +27,4 @@ Product Owner: Please review the implementation. Chakra UI and i18next are confi
 4. You should see the app using Chakra UI styling with "Hello World" and "Welcome" messages
 5. Test the language switching buttons (English, Español, Nederlands) - text should change accordingly and current language should be shown in bold
 
-Ready to move to Done?
+✅ Accepted by Hes
