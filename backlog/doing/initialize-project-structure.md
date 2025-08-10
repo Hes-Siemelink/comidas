@@ -23,4 +23,5 @@ Product Owner: Please review the implementation in `implementation/family-recipe
 3. Open your browser to the URL shown (typically http://localhost:5173)
 4. You should see the default Vite + React app with the React logo and counter
 
-Ready to move to Done?
+✅ _Accepted by Product Owner_
+
