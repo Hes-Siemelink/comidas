@@ -446,6 +446,18 @@ Proceed!
 
 _**Assistant**_
 
+It looks like the workspace is not set up for automated project scaffolding. Please create and open an empty folder (e.g., `implementation/family-recipe-app`) in VS Code, and I can proceed to initialize the Vite + React + TypeScript project for you. Let me know when you're ready!
+
+---
+
+_**User**_
+
+Let's try again
+
+---
+
+_**Assistant**_
+
 
 
 ---
