@@ -12,6 +12,12 @@
 - Stage with `git add`, commit with `git commit -m`. Amend with `git commit --amend -m`.
 - Always keep commit messages clear and practical.
 
+## Moving Files
+
+- Use `git mv` when moving files to properly track the move in Git.
+- Alternative: Use `mv` then `git add` both the new location AND `git rm` the old location.
+- Never use regular `mv` alone and only add the new location - this creates dangling files in Git.
+
 ---
 
 Add further common instructions here as the project evolves.
