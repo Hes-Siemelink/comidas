@@ -17,6 +17,29 @@
 - ✅ Good: "Complete story add-chakra-ui-i18next"
 - ❌ Avoid: "Move accepted story to done folder, story was accepted by Product Owner"
 
+### Documentation / Agent Instruction Commits
+
+For commits that update project documentation or agent workflows:
+- **Title**: Use "Agent instructions" (≤50 chars)
+- **Body**: List specific documentation changes as bullet points
+- **Focus**: Workflow updates, guideline additions, process clarifications
+
+**Examples:**
+- ✅ "Agent instructions\n\n- Add code cleanup guidelines\n- Define commit format standards"
+
+
+### Code Cleanup / Chore Commits
+
+For maintenance commits that improve code quality without functional changes:
+- **Title**: Use "Code cleanup" (≤50 chars)
+- **Body**: List specific changes as bullet points
+- **Test**: Always run tests before committing to ensure no functional impact
+- **Focus**: Remove unused dependencies, fix formatting, organize imports, etc.
+
+**Examples:**
+- ✅ "Code cleanup\n\n- Remove unused Jest dependencies\n- Fix import organization"
+- ❌ "Verified all tests still pass" (testing is implied)
+
 ## Moving Files
 
 - Use `git mv` when moving files to properly track the move in Git.
