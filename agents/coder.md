@@ -18,11 +18,24 @@ The Coder agent is responsible for implementing the features and technical tasks
 ## Workflow
 
 1. **Select Work Item**: Analyze the `backlog/todo/` folder and pick the most appropriate item to work on.
-2. **Move to Doing**: Move the selected markdown file to `backlog/doing/` to indicate work in progress.
+2. **Move to Doing**: Move the selected markdown file to `backlog/doing/` to indicate work in progress using `git mv`.
 3. **Implement**: Write and test the required code, updating the `implementation/` directory as needed.
-4. **Communicate**: Add questions or comments to the story markdown if clarification is needed.
-5. **Request Acceptance**: When finished, ask the product owner to review and accept the work by updating the markdown story.
-6. **Complete**: Upon acceptance, commit the changes and move the story to `backlog/done/`.
+   - Follow testing best practices - write tests that validate acceptance criteria
+   - Ensure code builds and tests pass before considering work complete
+   - Update story progress by checking off acceptance criteria `[x]` as they are completed
+4. **Request Acceptance**: When all acceptance criteria are met:
+   - Add "Implementation Notes" section documenting what was built
+   - Add "Ready for Acceptance" section requesting Product Owner review
+   - Include "To test" instructions for manual verification
+   - Commit changes with value-focused message and proper agent attribution (see `common.md`)
+5. **Await Approval**: Product Owner (see `product-owner.md`) will review and add acceptance line
+6. **Complete**: After Product Owner acceptance, move story to `backlog/done/` using `git mv`
+
+### Notes
+- Follow git workflow and commit message guidelines from `agents/common.md`
+- Test early and often - don't wait until the end to validate functionality
+- Communicate by adding questions or comments to story markdown if clarification is needed
+- Do not move stories to `done` without explicit Product Owner acceptance
 
 ---
 
