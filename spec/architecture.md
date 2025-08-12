@@ -16,7 +16,7 @@ This document describes the initial technology choices and architectural directi
 
 ## Testing
 
-- **Unit/Integration Testing**: Jest and React Testing Library
+- **Unit/Integration Testing**: Vitest (Vite-native) and React Testing Library
 
 ## Rationale
 
@@ -24,5 +24,10 @@ This document describes the initial technology choices and architectural directi
 - Chakra UI provides a great developer experience and ensures accessibility out of the box.
 
 ---
+
+
+## Testing Rationale
+
+Vitest is chosen over Jest because it is designed for Vite/ESM projects, requires minimal configuration, and works seamlessly with React, TypeScript, and static assets. It provides a fast, modern, and reliable testing experience for this stack.
 
 This architecture will be reviewed and updated as the project evolves and requirements change.
