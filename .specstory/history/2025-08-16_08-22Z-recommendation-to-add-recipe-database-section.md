@@ -533,3 +533,17 @@ The Recipe Database section now uses the same high-contrast button styling as th
 
 ---
 
+_**User**_
+
+OK, accepted
+
+---
+
+_**Assistant**_
+
+Excellent! 🎉 As the **Coder Agent** 👩‍💻, I'm thrilled to receive Product Owner acceptance! 
+
+Now I'll move the story from `doing` to `done` and add the acceptance confirmation: I can see the Product Owner has already marked it as accepted! Now I'll move the story to the `done` backlog: 
+
+---
+

@@ -69,6 +69,8 @@ This structure creates a collaborative AI development team where each agent has 
 ## GIT GUIDELINES
 - Specific git commit message format with agent attribution
 - File movement protocols using `git mv`
+- When committing, use the `--author` flag to identify the agent.
+- When the Coder Agent needs to amend a commit, they should keep the original message.
 
 ## AGILE INTEGRATION
 

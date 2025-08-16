@@ -59,10 +59,10 @@ describe('Page Components', () => {
     it('shows placeholder content for features', () => {
       render(<HomePage />, { wrapper: TestWrapper })
       
-      // Should have 2 "Coming soon..." placeholders (Meal Planner and Cooking Assistant)
-      // Recipe Database is no longer a placeholder
+      // Should have 1 "Coming soon..." placeholder (Cooking Assistant only)
+      // Recipe Database and Meal Planner are no longer placeholders
       const comingSoonTexts = screen.getAllByText('Coming soon...')
-      expect(comingSoonTexts).toHaveLength(2)
+      expect(comingSoonTexts).toHaveLength(1)
     })
 
     it('uses internationalization', () => {
@@ -91,6 +91,26 @@ describe('Page Components', () => {
       // Check for proper ARIA labels
       expect(screen.getByLabelText(/browse all family recipes/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/add a new recipe to the collection/i)).toBeInTheDocument()
+    })
+
+    it('renders Meal Planner section with interactive buttons', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Check for Meal Planner section
+      expect(screen.getByRole('heading', { name: 'Meal Planner' })).toBeInTheDocument()
+      expect(screen.getByText(/plan your weekly family meals/i)).toBeInTheDocument()
+      
+      // Check for action buttons by their accessible names (aria-label)
+      expect(screen.getByRole('button', { name: 'View the complete meal planning interface' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Start planning meals for this week' })).toBeInTheDocument()
+    })
+
+    it('Meal Planner buttons have proper accessibility labels', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Check for proper ARIA labels
+      expect(screen.getByLabelText(/view the complete meal planning interface/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/start planning meals for this week/i)).toBeInTheDocument()
     })
   })
 

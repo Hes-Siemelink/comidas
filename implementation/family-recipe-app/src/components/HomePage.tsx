@@ -17,6 +17,12 @@ interface RecipeDatabaseSectionProps {
   icon?: React.ReactNode
 }
 
+interface MealPlannerSectionProps {
+  title: string
+  description: string
+  icon?: React.ReactNode
+}
+
 function RecipeDatabaseSection({ title, description, icon }: RecipeDatabaseSectionProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -52,18 +58,72 @@ function RecipeDatabaseSection({ title, description, icon }: RecipeDatabaseSecti
           <AccessibleButton
             variant="primary"
             size="sm"
+            onClick={() => navigate('/recipes/new')}
+            aria-label={t('recipes.addNewAriaLabel')}
+          >
+            {t('recipes.addNew')}
+          </AccessibleButton>
+          <AccessibleButton
+            variant="secondary"
+            size="sm"
             onClick={() => navigate('/recipes')}
             aria-label={t('recipes.browseAllAriaLabel')}
           >
             {t('recipes.browseAll')}
           </AccessibleButton>
+        </HStack>
+      </VStack>
+    </Box>
+  )
+}
+
+function MealPlannerSection({ title, description, icon }: MealPlannerSectionProps) {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  return (
+    <Box 
+      p={6} 
+      borderRadius="lg" 
+      border="1px" 
+      borderColor="gray.300"
+      bg="white"
+      textAlign="center"
+      minH="200px"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      _hover={{ shadow: "md", borderColor: "green.300" }}
+      transition="all 0.2s"
+    >
+      <VStack gap={4}>
+        {icon && (
+          <Box color="green.500">
+            {icon}
+          </Box>
+        )}
+        <Heading as="h3" size="md" color="gray.700">
+          {title}
+        </Heading>
+        <Text color="gray.600" mb={4}>
+          {description}
+        </Text>
+        <HStack gap={3} justify="center" flexWrap="wrap">
+          <AccessibleButton
+            variant="primary"
+            size="sm"
+            onClick={() => navigate('/planner/week')}
+            aria-label={t('planner.planThisWeekAriaLabel')}
+          >
+            {t('planner.planThisWeek')}
+          </AccessibleButton>
           <AccessibleButton
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/recipes/new')}
-            aria-label={t('recipes.addNewAriaLabel')}
+            onClick={() => navigate('/planner')}
+            aria-label={t('planner.viewFullAriaLabel')}
           >
-            {t('recipes.addNew')}
+            {t('planner.viewFull')}
           </AccessibleButton>
         </HStack>
       </VStack>
@@ -139,10 +199,9 @@ function HomePage() {
             />
             
             {/* Meal Planner Section */}
-            <FeatureSection
+            <MealPlannerSection
               title={t('planner.title', 'Meal Planner')}
               description={t('planner.description', 'Plan your weekly family meals.')}
-              placeholder={true}
               icon={<PlannerIcon size="xl" />}
             />
             

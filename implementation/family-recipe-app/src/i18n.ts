@@ -32,7 +32,11 @@ const resources = {
       },
       "planner": {
         "title": "Meal Planner",
-        "description": "Plan your weekly family meals."
+        "description": "Plan your weekly family meals.",
+        "viewFull": "View Full Planner",
+        "planThisWeek": "Plan This Week",
+        "viewFullAriaLabel": "View the complete meal planning interface",
+        "planThisWeekAriaLabel": "Start planning meals for this week"
       },
       "cooking": {
         "title": "Cooking Assistant",
@@ -69,7 +73,11 @@ const resources = {
       },
       "planner": {
         "title": "Planificador de Comidas",
-        "description": "Planifica tus comidas familiares semanales."
+        "description": "Planifica tus comidas familiares semanales.",
+        "viewFull": "Ver Planificador Completo",
+        "planThisWeek": "Planificar Esta Semana",
+        "viewFullAriaLabel": "Ver la interfaz completa de planificación de comidas",
+        "planThisWeekAriaLabel": "Comenzar a planificar comidas para esta semana"
       },
       "cooking": {
         "title": "Asistente de Cocina",
@@ -106,7 +114,11 @@ const resources = {
       },
       "planner": {
         "title": "Maaltijdplanner",
-        "description": "Plan je wekelijkse familiemaaltijden."
+        "description": "Plan je wekelijkse familiemaaltijden.",
+        "viewFull": "Volledige Planner Bekijken",
+        "planThisWeek": "Deze Week Plannen",
+        "viewFullAriaLabel": "De volledige maaltijdplannings-interface bekijken",
+        "planThisWeekAriaLabel": "Begin met het plannen van maaltijden voor deze week"
       },
       "cooking": {
         "title": "Kookassistent",
