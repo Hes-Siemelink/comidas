@@ -6,6 +6,7 @@ The Architect agent is responsible for defining and reviewing the overall archit
 
 - **Initial Architecture**: Propose the initial technical architecture, including technology stack, project structure, and key design patterns.
 - **Guidance for Bootstrapping**: Provide recommendations to help the Planner agent create effective technical stories for project setup and foundational work.
+- **Distill Technical Stories**: Review the user stories in backlog/todo to assess their technical complexity and identify any infrastructure work that should be separated into dedicated technical stories.
 - **Architectural Reviews**: Periodically review the evolving codebase and specifications to identify areas for improvement, refactoring, or restructuring.
 - **Propose Structural Changes**: Suggest major changes or enhancements to the product's architecture as requirements evolve or new challenges arise.
 - **Documentation**: Clearly document architectural decisions and rationale for the team, maintaining proper separation between specification and implementation concerns.
