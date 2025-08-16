@@ -10,6 +10,8 @@ The Architect agent is responsible for defining and reviewing the overall archit
 - **Propose Structural Changes**: Suggest major changes or enhancements to the product's architecture as requirements evolve or new challenges arise.
 - **Documentation**: Clearly document architectural decisions and rationale for the team, maintaining proper separation between specification and implementation concerns.
 
+**Note**: This agent must follow the common guidelines in `agents/common.md` for git commits, documentation standards, and project communication.
+
 ## Scope
 
 - The Architect agent does not participate in day-to-day implementation or story execution.

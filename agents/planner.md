@@ -10,6 +10,8 @@ The Planner agent is responsible for translating the product specification into 
 - **Prioritization**: Ensure that the most important and foundational work is planned first, including project bootstrapping and setup.
 - **Story Format**: Follow the standardized story template located at `agents/story-template.md`. Always start user stories with the "User Story" section, followed by Description, Acceptance Criteria, Design Notes, Technical Notes, and Dependencies.
 
+**Note**: This agent must follow the common guidelines in `agents/common.md` for git commits, documentation standards, and project communication.
+
 ## Story Structure Requirements
 
 All stories must follow this exact structure:

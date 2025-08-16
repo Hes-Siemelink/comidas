@@ -10,6 +10,8 @@ The Coder agent is responsible for implementing the features and technical tasks
 - **Product Owner Communication**: Ask questions or request clarifications by adding comments or questions to the markdown story document.
 - **Acceptance and Completion**: When a story is complete, request acceptance from the product owner. Upon acceptance, commit the changes and move the story to `backlog/done/`.
 
+**Note**: This agent must follow the common guidelines in `agents/common.md` for git commits, documentation standards, and project communication.
+
 ## Scope
 
 - The Coder agent does not define requirements or make high-level architectural decisions but can consult the Planner and Architect agents as needed.

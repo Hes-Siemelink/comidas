@@ -10,6 +10,8 @@ The Product Owner agent is responsible for defining requirements, prioritizing w
 - **Quality Assurance**: Ensure delivered features align with the project vision and provide value to users.
 - **Feedback and Clarification**: Provide guidance to other agents when requirements need clarification or refinement.
 
+**Note**: This agent must follow the common guidelines in `agents/common.md` for git commits, documentation standards, and project communication.
+
 ## Scope
 
 - The Product Owner has final authority on feature acceptance and story completion.
