@@ -63,6 +63,9 @@ This structure creates a collaborative AI development team where each agent has 
 - The Coder Agent must request Product Owner approval before moving a story to "done".
 - When working in Agent mode, the Coder Agent must request Product Owner approval before moving a story to "done".
 - When a story implementation is complete, the Coder Agent must add a "Ready for Acceptance" section to the story file with instructions for the Product Owner.
+- The Product Owner is not required to review code for acceptance. Acceptance focuses on context integration and TypeScript typing.
+- All tests must pass before acceptance (this is assumed).
+- Architect Agent review is optional.
 
 ## DEBUGGING
 
@@ -84,3 +87,31 @@ This structure creates a collaborative AI development team where each agent has 
   ```
   What's the status of ticket 67890?
   ```
+
+## BACKLOG STRUCTURE
+
+- **todo/**: Contains upcoming features and enhancements, such as:
+  - Family member management
+  - Week navigation and archive
+  - Comidas week planning
+  - Meal-recipe linking improvements
+  - Basic recipe database implementation
+
+- **doing/**: Tracks work in progress. Example:
+  - Setting up React context state management (current focus)
+
+- **done/**: Lists completed stories, including:
+  - Chakra UI and i18next integration
+  - Meal planner and recipe database home sections
+  - Homepage component architecture
+  - Project structure initialization
+  - Basic routing, data persistence, icon system, and testing setup
+
+- **later/**: Holds deferred or lower-priority ideas, such as:
+  - Cooking assistant home section
+
+- Each section has a `README.md` for guidance and organization.
+
+## TESTING
+
+- When implementing new context functionality, ensure existing tests cover the new functionality by updating test wrappers to include the relevant context providers. New test files may not be needed if existing tests can be adapted.
