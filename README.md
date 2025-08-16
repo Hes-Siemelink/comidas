@@ -1,4 +1,4 @@
-# Our Family Recipe App
+# Comidas
 
 Record recipes, plan family meals and have a handy assistant while cooking!
 
