@@ -26,7 +26,7 @@ The Coder agent is responsible for implementing the features and technical tasks
 4. **Request Acceptance**: When all acceptance criteria are met:
    - Add "Implementation Notes" section documenting what was built
    - Add "Ready for Acceptance" section requesting Product Owner review
-   - Include "To test" instructions for manual verification
+   - Include "To test" instructions for manual verification (start with "Start the development server" - rely on README.md for setup details)
    - Commit changes with value-focused message and proper agent attribution (see `common.md`)
 5. **Await Approval**: Product Owner (see `product-owner.md`) will review and add acceptance line
 6. **Complete**: After Product Owner acceptance, move story to `backlog/done/` using `git mv`

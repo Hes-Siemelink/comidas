@@ -19,14 +19,49 @@ describe('Page Components', () => {
       
       expect(screen.getByText('Family Recipe App')).toBeInTheDocument()
       expect(screen.getByText(/record recipes, plan family meals/i)).toBeInTheDocument()
-      expect(screen.getByText(/home page sections coming soon/i)).toBeInTheDocument()
+      expect(screen.getByText('Main Features')).toBeInTheDocument()
     })
 
     it('has proper heading structure', () => {
       render(<HomePage />, { wrapper: TestWrapper })
       
-      const heading = screen.getByRole('heading', { level: 2 })
-      expect(heading).toHaveTextContent('Family Recipe App')
+      // Main title should be h1
+      const mainHeading = screen.getByRole('heading', { level: 1 })
+      expect(mainHeading).toHaveTextContent('Family Recipe App')
+      
+      // Features section should be h2
+      const featuresHeading = screen.getByRole('heading', { level: 2 })
+      expect(featuresHeading).toHaveTextContent('Main Features')
+    })
+
+    it('renders all three feature sections', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Check for feature section headings
+      expect(screen.getByRole('heading', { name: 'Recipe Database' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Meal Planner' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Cooking Assistant' })).toBeInTheDocument()
+      
+      // Check for feature descriptions
+      expect(screen.getByText(/browse and manage your family recipes/i)).toBeInTheDocument()
+      expect(screen.getByText(/plan your weekly family meals/i)).toBeInTheDocument()
+      expect(screen.getByText(/step-by-step cooking guidance/i)).toBeInTheDocument()
+    })
+
+    it('shows placeholder content for features', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Should have multiple "Coming soon..." placeholders
+      const comingSoonTexts = screen.getAllByText('Coming soon...')
+      expect(comingSoonTexts).toHaveLength(3)
+    })
+
+    it('uses internationalization', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Should use translation keys (falls back to English text)
+      expect(screen.getByText('Family Recipe App')).toBeInTheDocument()
+      expect(screen.getByText('Main Features')).toBeInTheDocument()
     })
   })
 
@@ -42,7 +77,7 @@ describe('Page Components', () => {
     it('has proper heading structure', () => {
       render(<RecipesPage />, { wrapper: TestWrapper })
       
-      const heading = screen.getByRole('heading', { level: 2 })
+      const heading = screen.getByRole('heading', { level: 1 })
       expect(heading).toHaveTextContent('Recipe Database')
     })
 
@@ -66,7 +101,7 @@ describe('Page Components', () => {
     it('has proper heading structure', () => {
       render(<PlannerPage />, { wrapper: TestWrapper })
       
-      const heading = screen.getByRole('heading', { level: 2 })
+      const heading = screen.getByRole('heading', { level: 1 })
       expect(heading).toHaveTextContent('Meal Planner')
     })
 
@@ -89,7 +124,7 @@ describe('Page Components', () => {
     it('has proper heading structure', () => {
       render(<CookingPage />, { wrapper: TestWrapper })
       
-      const heading = screen.getByRole('heading', { level: 2 })
+      const heading = screen.getByRole('heading', { level: 1 })
       expect(heading).toHaveTextContent('Cooking Assistant')
     })
 
@@ -112,9 +147,9 @@ describe('Page Components', () => {
       it(`${name} has accessible content structure`, () => {
         render(<Component />, { wrapper: TestWrapper })
         
-        // Should have a heading
-        const heading = screen.getByRole('heading')
-        expect(heading).toBeInTheDocument()
+        // Should have at least one heading
+        const headings = screen.getAllByRole('heading')
+        expect(headings.length).toBeGreaterThan(0)
         
         // Should have meaningful text content
         const textElements = screen.getAllByText(/\w+/)

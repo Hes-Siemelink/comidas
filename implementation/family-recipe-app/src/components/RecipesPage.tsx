@@ -7,7 +7,7 @@ function RecipesPage() {
   return (
     <Box p={8} textAlign="center">
       <VStack gap={6}>
-        <Heading>{t('recipes.title', 'Recipe Database')}</Heading>
+        <Heading as="h1">{t('recipes.title', 'Recipe Database')}</Heading>
         <Text>{t('recipes.description', 'Browse and manage your family recipes.')}</Text>
         
         <Text fontSize="sm" color="gray.500">

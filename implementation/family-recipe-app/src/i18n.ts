@@ -11,6 +11,11 @@ const resources = {
         "title": "Family Recipe App",
         "description": "Record recipes, plan family meals and have a handy assistant while cooking!"
       },
+      "home": {
+        "features": {
+          "title": "Main Features"
+        }
+      },
       "nav": {
         "home": "Home",
         "recipes": "Recipes",
@@ -39,6 +44,11 @@ const resources = {
         "title": "App de Recetas Familiares",
         "description": "¡Registra recetas, planifica comidas familiares y ten un asistente útil mientras cocinas!"
       },
+      "home": {
+        "features": {
+          "title": "Características Principales"
+        }
+      },
       "nav": {
         "home": "Inicio",
         "recipes": "Recetas",
@@ -66,6 +76,11 @@ const resources = {
       "app": {
         "title": "Familie Recepten App",
         "description": "Leg recepten vast, plan familiemaaltijden en heb een handige assistent tijdens het koken!"
+      },
+      "home": {
+        "features": {
+          "title": "Hoofdfuncties"
+        }
       },
       "nav": {
         "home": "Thuis",

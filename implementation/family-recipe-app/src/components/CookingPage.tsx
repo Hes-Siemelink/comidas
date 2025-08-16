@@ -7,7 +7,7 @@ function CookingPage() {
   return (
     <Box p={8} textAlign="center">
       <VStack gap={6}>
-        <Heading>{t('cooking.title', 'Cooking Assistant')}</Heading>
+        <Heading as="h1">{t('cooking.title', 'Cooking Assistant')}</Heading>
         <Text>{t('cooking.description', 'Step-by-step cooking guidance and timers.')}</Text>
         
         <Text fontSize="sm" color="gray.500">
