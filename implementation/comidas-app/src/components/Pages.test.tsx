@@ -5,14 +5,17 @@ import HomePage from './HomePage'
 import RecipesPage from './RecipesPage'
 import PlannerPage from './PlannerPage'
 import CookingPage from './CookingPage'
+import { PlannerProvider } from '../context/PlannerContext'
 import '../i18n'
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <BrowserRouter>
-    <ChakraProvider value={defaultSystem}>
-      {children}
-    </ChakraProvider>
-  </BrowserRouter>
+  <PlannerProvider>
+    <BrowserRouter>
+      <ChakraProvider value={defaultSystem}>
+        {children}
+      </ChakraProvider>
+    </BrowserRouter>
+  </PlannerProvider>
 )
 
 describe('Page Components', () => {
@@ -144,7 +147,8 @@ describe('Page Components', () => {
       
       expect(screen.getByText('Meal Planner')).toBeInTheDocument()
       expect(screen.getByText(/plan your weekly family meals/i)).toBeInTheDocument()
-      expect(screen.getByText(/meal planning functionality coming soon/i)).toBeInTheDocument()
+      expect(screen.getByText(/Current week plan:/i)).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Set Example Week Plan/i })).toBeInTheDocument()
     })
 
     it('has proper heading structure', () => {

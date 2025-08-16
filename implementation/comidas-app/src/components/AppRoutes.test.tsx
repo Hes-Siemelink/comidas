@@ -2,14 +2,17 @@ import { render, screen } from '@testing-library/react'
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import AppRoutes from './AppRoutes'
+import { PlannerProvider } from '../context/PlannerContext'
 import '../i18n'
 
 const TestWrapper = ({ children, initialEntries = ['/'] }: { children: React.ReactNode, initialEntries?: string[] }) => (
-  <ChakraProvider value={defaultSystem}>
-    <MemoryRouter initialEntries={initialEntries}>
-      {children}
-    </MemoryRouter>
-  </ChakraProvider>
+  <PlannerProvider>
+    <ChakraProvider value={defaultSystem}>
+      <MemoryRouter initialEntries={initialEntries}>
+        {children}
+      </MemoryRouter>
+    </ChakraProvider>
+  </PlannerProvider>
 )
 
 describe('AppRoutes', () => {
