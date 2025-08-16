@@ -20,7 +20,7 @@ describe('Page Components', () => {
     it('renders app title and description', () => {
       render(<HomePage />, { wrapper: TestWrapper })
       
-      expect(screen.getByText('Family Recipe App')).toBeInTheDocument()
+      expect(screen.getByText('Comidas')).toBeInTheDocument()
       expect(screen.getByText(/record recipes, plan family meals/i)).toBeInTheDocument()
       expect(screen.getByText('Main Features')).toBeInTheDocument()
     })
@@ -30,7 +30,7 @@ describe('Page Components', () => {
       
       // Main title should be h1
       const mainHeading = screen.getByRole('heading', { level: 1 })
-      expect(mainHeading).toHaveTextContent('Family Recipe App')
+      expect(mainHeading).toHaveTextContent('Comidas')
       
       // Features section should be h2
       const featuresHeading = screen.getByRole('heading', { level: 2 })
@@ -69,7 +69,7 @@ describe('Page Components', () => {
       render(<HomePage />, { wrapper: TestWrapper })
       
       // Should use translation keys (falls back to English text)
-      expect(screen.getByText('Family Recipe App')).toBeInTheDocument()
+      expect(screen.getByText('Comidas')).toBeInTheDocument()
       expect(screen.getByText('Main Features')).toBeInTheDocument()
     })
 

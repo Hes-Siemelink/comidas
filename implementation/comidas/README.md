@@ -1,4 +1,4 @@
-# Family Recipe App
+# Comidas
 
 A web application for recording recipes, planning family meals, and providing cooking assistance.
 

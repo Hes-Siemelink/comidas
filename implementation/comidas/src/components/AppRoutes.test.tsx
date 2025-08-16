@@ -16,7 +16,7 @@ describe('AppRoutes', () => {
   it('renders home page by default', () => {
     render(<AppRoutes />, { wrapper: (props) => <TestWrapper {...props} /> })
     
-    expect(screen.getByText('Family Recipe App')).toBeInTheDocument()
+    expect(screen.getByText('Comidas')).toBeInTheDocument()
     expect(screen.getByText(/record recipes, plan family meals/i)).toBeInTheDocument()
   })
 

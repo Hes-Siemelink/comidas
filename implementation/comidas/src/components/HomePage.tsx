@@ -142,7 +142,7 @@ function HomePage() {
         <Box textAlign="center" py={8}>
           <VStack gap={4}>
             <Heading as="h1" size="2xl" color="gray.800">
-              {t('app.title', 'Family Recipe App')}
+              {t('app.title', 'Comidas')}
             </Heading>
             <Text fontSize="lg" color="gray.600" maxW="2xl">
               {t('app.description', 'Record recipes, plan family meals and have a handy assistant while cooking!')}

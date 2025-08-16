@@ -6,9 +6,9 @@ const resources = {
   en: {
     translation: {
       "hello": "Hello World",
-      "welcome": "Welcome to the Family Recipe App",
+      "welcome": "Welcome to Comidas",
       "app": {
-        "title": "Family Recipe App",
+        "title": "Comidas",
         "description": "Record recipes, plan family meals and have a handy assistant while cooking!"
       },
       "home": {
@@ -47,9 +47,9 @@ const resources = {
   es: {
     translation: {
       "hello": "Hola Mundo",
-      "welcome": "Bienvenido a la App de Recetas Familiares",
+      "welcome": "Bienvenido a Comidas",
       "app": {
-        "title": "App de Recetas Familiares",
+        "title": "Comidas",
         "description": "¡Registra recetas, planifica comidas familiares y ten un asistente útil mientras cocinas!"
       },
       "home": {
@@ -88,9 +88,9 @@ const resources = {
   nl: {
     translation: {
       "hello": "Hallo Wereld",
-      "welcome": "Welkom bij de Familie Recepten App",
+      "welcome": "Welkom bij Comidas",
       "app": {
-        "title": "Familie Recepten App",
+        "title": "Comidas",
         "description": "Leg recepten vast, plan familiemaaltijden en heb een handige assistent tijdens het koken!"
       },
       "home": {

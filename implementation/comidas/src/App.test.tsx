@@ -16,7 +16,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 describe('App', () => {
   it('renders app title', () => {
     render(<AppRoutes />, { wrapper: TestWrapper })
-    expect(screen.getByText(/family recipe app/i)).toBeInTheDocument()
+    expect(screen.getByText(/comidas/i)).toBeInTheDocument()
   })
 
   it('renders app description', () => {
