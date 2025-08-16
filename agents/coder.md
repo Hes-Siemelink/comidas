@@ -63,6 +63,80 @@ Follow language-specific capitalization conventions for user-facing text:
 - Test UI with all supported languages to ensure text fits properly in interface elements
 - Use lowercase for Spanish/Dutch titles unless referring to proper nouns or brand names
 
+## Definition of Done
+
+Before requesting Product Owner acceptance, verify ALL criteria are met:
+
+### ✅ **Functionality Requirements**
+- [ ] **All acceptance criteria** marked as completed `[x]` in story markdown
+- [ ] **Feature works end-to-end** - complete user workflow functional
+- [ ] **Error handling implemented** - graceful handling of failure cases
+- [ ] **Loading states** provided for async operations
+- [ ] **Form validation** (if applicable) with user-friendly error messages
+- [ ] **Responsive design** - works on mobile and desktop viewports
+
+### ✅ **Code Quality Standards**
+- [ ] **TypeScript compilation** passes with zero errors (`npm run build`)
+- [ ] **All tests passing** - 98+ tests with no failures (`npm run test:run`)
+- [ ] **Test coverage targets met** - Business logic 90%+, UI components 80%+
+- [ ] **ESLint passes** with no errors (`npm run lint` if available)
+- [ ] **Code follows existing patterns** - matches codebase conventions
+- [ ] **No console errors** in browser during manual testing
+
+### ✅ **Accessibility Compliance**
+- [ ] **AccessibleButton usage** - No direct Chakra Button with colorScheme
+- [ ] **WCAG AA contrast ratios** - 4.5:1 minimum for all text/buttons
+- [ ] **Keyboard navigation** works for all interactive elements
+- [ ] **Screen reader compatibility** - proper ARIA labels and semantics
+- [ ] **Focus indicators visible** for all focusable elements
+
+### ✅ **Internationalization (i18n)**
+- [ ] **All user-facing text** uses `t()` calls with fallback values
+- [ ] **Translation keys defined** in all three languages (en, es, nl)
+- [ ] **Language-appropriate capitalization** - Title case (en), sentence case (es, nl)
+- [ ] **No missing key warnings** in console during testing
+- [ ] **Dynamic content interpolation** properly implemented (`{{variable}}`)
+- [ ] **Text fits in UI** across all supported languages
+
+### ✅ **Technical Implementation**
+- [ ] **Component architecture** follows established patterns
+- [ ] **Context usage** appropriate for state management needs
+- [ ] **Service layer integration** uses existing services correctly
+- [ ] **Type safety** - proper TypeScript interfaces and types
+- [ ] **Import/export structure** follows project conventions
+- [ ] **File organization** components in appropriate directories
+
+### ✅ **Documentation & Communication**
+- [ ] **Implementation Notes** section added to story with what was built
+- [ ] **Technical details** documented (components created, architecture decisions)
+- [ ] **Manual testing instructions** provided with clear steps
+- [ ] **Story progress tracked** with todo list during implementation
+- [ ] **Git commits** follow common.md guidelines with proper attribution
+- [ ] **Code comments** added for complex business logic only
+
+### ✅ **Integration & Testing**
+- [ ] **Sample data** works correctly (if applicable)
+- [ ] **Context providers** added to App.tsx and test wrappers
+- [ ] **Navigation flows** work between pages
+- [ ] **State persistence** functions across app usage
+- [ ] **Browser compatibility** tested in modern browsers
+- [ ] **Manual smoke testing** completed for happy path scenarios
+
+### ✅ **Performance & Production**
+- [ ] **Build optimization** - no excessive bundle size warnings addressed
+- [ ] **Loading performance** acceptable for user experience
+- [ ] **Memory leaks** - no component cleanup issues
+- [ ] **Production build** generates and deploys successfully
+- [ ] **Environment compatibility** - works in development and production modes
+
+### 🚫 **Completion Blockers**
+Any of these conditions prevents story completion:
+- Tests failing or build errors
+- Missing translation keys or accessibility violations
+- Button contrast issues or colorScheme usage
+- Acceptance criteria not met or untested workflows
+- Missing Product Owner approval
+
 ### Notes
 - Follow git workflow and commit message guidelines from `agents/common.md`
 - Test early and often - don't wait until the end to validate functionality
