@@ -64,23 +64,23 @@ const resources = {
         "cooking": "Cocina"
       },
       "recipes": {
-        "title": "Base de Datos de Recetas",
+        "title": "Base de datos de recetas",
         "description": "Navega y gestiona tus recetas familiares.",
-        "browseAll": "Ver Todas las Recetas",
-        "addNew": "Agregar Nueva Receta",
+        "browseAll": "Ver todas las recetas",
+        "addNew": "Agregar nueva receta",
         "browseAllAriaLabel": "Ver todas las recetas familiares",
         "addNewAriaLabel": "Agregar una nueva receta a la colección"
       },
       "planner": {
-        "title": "Planificador de Comidas",
+        "title": "Planificador de comidas",
         "description": "Planifica tus comidas familiares semanales.",
-        "viewFull": "Ver Planificador Completo",
-        "planThisWeek": "Planificar Esta Semana",
+        "viewFull": "Ver planificador completo",
+        "planThisWeek": "Planificar esta semana",
         "viewFullAriaLabel": "Ver la interfaz completa de planificación de comidas",
         "planThisWeekAriaLabel": "Comenzar a planificar comidas para esta semana"
       },
       "cooking": {
-        "title": "Asistente de Cocina",
+        "title": "Asistente de cocina",
         "description": "Guía paso a paso para cocinar y temporizadores."
       }
     }
@@ -107,16 +107,16 @@ const resources = {
       "recipes": {
         "title": "Receptendatabase",
         "description": "Blader door en beheer je familierecepten.",
-        "browseAll": "Alle Recepten Bekijken",
-        "addNew": "Nieuw Recept Toevoegen",
+        "browseAll": "Alle recepten bekijken",
+        "addNew": "Nieuw recept toevoegen",
         "browseAllAriaLabel": "Alle familierecepten bekijken",
         "addNewAriaLabel": "Een nieuw recept toevoegen aan de collectie"
       },
       "planner": {
         "title": "Maaltijdplanner",
         "description": "Plan je wekelijkse familiemaaltijden.",
-        "viewFull": "Volledige Planner Bekijken",
-        "planThisWeek": "Deze Week Plannen",
+        "viewFull": "Volledige planner bekijken",
+        "planThisWeek": "Deze week plannen",
         "viewFullAriaLabel": "De volledige maaltijdplannings-interface bekijken",
         "planThisWeekAriaLabel": "Begin met het plannen van maaltijden voor deze week"
       },

@@ -45,6 +45,22 @@ Target coverage levels for React TypeScript projects:
 
 **Overall targets**: 80-90% good, 90%+ excellent. Use `npm run test:run -- --coverage` to check coverage.
 
+### Internationalization Guidelines
+
+Follow language-specific capitalization conventions for user-facing text:
+
+| Language | Capitalization Rule | Examples |
+|----------|-------------------|----------|
+| **English (en)** | Title Case for buttons/actions | "Browse All Recipes", "Plan This Week" |
+| **Spanish (es)** | Sentence case (lowercase except first word) | "Ver todas las recetas", "Planificar esta semana" |
+| **Dutch (nl)** | Sentence case (lowercase except first word) | "Alle recepten bekijken", "Deze week plannen" |
+
+**Implementation Rules:**
+- Always maintain proper grammar and natural language flow for each target language
+- Avoid direct word-for-word translations that ignore local conventions
+- Test UI with all supported languages to ensure text fits properly in interface elements
+- Use lowercase for Spanish/Dutch titles unless referring to proper nouns or brand names
+
 ### Notes
 - Follow git workflow and commit message guidelines from `agents/common.md`
 - Test early and often - don't wait until the end to validate functionality
