@@ -49,7 +49,7 @@ describe('LocalStorageService', () => {
         updatedAt: new Date('2024-01-01')
       }]
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify(testRecipes, (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify(testRecipes, (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
 
@@ -83,7 +83,7 @@ describe('LocalStorageService', () => {
         updatedAt: new Date()
       }
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify([testRecipe], (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify([testRecipe], (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
 
@@ -137,7 +137,7 @@ describe('LocalStorageService', () => {
         updatedAt: new Date()
       }
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify([existingRecipe], (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify([existingRecipe], (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
 
@@ -165,7 +165,7 @@ describe('LocalStorageService', () => {
         updatedAt: new Date('2024-01-01')
       }
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify([originalRecipe], (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify([originalRecipe], (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
 
@@ -192,7 +192,7 @@ describe('LocalStorageService', () => {
         updatedAt: new Date()
       }
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify([originalRecipe], (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify([originalRecipe], (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
 
@@ -222,7 +222,7 @@ describe('LocalStorageService', () => {
         }
       ]
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify(testRecipes, (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify(testRecipes, (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
 
@@ -270,7 +270,7 @@ describe('LocalStorageService', () => {
         }
       ]
       
-      mockLocalStorage.data.set(storageKey, JSON.stringify(testRecipes, (key, value) => 
+      mockLocalStorage.data.set(storageKey, JSON.stringify(testRecipes, (_key, value) => 
         value instanceof Date ? value.toISOString() : value
       ))
     })

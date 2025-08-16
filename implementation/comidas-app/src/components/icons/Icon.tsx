@@ -36,8 +36,8 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
         flexShrink={0}
         role={ariaLabel ? 'img' : undefined}
         aria-label={ariaLabel}
-        {...props}
-        sx={{
+        fontSize={iconSize}
+        css={{
           '& > svg': {
             width: '100%',
             height: '100%',
@@ -47,10 +47,9 @@ const Icon = forwardRef<HTMLDivElement, IconProps>(
             width: '100%',
             height: '100%',
             fontSize: iconSize,
-          },
-          fontSize: iconSize, // For React Icons that inherit font-size
-          ...props.sx
+          }
         }}
+        {...props}
       >
         {children}
       </Box>

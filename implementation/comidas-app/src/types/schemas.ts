@@ -46,7 +46,9 @@ export const FamilyMemberSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1, 'Family member name is required'),
   isChild: z.boolean(),
-  weeklyAssignments: z.number().int().min(0).optional()
+  weeklyAssignments: z.number().int().min(0).optional(),
+  createdAt: z.date(),
+  updatedAt: z.date()
 })
 
 // Export types inferred from schemas for consistency

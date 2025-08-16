@@ -81,7 +81,7 @@ describe('AccessibleButton', () => {
     
     const button = screen.getByRole('button', { name: 'Custom label' })
     fireEvent.click(button)
-    expect(handleClick).toHaveBeenCalledOnce()
+    expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
   it('supports disabled state', () => {

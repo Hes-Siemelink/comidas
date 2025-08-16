@@ -2,7 +2,7 @@
 // Provides type-safe CRUD operations with validation and error handling
 
 import { z } from 'zod'
-import type { StorageService, StorageServiceWithSearch } from './StorageService'
+import type { StorageServiceWithSearch } from './StorageService'
 import { StorageError, ValidationError } from './StorageService'
 
 interface HasId {
@@ -19,10 +19,16 @@ type CreateInput<T> = Omit<T, 'id' | 'createdAt' | 'updatedAt'>
 export class LocalStorageService<T extends HasId & HasTimestamps> 
   implements StorageServiceWithSearch<T> {
   
+  private readonly storageKey: string
+  private readonly schema: z.ZodSchema<T>
+  
   constructor(
-    private readonly storageKey: string,
-    private readonly schema: z.ZodSchema<T>
-  ) {}
+    storageKey: string,
+    schema: z.ZodSchema<T>
+  ) {
+    this.storageKey = storageKey
+    this.schema = schema
+  }
 
   async getAll(): Promise<T[]> {
     try {
@@ -77,8 +83,8 @@ export class LocalStorageService<T extends HasId & HasTimestamps>
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new ValidationError(
-          `Validation failed: ${error.errors?.map?.(e => e.message)?.join?.(', ') || 'Unknown validation error'}`,
-          error.errors?.[0]?.path?.[0]?.toString(),
+          `Validation failed: ${error.issues?.map?.((e: any) => e.message)?.join?.(', ') || 'Unknown validation error'}`,
+          error.issues?.[0]?.path?.[0]?.toString(),
           item
         )
       }
@@ -120,8 +126,8 @@ export class LocalStorageService<T extends HasId & HasTimestamps>
     } catch (error) {
       if (error instanceof z.ZodError) {
         throw new ValidationError(
-          `Validation failed: ${error.errors?.map?.(e => e.message)?.join?.(', ') || 'Unknown validation error'}`,
-          error.errors?.[0]?.path?.[0]?.toString(),
+          `Validation failed: ${error.issues?.map?.((e: any) => e.message)?.join?.(', ') || 'Unknown validation error'}`,
+          error.issues?.[0]?.path?.[0]?.toString(),
           updates
         )
       }
@@ -196,11 +202,11 @@ export class LocalStorageService<T extends HasId & HasTimestamps>
   }
 
   // Helper methods for Date serialization
-  private dateReplacer(key: string, value: unknown): unknown {
+  private dateReplacer(_key: string, value: unknown): unknown {
     return value instanceof Date ? value.toISOString() : value
   }
 
-  private dateReviver(key: string, value: unknown): unknown {
+  private dateReviver(_key: string, value: unknown): unknown {
     if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
       return new Date(value)
     }
