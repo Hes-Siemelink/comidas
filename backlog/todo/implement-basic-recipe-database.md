@@ -12,11 +12,9 @@ Create minimal viable recipe database to support meal planning with simple CRUD 
 - [ ] Recipes can be linked from meal planner (foundation for future stories)
 
 ## Technical Requirements
-- Implement `Recipe` data model per architecture
-- Create `RecipeService` with localStorage persistence
 - Build `RecipeList`, `RecipeForm`, `RecipeSearchBar` components
-- Initialize sample data: Albondigas de Marta, Appelmoes, Broccoli Salad de Leon
-- Add `RecipeContext` for state management
+- Connect to `RecipeContext` for state management
+- Implement recipe UI components and workflows
 
 ## Priority
 🟨 **High** - Required to support meal planning with recipe references
@@ -25,7 +23,8 @@ Create minimal viable recipe database to support meal planning with simple CRUD 
 **Medium** (2-3 days)
 
 ## Dependencies
-- None (standalone functionality)
+- Data persistence layer setup
+- React Context state management setup
 
 ## Success Metrics
 - Sample recipes display immediately on first app load

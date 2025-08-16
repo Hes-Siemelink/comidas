@@ -13,11 +13,10 @@ Implement the core meal planning functionality that allows users to create and m
 - [ ] Display current comidas week prominently on meal planner page
 
 ## Technical Requirements
-- Implement `ComidasWeek` and `Comida` data models per architecture
-- Create `ComidasWeekService` with localStorage persistence
 - Build `QuickPlanningForm` component for fast meal entry
 - Create `CheckableListItem` component for meal display
-- Add `ComidasWeekContext` for state management
+- Connect to `ComidasWeekContext` for state management
+- Implement meal planning UI components
 
 ## Priority
 🔥 **Critical** - This delivers the Product Owner's primary goal: "create a list of meals in week view and being able to tick them off"
@@ -26,6 +25,8 @@ Implement the core meal planning functionality that allows users to create and m
 **Large** (3-5 days)
 
 ## Dependencies
+- Data persistence layer setup
+- React Context state management setup
 - Recipe database basic setup (for optional meal-recipe linking)
 
 ## Success Metrics
