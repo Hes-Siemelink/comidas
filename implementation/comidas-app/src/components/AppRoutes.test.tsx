@@ -3,16 +3,19 @@ import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { MemoryRouter } from 'react-router-dom'
 import AppRoutes from './AppRoutes'
 import { PlannerProvider } from '../context/PlannerContext'
+import { RecipeProvider } from '../context/RecipeContext'
 import '../i18n'
 
 const TestWrapper = ({ children, initialEntries = ['/'] }: { children: React.ReactNode, initialEntries?: string[] }) => (
-  <PlannerProvider>
-    <ChakraProvider value={defaultSystem}>
-      <MemoryRouter initialEntries={initialEntries}>
-        {children}
-      </MemoryRouter>
-    </ChakraProvider>
-  </PlannerProvider>
+  <RecipeProvider>
+    <PlannerProvider>
+      <ChakraProvider value={defaultSystem}>
+        <MemoryRouter initialEntries={initialEntries}>
+          {children}
+        </MemoryRouter>
+      </ChakraProvider>
+    </PlannerProvider>
+  </RecipeProvider>
 )
 
 describe('AppRoutes', () => {

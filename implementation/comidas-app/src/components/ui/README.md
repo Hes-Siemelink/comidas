@@ -38,24 +38,36 @@ import AccessibleButton from './ui/AccessibleButton'
 
 ### Variants
 
-- **primary**: Blue background (`blue.600`), white text - for main actions
-- **secondary**: Gray background (`gray.100`), dark text - for secondary actions  
-- **ghost**: Transparent background, dark text - for subtle actions
+- **primary**: Blue background (`blue.600`), white text - for main actions (Save, Submit, Add)
+- **secondary**: Gray background (`gray.100`), dark text with border - for secondary actions (Cancel, Edit)
+- **outline**: Transparent background, blue border and text - for outline style actions (Search, View)
+- **ghost**: Transparent background, dark text - for subtle actions (Clear, Remove)
 - **navigation**: Blue when active, transparent when inactive - for navigation
+- **danger**: Red background (`red.600`), white text - for destructive actions (Delete)
 
 ### Accessibility Features
 
-- WCAG AA compliant contrast ratios (4.5:1 minimum)
-- High contrast focus indicators
-- Proper semantic button attributes
-- Keyboard navigation support
-- Screen reader compatible
+- **WCAG AA compliant contrast ratios** (4.5:1 minimum) for all variants
+- **Enhanced disabled states** with proper visual feedback and cursor changes
+- **High contrast focus indicators** with 2px blue outline
+- **Proper semantic button attributes** for screen readers
+- **Keyboard navigation support** with focus management
+- **Screen reader compatible** with ARIA labels and descriptions
 
 ### Design Principles
 
-- **Consistency**: All buttons use the same base styling system
-- **Accessibility**: High contrast ensures readability for all users
-- **Flexibility**: Multiple variants for different use cases
-- **Future-proof**: Centralized styling prevents contrast issues
+- **Consistency**: All buttons use the same base styling system across the application
+- **Accessibility**: High contrast ensures readability for all users, including color-blind users
+- **Flexibility**: Six distinct variants cover all common use cases
+- **Future-proof**: Centralized styling prevents contrast issues from recurring
+- **Maintainability**: Single source of truth for button styles reduces design debt
 
-Use this component instead of Chakra UI's default Button to ensure accessibility compliance throughout the application.
+### Breaking Change from Chakra UI
+
+This component **completely replaces** Chakra UI's default Button component to ensure:
+- No more `colorScheme` prop usage that caused contrast issues
+- Standardized variants that guarantee accessibility compliance  
+- Consistent disabled states across all button types
+- Centralized maintenance of button accessibility standards
+
+**Always use AccessibleButton instead of Chakra UI's Button** to ensure accessibility compliance throughout the application.

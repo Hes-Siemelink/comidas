@@ -6,16 +6,19 @@ import RecipesPage from './RecipesPage'
 import PlannerPage from './PlannerPage'
 import CookingPage from './CookingPage'
 import { PlannerProvider } from '../context/PlannerContext'
+import { RecipeProvider } from '../context/RecipeContext'
 import '../i18n'
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <PlannerProvider>
-    <BrowserRouter>
-      <ChakraProvider value={defaultSystem}>
-        {children}
-      </ChakraProvider>
-    </BrowserRouter>
-  </PlannerProvider>
+  <RecipeProvider>
+    <PlannerProvider>
+      <BrowserRouter>
+        <ChakraProvider value={defaultSystem}>
+          {children}
+        </ChakraProvider>
+      </BrowserRouter>
+    </PlannerProvider>
+  </RecipeProvider>
 )
 
 describe('Page Components', () => {
@@ -123,7 +126,8 @@ describe('Page Components', () => {
       
       expect(screen.getByText('Recipe Database')).toBeInTheDocument()
       expect(screen.getByText(/browse and manage your family recipes/i)).toBeInTheDocument()
-      expect(screen.getByText(/recipe database functionality coming soon/i)).toBeInTheDocument()
+      expect(screen.getByText(/no recipes found/i)).toBeInTheDocument()
+      expect(screen.getByText('Add New Recipe')).toBeInTheDocument()
     })
 
     it('has proper heading structure', () => {
