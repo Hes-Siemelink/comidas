@@ -12,6 +12,7 @@
 - Use `--author` flag to identify the agent making the commit: `git commit --author="Agent Name <agent@family-recipe-app>" -m "Commit message"`
 - Add a blank line after the title, then a detailed body if needed.
 - Stage with `git add`, commit with `git commit -m`. Amend with `git commit --amend -m`.
+- **Never include AI tool references** in commit messages (e.g., "Generated with Claude Code", "Co-Authored-By: Claude").
 
 **Examples:**
 - ✅ Good: "Complete story add-chakra-ui-i18next"
