@@ -47,6 +47,13 @@ For maintenance commits that improve code quality without functional changes:
 - Alternative: Use `mv` then `git add` both the new location AND `git rm` the old location.
 - Never use regular `mv` alone and only add the new location - this creates dangling files in Git.
 
+## SpecStory Files
+
+- **Always commit `.specstory/` files** - These contain chat history and serve as meta information about development sessions
+- SpecStory files document the reasoning, decisions, and context behind code changes
+- Include them in commits as they provide valuable project history and decision tracking
+- No special commit message needed - they can be included with regular commits or as separate "Update session history" commits
+
 ---
 
 Add further common instructions here as the project evolves.
