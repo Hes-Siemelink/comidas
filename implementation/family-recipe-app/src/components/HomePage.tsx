@@ -4,160 +4,94 @@ import { useNavigate } from 'react-router-dom'
 import { RecipeIcon, PlannerIcon, CookingIcon } from './icons'
 import AccessibleButton from './ui/AccessibleButton'
 
+interface FeatureAction {
+  labelKey: string
+  ariaLabelKey: string
+  route: string
+  variant: 'primary' | 'secondary'
+}
+
 interface FeatureSectionProps {
   title: string
   description: string
-  placeholder?: boolean
   icon?: React.ReactNode
+  featureType: 'interactive' | 'placeholder'
+  themeColor?: 'blue' | 'green'
+  actions?: FeatureAction[]
 }
 
-interface RecipeDatabaseSectionProps {
-  title: string
-  description: string
-  icon?: React.ReactNode
-}
-
-interface MealPlannerSectionProps {
-  title: string
-  description: string
-  icon?: React.ReactNode
-}
-
-function RecipeDatabaseSection({ title, description, icon }: RecipeDatabaseSectionProps) {
+function FeatureSection({ 
+  title, 
+  description, 
+  icon, 
+  featureType, 
+  themeColor = 'blue', 
+  actions = [] 
+}: FeatureSectionProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  
+  const isPlaceholder = featureType === 'placeholder'
+  const isInteractive = featureType === 'interactive'
+  
+  const getThemeColors = () => {
+    const colors = {
+      blue: { main: 'blue.500', hover: 'blue.300' },
+      green: { main: 'green.500', hover: 'green.300' }
+    }
+    return colors[themeColor]
+  }
+  
+  const themeColors = getThemeColors()
 
   return (
     <Box 
       p={6} 
       borderRadius="lg" 
       border="1px" 
-      borderColor="gray.300"
-      bg="white"
+      borderColor={isPlaceholder ? "gray.200" : "gray.300"}
+      bg={isPlaceholder ? "gray.50" : "white"}
       textAlign="center"
       minH="200px"
       display="flex"
       flexDirection="column"
       justifyContent="center"
-      _hover={{ shadow: "md", borderColor: "blue.300" }}
+      _hover={isInteractive ? { 
+        shadow: "md", 
+        borderColor: themeColors.hover 
+      } : undefined}
       transition="all 0.2s"
     >
       <VStack gap={4}>
         {icon && (
-          <Box color="blue.500">
+          <Box color={isPlaceholder ? "gray.400" : themeColors.main}>
             {icon}
           </Box>
         )}
-        <Heading as="h3" size="md" color="gray.700">
+        <Heading as="h3" size="md" color={isPlaceholder ? "gray.400" : "gray.700"}>
           {title}
         </Heading>
-        <Text color="gray.600" mb={4}>
+        <Text color={isPlaceholder ? "gray.400" : "gray.600"} mb={isInteractive ? 4 : 0}>
           {description}
         </Text>
-        <HStack gap={3} justify="center" flexWrap="wrap">
-          <AccessibleButton
-            variant="primary"
-            size="sm"
-            onClick={() => navigate('/recipes/new')}
-            aria-label={t('recipes.addNewAriaLabel')}
-          >
-            {t('recipes.addNew')}
-          </AccessibleButton>
-          <AccessibleButton
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate('/recipes')}
-            aria-label={t('recipes.browseAllAriaLabel')}
-          >
-            {t('recipes.browseAll')}
-          </AccessibleButton>
-        </HStack>
-      </VStack>
-    </Box>
-  )
-}
-
-function MealPlannerSection({ title, description, icon }: MealPlannerSectionProps) {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-
-  return (
-    <Box 
-      p={6} 
-      borderRadius="lg" 
-      border="1px" 
-      borderColor="gray.300"
-      bg="white"
-      textAlign="center"
-      minH="200px"
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      _hover={{ shadow: "md", borderColor: "green.300" }}
-      transition="all 0.2s"
-    >
-      <VStack gap={4}>
-        {icon && (
-          <Box color="green.500">
-            {icon}
-          </Box>
+        
+        {isInteractive && actions.length > 0 && (
+          <HStack gap={3} justify="center" flexWrap="wrap">
+            {actions.map((action, index) => (
+              <AccessibleButton
+                key={index}
+                variant={action.variant}
+                size="sm"
+                onClick={() => navigate(action.route)}
+                aria-label={t(action.ariaLabelKey)}
+              >
+                {t(action.labelKey)}
+              </AccessibleButton>
+            ))}
+          </HStack>
         )}
-        <Heading as="h3" size="md" color="gray.700">
-          {title}
-        </Heading>
-        <Text color="gray.600" mb={4}>
-          {description}
-        </Text>
-        <HStack gap={3} justify="center" flexWrap="wrap">
-          <AccessibleButton
-            variant="primary"
-            size="sm"
-            onClick={() => navigate('/planner/week')}
-            aria-label={t('planner.planThisWeekAriaLabel')}
-          >
-            {t('planner.planThisWeek')}
-          </AccessibleButton>
-          <AccessibleButton
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate('/planner')}
-            aria-label={t('planner.viewFullAriaLabel')}
-          >
-            {t('planner.viewFull')}
-          </AccessibleButton>
-        </HStack>
-      </VStack>
-    </Box>
-  )
-}
-
-function FeatureSection({ title, description, placeholder = false, icon }: FeatureSectionProps) {
-  return (
-    <Box 
-      p={6} 
-      borderRadius="lg" 
-      border="1px" 
-      borderColor={placeholder ? "gray.200" : "gray.300"}
-      bg={placeholder ? "gray.50" : "white"}
-      textAlign="center"
-      minH="200px"
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-    >
-      <VStack gap={4}>
-        {icon && (
-          <Box>
-            {icon}
-          </Box>
-        )}
-        <Heading as="h3" size="md" color={placeholder ? "gray.400" : "gray.700"}>
-          {title}
-        </Heading>
-        <Text color={placeholder ? "gray.400" : "gray.600"}>
-          {description}
-        </Text>
-        {placeholder && (
+        
+        {isPlaceholder && (
           <Text fontSize="xs" color="gray.400" fontStyle="italic">
             Coming soon...
           </Text>
@@ -169,6 +103,37 @@ function FeatureSection({ title, description, placeholder = false, icon }: Featu
 
 function HomePage() {
   const { t } = useTranslation()
+
+  // Feature action configurations
+  const recipeActions: FeatureAction[] = [
+    {
+      labelKey: 'recipes.addNew',
+      ariaLabelKey: 'recipes.addNewAriaLabel',
+      route: '/recipes/new',
+      variant: 'primary'
+    },
+    {
+      labelKey: 'recipes.browseAll',
+      ariaLabelKey: 'recipes.browseAllAriaLabel',
+      route: '/recipes',
+      variant: 'secondary'
+    }
+  ]
+
+  const plannerActions: FeatureAction[] = [
+    {
+      labelKey: 'planner.planThisWeek',
+      ariaLabelKey: 'planner.planThisWeekAriaLabel',
+      route: '/planner/week',
+      variant: 'primary'
+    },
+    {
+      labelKey: 'planner.viewFull',
+      ariaLabelKey: 'planner.viewFullAriaLabel',
+      route: '/planner',
+      variant: 'secondary'
+    }
+  ]
 
   return (
     <Container maxW="container.xl" py={8}>
@@ -192,25 +157,31 @@ function HomePage() {
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
             {/* Recipe Database Section */}
-            <RecipeDatabaseSection
+            <FeatureSection
               title={t('recipes.title', 'Recipe Database')}
               description={t('recipes.description', 'Browse and manage your family recipes.')}
               icon={<RecipeIcon size="xl" />}
+              featureType="interactive"
+              themeColor="blue"
+              actions={recipeActions}
             />
             
             {/* Meal Planner Section */}
-            <MealPlannerSection
+            <FeatureSection
               title={t('planner.title', 'Meal Planner')}
               description={t('planner.description', 'Plan your weekly family meals.')}
               icon={<PlannerIcon size="xl" />}
+              featureType="interactive"
+              themeColor="green"
+              actions={plannerActions}
             />
             
             {/* Cooking Assistant Section */}
             <FeatureSection
               title={t('cooking.title', 'Cooking Assistant')}
               description={t('cooking.description', 'Step-by-step cooking guidance and timers.')}
-              placeholder={true}
               icon={<CookingIcon size="xl" />}
+              featureType="placeholder"
             />
           </SimpleGrid>
         </Box>
