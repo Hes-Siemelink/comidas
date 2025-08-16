@@ -2,7 +2,8 @@
 // Provides type-safe CRUD operations with validation and error handling
 
 import { z } from 'zod'
-import { StorageService, StorageServiceWithSearch, StorageError, ValidationError } from './StorageService'
+import type { StorageService, StorageServiceWithSearch } from './StorageService'
+import { StorageError, ValidationError } from './StorageService'
 
 interface HasId {
   id: string

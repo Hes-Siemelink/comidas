@@ -99,3 +99,4 @@ export async function initializeSampleData(): Promise<void> {
 // Export service types for consumption
 export type { Recipe, ComidasWeek, FamilyMember } from '../types/schemas'
 export { StorageError, ValidationError } from './StorageService'
+export type { StorageService, StorageServiceWithSearch } from './StorageService'
