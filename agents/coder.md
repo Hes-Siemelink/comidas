@@ -31,6 +31,20 @@ The Coder agent is responsible for implementing the features and technical tasks
 5. **Await Approval**: Product Owner (see `product-owner.md`) will review and add acceptance line
 6. **Complete**: After Product Owner acceptance, move story to `backlog/done/` using `git mv`
 
+### Test Coverage Standards
+
+Target coverage levels for React TypeScript projects:
+
+| Component Type | Target Coverage | Priority |
+|---------------|-----------------|----------|
+| **Business Logic** | 90-95% | Critical |
+| **Utility Functions** | 95%+ | Critical |
+| **Custom Hooks** | 90%+ | Critical |
+| **UI Components** | 80-90% | Important |
+| **Page Components** | 70-80% | Important |
+
+**Overall targets**: 80-90% good, 90%+ excellent. Use `npm run test:run -- --coverage` to check coverage.
+
 ### Notes
 - Follow git workflow and commit message guidelines from `agents/common.md`
 - Test early and often - don't wait until the end to validate functionality
