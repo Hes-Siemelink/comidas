@@ -1,7 +1,8 @@
-import { Box, Button, HStack, VStack } from '@chakra-ui/react'
+import { Box, HStack, VStack } from '@chakra-ui/react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from './LanguageSwitcher'
+import AccessibleButton from './ui/AccessibleButton'
 
 function Navigation() {
   const { t } = useTranslation()
@@ -14,34 +15,38 @@ function Navigation() {
         <LanguageSwitcher />
         
         <HStack gap={4}>
-          <Button 
+          <AccessibleButton 
             onClick={() => navigate('/')}
-            variant={location.pathname === '/' ? 'solid' : 'ghost'}
+            variant="navigation"
+            isActive={location.pathname === '/'}
             size="sm"
           >
             {t('nav.home', 'Home')}
-          </Button>
-          <Button 
+          </AccessibleButton>
+          <AccessibleButton 
             onClick={() => navigate('/recipes')}
-            variant={location.pathname === '/recipes' ? 'solid' : 'ghost'}
+            variant="navigation"
+            isActive={location.pathname === '/recipes'}
             size="sm"
           >
             {t('nav.recipes', 'Recipes')}
-          </Button>
-          <Button 
+          </AccessibleButton>
+          <AccessibleButton 
             onClick={() => navigate('/planner')}
-            variant={location.pathname === '/planner' ? 'solid' : 'ghost'}
+            variant="navigation"
+            isActive={location.pathname === '/planner'}
             size="sm"
           >
             {t('nav.planner', 'Planner')}
-          </Button>
-          <Button 
+          </AccessibleButton>
+          <AccessibleButton 
             onClick={() => navigate('/cooking')}
-            variant={location.pathname === '/cooking' ? 'solid' : 'ghost'}
+            variant="navigation"
+            isActive={location.pathname === '/cooking'}
             size="sm"
           >
             {t('nav.cooking', 'Cooking')}
-          </Button>
+          </AccessibleButton>
         </HStack>
       </VStack>
     </Box>
