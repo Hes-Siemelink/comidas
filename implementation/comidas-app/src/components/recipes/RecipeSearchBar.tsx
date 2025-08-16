@@ -7,9 +7,10 @@ interface RecipeSearchBarProps {
   onSearch: (query: string) => void
   placeholder?: string
   disabled?: boolean
+  currentSearchQuery?: string
 }
 
-function RecipeSearchBar({ onSearch, placeholder, disabled = false }: RecipeSearchBarProps) {
+function RecipeSearchBar({ onSearch, placeholder, disabled = false, currentSearchQuery }: RecipeSearchBarProps) {
   const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -42,7 +43,7 @@ function RecipeSearchBar({ onSearch, placeholder, disabled = false }: RecipeSear
           >
             {t('recipes.search.search', 'Search')}
           </AccessibleButton>
-          {searchQuery && (
+          {(searchQuery || currentSearchQuery) && (
             <AccessibleButton
               variant="ghost"
               onClick={handleClear}

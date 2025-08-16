@@ -55,6 +55,10 @@ function RecipesPage() {
       
       setShowForm(false)
       setEditingRecipe(null)
+      // Clear search when adding new recipe to show all recipes including the new one
+      if (!editingRecipe) {
+        setSearchQuery('')
+      }
     } catch (err) {
       console.error('Failed to save recipe:', err)
     } finally {
@@ -120,6 +124,7 @@ function RecipesPage() {
               <RecipeSearchBar 
                 onSearch={handleSearch}
                 disabled={loading}
+                currentSearchQuery={searchQuery}
               />
             </Box>
             <AccessibleButton
