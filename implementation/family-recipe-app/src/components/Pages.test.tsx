@@ -34,7 +34,7 @@ describe('Page Components', () => {
       expect(featuresHeading).toHaveTextContent('Main Features')
     })
 
-    it('renders all three feature sections', () => {
+    it('renders all three feature sections with icons', () => {
       render(<HomePage />, { wrapper: TestWrapper })
       
       // Check for feature section headings
@@ -46,6 +46,11 @@ describe('Page Components', () => {
       expect(screen.getByText(/browse and manage your family recipes/i)).toBeInTheDocument()
       expect(screen.getByText(/plan your weekly family meals/i)).toBeInTheDocument()
       expect(screen.getByText(/step-by-step cooking guidance/i)).toBeInTheDocument()
+      
+      // Check for feature icons with accessibility labels
+      expect(screen.getByRole('img', { name: 'Recipe Database' })).toBeInTheDocument()
+      expect(screen.getByRole('img', { name: 'Meal Planner' })).toBeInTheDocument()
+      expect(screen.getByRole('img', { name: 'Cooking Assistant' })).toBeInTheDocument()
     })
 
     it('shows placeholder content for features', () => {

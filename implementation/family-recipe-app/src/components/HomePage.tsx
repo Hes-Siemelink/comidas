@@ -1,13 +1,15 @@
 import { Box, Container, Heading, Text, VStack, SimpleGrid } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { RecipeIcon, PlannerIcon, CookingIcon } from './icons'
 
 interface FeatureSectionProps {
   title: string
   description: string
   placeholder?: boolean
+  icon?: React.ReactNode
 }
 
-function FeatureSection({ title, description, placeholder = false }: FeatureSectionProps) {
+function FeatureSection({ title, description, placeholder = false, icon }: FeatureSectionProps) {
   return (
     <Box 
       p={6} 
@@ -21,7 +23,12 @@ function FeatureSection({ title, description, placeholder = false }: FeatureSect
       flexDirection="column"
       justifyContent="center"
     >
-      <VStack gap={3}>
+      <VStack gap={4}>
+        {icon && (
+          <Box>
+            {icon}
+          </Box>
+        )}
         <Heading as="h3" size="md" color={placeholder ? "gray.400" : "gray.700"}>
           {title}
         </Heading>
@@ -67,6 +74,7 @@ function HomePage() {
               title={t('recipes.title', 'Recipe Database')}
               description={t('recipes.description', 'Browse and manage your family recipes.')}
               placeholder={true}
+              icon={<RecipeIcon size="xl" />}
             />
             
             {/* Meal Planner Section */}
@@ -74,6 +82,7 @@ function HomePage() {
               title={t('planner.title', 'Meal Planner')}
               description={t('planner.description', 'Plan your weekly family meals.')}
               placeholder={true}
+              icon={<PlannerIcon size="xl" />}
             />
             
             {/* Cooking Assistant Section */}
@@ -81,6 +90,7 @@ function HomePage() {
               title={t('cooking.title', 'Cooking Assistant')}
               description={t('cooking.description', 'Step-by-step cooking guidance and timers.')}
               placeholder={true}
+              icon={<CookingIcon size="xl" />}
             />
           </SimpleGrid>
         </Box>
