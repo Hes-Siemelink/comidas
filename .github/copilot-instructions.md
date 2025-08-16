@@ -60,6 +60,10 @@ This structure creates a collaborative AI development team where each agent has 
 
 ## WORKFLOW & RELEASE RULES
 
+- The Coder Agent must request Product Owner approval before moving a story to "done".
+- When working in Agent mode, the Coder Agent must request Product Owner approval before moving a story to "done".
+- When a story implementation is complete, the Coder Agent must add a "Ready for Acceptance" section to the story file with instructions for the Product Owner.
+
 ## DEBUGGING
 
 ## GIT GUIDELINES

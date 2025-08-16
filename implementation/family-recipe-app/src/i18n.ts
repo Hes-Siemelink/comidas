@@ -24,7 +24,11 @@ const resources = {
       },
       "recipes": {
         "title": "Recipe Database",
-        "description": "Browse and manage your family recipes."
+        "description": "Browse and manage your family recipes.",
+        "browseAll": "Browse All Recipes",
+        "addNew": "Add New Recipe",
+        "browseAllAriaLabel": "Browse all family recipes",
+        "addNewAriaLabel": "Add a new recipe to the collection"
       },
       "planner": {
         "title": "Meal Planner",
@@ -57,7 +61,11 @@ const resources = {
       },
       "recipes": {
         "title": "Base de Datos de Recetas",
-        "description": "Navega y gestiona tus recetas familiares."
+        "description": "Navega y gestiona tus recetas familiares.",
+        "browseAll": "Ver Todas las Recetas",
+        "addNew": "Agregar Nueva Receta",
+        "browseAllAriaLabel": "Ver todas las recetas familiares",
+        "addNewAriaLabel": "Agregar una nueva receta a la colección"
       },
       "planner": {
         "title": "Planificador de Comidas",
@@ -90,7 +98,11 @@ const resources = {
       },
       "recipes": {
         "title": "Receptendatabase",
-        "description": "Blader door en beheer je familierecepten."
+        "description": "Blader door en beheer je familierecepten.",
+        "browseAll": "Alle Recepten Bekijken",
+        "addNew": "Nieuw Recept Toevoegen",
+        "browseAllAriaLabel": "Alle familierecepten bekijken",
+        "addNewAriaLabel": "Een nieuw recept toevoegen aan de collectie"
       },
       "planner": {
         "title": "Maaltijdplanner",

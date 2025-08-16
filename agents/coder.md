@@ -29,7 +29,7 @@ The Coder agent is responsible for implementing the features and technical tasks
    - Include "To test" instructions for manual verification (start with "Start the development server" - rely on README.md for setup details)
    - Commit changes with value-focused message and proper agent attribution (see `common.md`)
 5. **Await Approval**: Product Owner (see `product-owner.md`) will review and add acceptance line
-6. **Complete**: After Product Owner acceptance, move story to `backlog/done/` using `git mv`
+6. **Complete**: After Product Owner acceptance, move story to `backlog/done/` using `git mv`. You MUST NOT move the story to done before having approval.
 
 ### Test Coverage Standards
 

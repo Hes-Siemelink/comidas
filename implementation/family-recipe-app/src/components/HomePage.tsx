@@ -1,12 +1,74 @@
-import { Box, Container, Heading, Text, VStack, SimpleGrid } from '@chakra-ui/react'
+import { Box, Container, Heading, Text, VStack, SimpleGrid, HStack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { RecipeIcon, PlannerIcon, CookingIcon } from './icons'
+import AccessibleButton from './ui/AccessibleButton'
 
 interface FeatureSectionProps {
   title: string
   description: string
   placeholder?: boolean
   icon?: React.ReactNode
+}
+
+interface RecipeDatabaseSectionProps {
+  title: string
+  description: string
+  icon?: React.ReactNode
+}
+
+function RecipeDatabaseSection({ title, description, icon }: RecipeDatabaseSectionProps) {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  return (
+    <Box 
+      p={6} 
+      borderRadius="lg" 
+      border="1px" 
+      borderColor="gray.300"
+      bg="white"
+      textAlign="center"
+      minH="200px"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      _hover={{ shadow: "md", borderColor: "blue.300" }}
+      transition="all 0.2s"
+    >
+      <VStack gap={4}>
+        {icon && (
+          <Box color="blue.500">
+            {icon}
+          </Box>
+        )}
+        <Heading as="h3" size="md" color="gray.700">
+          {title}
+        </Heading>
+        <Text color="gray.600" mb={4}>
+          {description}
+        </Text>
+        <HStack gap={3} justify="center" flexWrap="wrap">
+          <AccessibleButton
+            variant="primary"
+            size="sm"
+            onClick={() => navigate('/recipes')}
+            aria-label={t('recipes.browseAllAriaLabel')}
+          >
+            {t('recipes.browseAll')}
+          </AccessibleButton>
+          <AccessibleButton
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/recipes/new')}
+            aria-label={t('recipes.addNewAriaLabel')}
+          >
+            {t('recipes.addNew')}
+          </AccessibleButton>
+        </HStack>
+      </VStack>
+    </Box>
+  )
 }
 
 function FeatureSection({ title, description, placeholder = false, icon }: FeatureSectionProps) {
@@ -70,10 +132,9 @@ function HomePage() {
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
             {/* Recipe Database Section */}
-            <FeatureSection
+            <RecipeDatabaseSection
               title={t('recipes.title', 'Recipe Database')}
               description={t('recipes.description', 'Browse and manage your family recipes.')}
-              placeholder={true}
               icon={<RecipeIcon size="xl" />}
             />
             

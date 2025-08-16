@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
+import { BrowserRouter } from 'react-router-dom'
 import HomePage from './HomePage'
 import RecipesPage from './RecipesPage'
 import PlannerPage from './PlannerPage'
@@ -7,9 +8,11 @@ import CookingPage from './CookingPage'
 import '../i18n'
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ChakraProvider value={defaultSystem}>
-    {children}
-  </ChakraProvider>
+  <BrowserRouter>
+    <ChakraProvider value={defaultSystem}>
+      {children}
+    </ChakraProvider>
+  </BrowserRouter>
 )
 
 describe('Page Components', () => {
@@ -56,9 +59,10 @@ describe('Page Components', () => {
     it('shows placeholder content for features', () => {
       render(<HomePage />, { wrapper: TestWrapper })
       
-      // Should have multiple "Coming soon..." placeholders
+      // Should have 2 "Coming soon..." placeholders (Meal Planner and Cooking Assistant)
+      // Recipe Database is no longer a placeholder
       const comingSoonTexts = screen.getAllByText('Coming soon...')
-      expect(comingSoonTexts).toHaveLength(3)
+      expect(comingSoonTexts).toHaveLength(2)
     })
 
     it('uses internationalization', () => {
@@ -67,6 +71,26 @@ describe('Page Components', () => {
       // Should use translation keys (falls back to English text)
       expect(screen.getByText('Family Recipe App')).toBeInTheDocument()
       expect(screen.getByText('Main Features')).toBeInTheDocument()
+    })
+
+    it('renders Recipe Database section with interactive buttons', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Check for Recipe Database section
+      expect(screen.getByRole('heading', { name: 'Recipe Database' })).toBeInTheDocument()
+      expect(screen.getByText(/browse and manage your family recipes/i)).toBeInTheDocument()
+      
+      // Check for action buttons by their accessible names (aria-label)
+      expect(screen.getByRole('button', { name: 'Browse all family recipes' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Add a new recipe to the collection' })).toBeInTheDocument()
+    })
+
+    it('Recipe Database buttons have proper accessibility labels', () => {
+      render(<HomePage />, { wrapper: TestWrapper })
+      
+      // Check for proper ARIA labels
+      expect(screen.getByLabelText(/browse all family recipes/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/add a new recipe to the collection/i)).toBeInTheDocument()
     })
   })
 
