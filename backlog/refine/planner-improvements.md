@@ -2,4 +2,5 @@
 
 ## Ideas for Enhancement
 
-<!-- Ideas converted to stories are removed from this list -->
+- Week tracking number. Apart from the title, weeks get numbers. This is a global counter. A new week gets the number of the last known week plus 1. 
+

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Box, HStack, IconButton } from '@chakra-ui/react'
@@ -15,6 +16,9 @@ interface DraggableListItemProps {
 function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListItemProps) {
   const { t } = useTranslation()
   const { currentWeek, reorderMeals } = usePlanner()
+  const [isAnimating, setIsAnimating] = useState(false)
+  const [animationDirection, setAnimationDirection] = useState<'up' | 'down' | null>(null)
+  
   const {
     attributes,
     listeners,
@@ -24,9 +28,16 @@ function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListIt
     isDragging,
   } = useSortable({ id: meal.id })
 
+  // Combine drag transform with keyboard animation
+  const keyboardTransform = isAnimating 
+    ? animationDirection === 'up' ? 'translateY(-8px)' : 'translateY(8px)'
+    : null
+  
+  const combinedTransform = keyboardTransform || CSS.Transform.toString(transform)
+
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+    transform: combinedTransform,
+    transition: isAnimating ? 'transform 200ms ease-out' : transition,
   }
 
   const handleKeyDown = async (event: React.KeyboardEvent) => {
@@ -38,17 +49,39 @@ function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListIt
     
     if (event.key === 'ArrowUp' && currentIndex > 0) {
       event.preventDefault()
+      // Trigger animation before reordering
+      setAnimationDirection('up')
+      setIsAnimating(true)
+      
       try {
         await reorderMeals(currentIndex, currentIndex - 1)
+        // Clear animation after reorder completes
+        setTimeout(() => {
+          setIsAnimating(false)
+          setAnimationDirection(null)
+        }, 200)
       } catch (error) {
         console.error('Failed to move meal up:', error)
+        setIsAnimating(false)
+        setAnimationDirection(null)
       }
     } else if (event.key === 'ArrowDown' && currentIndex < currentWeek.meals.length - 1) {
       event.preventDefault()
+      // Trigger animation before reordering
+      setAnimationDirection('down')
+      setIsAnimating(true)
+      
       try {
         await reorderMeals(currentIndex, currentIndex + 1)
+        // Clear animation after reorder completes
+        setTimeout(() => {
+          setIsAnimating(false)
+          setAnimationDirection(null)
+        }, 200)
       } catch (error) {
         console.error('Failed to move meal down:', error)
+        setIsAnimating(false)
+        setAnimationDirection(null)
       }
     }
   }

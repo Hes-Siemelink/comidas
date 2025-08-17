@@ -74,6 +74,7 @@ This structure creates a collaborative AI development team where each agent has 
 - File movement protocols using `git mv`
 - When committing, use the `--author` flag to identify the agent.
 - When the Coder Agent needs to amend a commit, they should keep the original message.
+- When moving a story to "done", commit all files from the root directory.
 
 ## AGILE INTEGRATION
 
@@ -106,6 +107,7 @@ This structure creates a collaborative AI development team where each agent has 
   - Homepage component architecture
   - Project structure initialization
   - Basic routing, data persistence, icon system, and testing setup
+  - Drag and drop meal ordering feature
 
 - **later/**: Holds deferred or lower-priority ideas, such as:
   - Cooking assistant home section
