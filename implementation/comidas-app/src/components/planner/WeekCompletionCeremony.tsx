@@ -15,7 +15,6 @@ function WeekCompletionCeremony() {
   const { 
     showCompletionCeremony, 
     completedWeekData, 
-    dismissCeremony, 
     proceedToNextWeek 
   } = usePlanner()
   
@@ -125,12 +124,6 @@ function WeekCompletionCeremony() {
 
           {/* Action Buttons */}
           <HStack gap={3} w="full" justify="center">
-            <AccessibleButton
-              variant="outline"
-              onClick={dismissCeremony}
-            >
-              {t('planner.ceremony.viewArchive', 'View Archive')}
-            </AccessibleButton>
             <AccessibleButton
               variant="primary"
               onClick={proceedToNextWeek}
