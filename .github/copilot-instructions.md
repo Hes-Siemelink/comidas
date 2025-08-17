@@ -106,6 +106,7 @@ This structure creates a collaborative AI development team where each agent has 
 - **NEVER USE 'npm test'. Always use "npm run test:run"**
 - **Always run TypeScript compilation during our build process.**
 - Add a type-check script for development. For example: `"type-check": "tsc --noEmit"`
+- Add a type-check script for development. For example: `"type-check": "tsc -b --noEmit"`
 
 ## GIT GUIDELINES
 - Specific git commit message format with agent attribution
@@ -177,7 +178,7 @@ This structure creates a collaborative AI development team where each agent has 
   2. `<ChakraProvider value={defaultSystem}>`
 - **NEVER USE 'npm test'. Always use "npm run test:run"**
 - **Always run TypeScript compilation during our build process.**
-- Add a type-check script for development. For example: `"type-check": "tsc --noEmit"`
+- Add a type-check script for development. For example: `"type-check": "tsc -b --noEmit"`
 
 ## CODE REVIEW GUIDELINES
 - UI components should be designed as potentially reusable components that receive their dependencies through props rather than directly coupling to domain-specific contexts.
