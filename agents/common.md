@@ -10,7 +10,8 @@
 - Focus on value and intent, not mechanical actions. Diffs show what changed.
 
 - Use `--author` flag to identify the agent making the commit: `git commit --author="[agent name]" -m "Commit message"`. Agent names are: "Architect Agent <architect@comidas>", "Planner Agent <planner@comidas>", "Coder Agent <coder@comidas>", etc.
-- Add a blank line after the title, then a detailed body if needed.
+- Add a blank line after the title, then a detailed body with concise line items describing the changes. This should not be a long list
+- Avoid saying "All tests are passing". This is implied.
 - Stage with `git add`, commit with `git commit -m`. Amend with `git commit --amend -m`.
 - **Never include AI tool references** in commit messages (e.g., "Generated with Claude Code", "Co-Authored-By: Claude").
 

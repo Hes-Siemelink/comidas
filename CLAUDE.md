@@ -11,6 +11,12 @@ This is an agent-driven development project for a Family Recipe App with the fol
 - `agents/` - Agent role definitions for development workflow
 - `backlog/` - Kanban-style project management (todo/doing/done)
 
+## Git commits
+
+- **Never include AI tool references** in commit messages (e.g., "Generated with Claude Code", "Co-Authored-By: Claude").
+
+- See agents/common.md for more commit guidelines
+
 ## Development Commands
 
 All development work happens in `implementation/family-recipe-app/`:
