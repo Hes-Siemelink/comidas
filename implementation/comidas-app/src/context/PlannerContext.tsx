@@ -8,6 +8,8 @@ export interface PlannerState {
   currentWeek: ComidasWeek | null;
   weekHistory: ComidasWeek[];
   loading: boolean;
+  showCompletionCeremony: boolean;
+  completedWeekData: ComidasWeek | null;
   createWeek: (status?: WeekStatus, title?: string) => Promise<ComidasWeek>;
   addMeal: (title: string) => Promise<void>;
   toggleMealComplete: (mealId: string) => Promise<void>;
@@ -18,6 +20,8 @@ export interface PlannerState {
   archiveWeek: (weekId: string) => Promise<void>;
   setCurrentWeek: (week: ComidasWeek | null) => void;
   updateWeekTitle: (title: string) => Promise<void>;
+  dismissCeremony: () => void;
+  proceedToNextWeek: () => Promise<void>;
 }
 
 const PlannerContext = createContext<PlannerState | undefined>(undefined);
@@ -26,6 +30,8 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
   const [currentWeek, setCurrentWeek] = useState<ComidasWeek | null>(null);
   const [weekHistory, setWeekHistory] = useState<ComidasWeek[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showCompletionCeremony, setShowCompletionCeremony] = useState(false);
+  const [completedWeekData, setCompletedWeekData] = useState<ComidasWeek | null>(null);
 
   const updateWeekTitle = useCallback(async (title: string) => {
     if (!currentWeek) return;
@@ -141,6 +147,24 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       // Persist the update
       await comidasWeekService.update(currentWeek.id, updatedWeek);
       setCurrentWeek(updatedWeek);
+
+      // Check if this completes the week (all meals completed)
+      const allMealsCompleted = updatedWeek.meals.length > 0 && 
+        updatedWeek.meals.every(meal => meal.completed);
+      
+      if (allMealsCompleted && updatedWeek.status === 'current') {
+        // Mark the week as completed and show ceremony
+        const completedWeek = { 
+          ...updatedWeek, 
+          status: 'completed' as const,
+          completedAt: new Date()
+        };
+        
+        await comidasWeekService.update(currentWeek.id, completedWeek);
+        setCurrentWeek(completedWeek);
+        setCompletedWeekData(completedWeek);
+        setShowCompletionCeremony(true);
+      }
     } catch (error) {
       console.error('Failed to toggle meal completion:', error);
       throw error;
@@ -264,10 +288,49 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [weekHistory]);
 
+  const dismissCeremony = useCallback(() => {
+    setShowCompletionCeremony(false);
+    setCompletedWeekData(null);
+  }, []);
+
+  const proceedToNextWeek = useCallback(async () => {
+    if (!completedWeekData) return;
+
+    try {
+      // Archive the completed week
+      const archivedWeek = { 
+        ...completedWeekData, 
+        status: 'archived' as const, 
+        updatedAt: new Date() 
+      };
+      
+      await comidasWeekService.update(completedWeekData.id, archivedWeek);
+      
+      // Update weekHistory
+      setWeekHistory(prev =>
+        prev.map(week =>
+          week.id === completedWeekData.id ? archivedWeek : week
+        )
+      );
+
+      // Create a new current week
+      const newWeek = await createWeek('current', 'New Week');
+      setCurrentWeek(newWeek);
+      
+      // Dismiss ceremony
+      dismissCeremony();
+    } catch (error) {
+      console.error('Failed to proceed to next week:', error);
+      throw error;
+    }
+  }, [completedWeekData, createWeek, dismissCeremony]);
+
   const value: PlannerState = {
     currentWeek,
     weekHistory,
     loading,
+    showCompletionCeremony,
+    completedWeekData,
     createWeek,
     addMeal,
     toggleMealComplete,
@@ -277,7 +340,9 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     completeWeek,
     archiveWeek,
     setCurrentWeek,
-    updateWeekTitle
+    updateWeekTitle,
+    dismissCeremony,
+    proceedToNextWeek
   };
 
   return (

@@ -1,9 +1,11 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { WeekManager } from './planner'
+import { WeekManager, WeekCompletionCeremony } from './planner'
+import { usePlanner } from '../context/PlannerContext'
 
 function PlannerPage() {
   const { t } = useTranslation()
+  const { showCompletionCeremony } = usePlanner()
 
   return (
     <Box p={8}>
@@ -18,6 +20,9 @@ function PlannerPage() {
 
         {/* Week Manager Component */}
         <WeekManager />
+
+        {/* Week Completion Ceremony */}
+        {showCompletionCeremony && <WeekCompletionCeremony />}
       </VStack>
     </Box>
   )

@@ -67,7 +67,7 @@ This structure creates a collaborative AI development team where each agent has 
 - All tests must pass before acceptance (this is assumed).
 - Architect Agent review is optional.
 - When creating a new week in the meal planner, the user should automatically be placed in title edit mode with the auto-generated title selected. Pressing Enter should save the title and focus should then move to the 'add meal' input box.
-- The week title should not be a blue hyperlink. Instead, a right-aligned pencil icon (✎) should be used for editing.
+- The week title should not be a blue hyperlink. Instead, a right-aligned monochrome outline pencil icon (✎) should be used for editing.
 - When editing the week title, the text size and style must be the same as in display mode, and the font weight should not be bold.
 
 ## DEBUGGING

@@ -30,7 +30,7 @@ export const ComidaSchema = z.object({
 export const ComidasWeekSchema = z.object({
   id: z.string().min(1),
   title: z.string().optional(),
-  status: z.enum(['current', 'planned', 'archived']),
+  status: z.enum(['current', 'planned', 'archived', 'completed']),
   meals: z.array(ComidaSchema),
   mealCount: z.number().int().min(0, 'Meal count cannot be negative'),
   createdAt: z.date(),
@@ -56,4 +56,4 @@ export type Recipe = z.infer<typeof RecipeSchema>
 export type Comida = z.infer<typeof ComidaSchema>
 export type ComidasWeek = z.infer<typeof ComidasWeekSchema>
 export type FamilyMember = z.infer<typeof FamilyMemberSchema>
-export type WeekStatus = 'current' | 'planned' | 'archived'
+export type WeekStatus = 'current' | 'planned' | 'archived' | 'completed'
