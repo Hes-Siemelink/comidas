@@ -146,13 +146,15 @@ describe('Page Components', () => {
   })
 
   describe('PlannerPage', () => {
-    it('renders meal planner title and description', () => {
+    it('renders meal planner title and description', async () => {
       render(<PlannerPage />, { wrapper: TestWrapper })
       
       expect(screen.getByText('Meal Planner')).toBeInTheDocument()
       expect(screen.getByText(/plan your weekly family meals/i)).toBeInTheDocument()
-      expect(screen.getByText(/Current week plan:/i)).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /Set Example Week Plan/i })).toBeInTheDocument()
+      
+      // Wait for loading to complete and content to appear
+      await screen.findByText(/Create New Comidas Week/i, {}, { timeout: 3000 })
+      expect(screen.getByRole('button', { name: /Create Week/i })).toBeInTheDocument()
     })
 
     it('has proper heading structure', () => {

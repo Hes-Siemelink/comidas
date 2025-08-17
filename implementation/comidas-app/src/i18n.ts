@@ -70,7 +70,33 @@ const resources = {
         "viewFull": "View Full Planner",
         "planThisWeek": "Plan This Week",
         "viewFullAriaLabel": "View the complete meal planning interface",
-        "planThisWeekAriaLabel": "Start planning meals for this week"
+        "planThisWeekAriaLabel": "Start planning meals for this week",
+        "quickForm": {
+          "noWeek": "Create a new week to start planning meals",
+          "placeholder": "Type meal and press Enter...",
+          "addMealHint": "Type a meal name and press Enter to add"
+        },
+        "week": {
+          "createNew": "Create New Comidas Week",
+          "createDescription": "Start planning meals for this week - add as many as you need!",
+          "loading": "Loading week data...",
+          "mealCount": "Number of meals (3-7):",
+          "create": "Create Week",
+          "current": "Current Week",
+          "created": "Created {{date}}",
+          "completed": "completed",
+          "complete": "Complete Week",
+          "confirmComplete": "Complete this week and archive it?",
+          "addMeals": "Add Meals",
+          "mealList": "Meal List"
+        },
+        "meal": {
+          "markComplete": "Mark meal as complete",
+          "markIncomplete": "Mark meal as incomplete",
+          "assignedTo": "Assigned to: {{name}}",
+          "delete": "Delete meal",
+          "confirmDelete": "Delete this meal?"
+        }
       },
       "cooking": {
         "title": "Cooking Assistant",
@@ -145,7 +171,33 @@ const resources = {
         "viewFull": "Ver planificador completo",
         "planThisWeek": "Planificar esta semana",
         "viewFullAriaLabel": "Ver la interfaz completa de planificación de comidas",
-        "planThisWeekAriaLabel": "Comenzar a planificar comidas para esta semana"
+        "planThisWeekAriaLabel": "Comenzar a planificar comidas para esta semana",
+        "quickForm": {
+          "noWeek": "Crear una nueva semana para comenzar a planificar comidas",
+          "placeholder": "Escriba la comida y presione Enter...",
+          "addMealHint": "Escriba el nombre de una comida y presione Enter para agregar"
+        },
+        "week": {
+          "createNew": "Crear nueva semana comidas",
+          "createDescription": "Comienza a planificar comidas para esta semana - ¡agrega tantas como necesites!",
+          "loading": "Cargando datos de la semana...",
+          "mealCount": "Número de comidas (3-7):",
+          "create": "Crear semana",
+          "current": "Semana actual",
+          "created": "Creada {{date}}",
+          "completed": "completada",
+          "complete": "Completar semana",
+          "confirmComplete": "¿Completar esta semana y archivarla?",
+          "addMeals": "Agregar comidas",
+          "mealList": "Lista de comidas"
+        },
+        "meal": {
+          "markComplete": "Marcar comida como completada",
+          "markIncomplete": "Marcar comida como incompleta",
+          "assignedTo": "Asignada a: {{name}}",
+          "delete": "Eliminar comida",
+          "confirmDelete": "¿Eliminar esta comida?"
+        }
       },
       "cooking": {
         "title": "Asistente de cocina",
@@ -220,7 +272,33 @@ const resources = {
         "viewFull": "Volledige planner bekijken",
         "planThisWeek": "Deze week plannen",
         "viewFullAriaLabel": "De volledige maaltijdplannings-interface bekijken",
-        "planThisWeekAriaLabel": "Begin met het plannen van maaltijden voor deze week"
+        "planThisWeekAriaLabel": "Begin met het plannen van maaltijden voor deze week",
+        "quickForm": {
+          "noWeek": "Maak een nieuwe week aan om maaltijden te plannen",
+          "placeholder": "Typ maaltijd en druk op Enter...",
+          "addMealHint": "Typ een maaltijdnaam en druk op Enter om toe te voegen"
+        },
+        "week": {
+          "createNew": "Nieuwe comidas week maken",
+          "createDescription": "Begin met het plannen van maaltijden voor deze week - voeg er zoveel toe als je nodig hebt!",
+          "loading": "Weekgegevens laden...",
+          "mealCount": "Aantal maaltijden (3-7):",
+          "create": "Week maken",
+          "current": "Huidige week",
+          "created": "Gemaakt {{date}}",
+          "completed": "voltooid",
+          "complete": "Week voltooien",
+          "confirmComplete": "Deze week voltooien en archiveren?",
+          "addMeals": "Maaltijden toevoegen",
+          "mealList": "Maaltijdlijst"
+        },
+        "meal": {
+          "markComplete": "Maaltijd als voltooid markeren",
+          "markIncomplete": "Maaltijd als onvoltooid markeren",
+          "assignedTo": "Toegewezen aan: {{name}}",
+          "delete": "Maaltijd verwijderen",
+          "confirmDelete": "Deze maaltijd verwijderen?"
+        }
       },
       "cooking": {
         "title": "Kookassistent",

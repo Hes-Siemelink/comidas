@@ -26,13 +26,13 @@ export const ComidaSchema = z.object({
   notes: z.string().optional()
 })
 
-// Comidas Week validation schema (3-7 meals per spec)
+// Comidas Week validation schema (dynamic meal count)
 export const ComidasWeekSchema = z.object({
   id: z.string().min(1),
   title: z.string().optional(),
   status: z.enum(['current', 'planned', 'archived']),
   meals: z.array(ComidaSchema),
-  mealCount: z.number().int().min(3).max(7, 'Comidas week must have 3-7 meals'),
+  mealCount: z.number().int().min(0, 'Meal count cannot be negative'),
   createdAt: z.date(),
   updatedAt: z.date(),
   completedAt: z.date().optional()
