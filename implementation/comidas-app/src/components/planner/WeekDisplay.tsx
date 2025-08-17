@@ -44,7 +44,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
     createWeek, 
     completeWeek, 
     reorderMeals, 
-    updateWeekTitle,
+    updateWeekTitleById,
     addMeal,
     addMealToWeek
   } = usePlanner()
@@ -218,16 +218,16 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                 onChange={(e) => setEditTitle(e.target.value)}
                 onBlur={async () => {
                   const trimmed = editTitle.trim().slice(0, 50)
-                  if (trimmed) {
-                    await updateWeekTitle(trimmed)
+                  if (trimmed && week) {
+                    await updateWeekTitleById(week.id, trimmed)
                   }
                   setIsEditingTitle(false)
                 }}
                 onKeyDown={async (e) => {
                   if (e.key === 'Enter') {
                     const trimmed = editTitle.trim().slice(0, 50)
-                    if (trimmed) {
-                      await updateWeekTitle(trimmed)
+                    if (trimmed && week) {
+                      await updateWeekTitleById(week.id, trimmed)
                     }
                     setIsEditingTitle(false)
                     setTimeout(() => {

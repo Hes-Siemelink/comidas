@@ -66,6 +66,7 @@ This structure creates a collaborative AI development team where each agent has 
 ## CODING STANDARDS
 
 - UI components must be created as potentially reusable in principle and decoupled from domain-specific lookup logic, in favor of property injection. See `code-review.md` for more details.
+- Code review will be a periodical exercise to analyze the code on high level and low level and make improvements.
 
 ## WORKFLOW & RELEASE RULES
 

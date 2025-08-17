@@ -105,7 +105,73 @@ The parent component should handle:
 - Should clearly separate pure and context-dependent parts
 - Consider splitting into smaller components
 
-### 📋 **Code Review Checklist**
+### � **Function Design Principles**
+
+#### **Avoid Hard-Coded Context Dependencies**
+
+**Principle**: Functions should operate on explicit parameters rather than being tightly coupled to specific context state. This prevents bugs when functions are used in different contexts.
+
+**✅ Good Example:**
+```tsx
+// Flexible function that works with any week
+const updateWeekTitleById = useCallback(async (weekId: string, title: string): Promise<ComidasWeek> => {
+  const targetWeek = currentWeek?.id === weekId ? currentWeek : weekHistory.find(week => week.id === weekId);
+  if (!targetWeek) throw new Error('Week not found');
+  
+  const updatedWeek = { ...targetWeek, title: title.trim().slice(0, 50), updatedAt: new Date() };
+  await comidasWeekService.update(weekId, updatedWeek);
+  return findAndUpdateWeek(weekId, () => updatedWeek);
+}, [currentWeek, weekHistory, findAndUpdateWeek]);
+```
+
+**❌ Anti-Pattern:**
+```tsx
+// Tightly coupled to currentWeek only - breaks for planned weeks
+const updateWeekTitle = useCallback(async (title: string) => {
+  if (!currentWeek) return;  // ❌ Hard-coded assumption
+  const updatedWeek = { ...currentWeek, title: title.trim(), updatedAt: new Date() };
+  setCurrentWeek(updatedWeek);  // ❌ Only updates current, not planned
+  await comidasWeekService.update(updatedWeek.id, updatedWeek);
+}, [currentWeek]);  // ❌ Limited dependency scope
+```
+
+**Common Coupling Bugs:**
+- Functions assume specific context state (e.g., always `currentWeek`)
+- Hard-coded logic that doesn't adapt to different use cases
+- Implicit dependencies that break when used in new contexts
+- Missing parameters that force tight coupling to global state
+
+**Detection Patterns:**
+- Functions with fewer parameters than they should need
+- Functions that reference global state directly instead of accepting it as parameters
+- Functions that make assumptions about which entity they're operating on
+- Functions that work in one component but fail in another similar context
+
+**Real-World Example (Comidas Bug):**
+```tsx
+// ❌ This caused "Planned week title editing doesn't work"
+const updateWeekTitle = useCallback(async (title: string) => {
+  if (!currentWeek) return;  // Only works for current weeks!
+  // ... update logic only for currentWeek
+}, [currentWeek]);
+
+// Component tries to use it for planned weeks - silent failure!
+<WeekDisplay viewingStatus="planned" />  // Title editing broken
+```
+
+**Resolution:**
+```tsx
+// ✅ Function works for any week by accepting explicit ID
+const updateWeekTitleById = useCallback(async (weekId: string, title: string) => {
+  const targetWeek = findWeek(weekId);  // Works for any week
+  // ... update logic for specified week
+}, []);
+
+// Now works everywhere
+await updateWeekTitleById(week.id, newTitle);  // Works for current AND planned
+```
+
+### �📋 **Code Review Checklist**
 
 ## High-Level Architecture Review
 
@@ -115,6 +181,13 @@ The parent component should handle:
 - [ ] **Separation of Concerns**: UI logic separate from business logic
 - [ ] **Context Usage**: Context only used in smart/coordinator components
 - [ ] **Component Hierarchy**: Clear parent-child responsibility boundaries
+
+### 🔄 **Function Design**
+- [ ] **Parameter Explicitness**: Functions receive data they need as parameters
+- [ ] **Context Independence**: Functions don't assume specific global state
+- [ ] **Reusability**: Functions work across different contexts and use cases
+- [ ] **Clear Dependencies**: Function dependencies are explicit in signature
+- [ ] **No Hidden Coupling**: Functions don't rely on implicit context assumptions
 
 ### 🔄 **Data Flow Patterns**
 - [ ] **Unidirectional Flow**: Data flows down, events flow up
@@ -147,6 +220,13 @@ The parent component should handle:
 - [ ] **Performance**: No obvious performance issues
 - [ ] **Memory Management**: Proper cleanup and resource management
 - [ ] **Error Handling**: Graceful error handling and user feedback
+
+### 🔗 **Coupling & Design Quality**
+- [ ] **Function Parameters**: Functions accept explicit parameters rather than assuming context state
+- [ ] **Context Usage**: Components don't hard-code specific context values (e.g., always using `currentWeek`)
+- [ ] **Component Flexibility**: UI components work with any valid data, not just specific instances
+- [ ] **State Dependencies**: Check if component only works in one specific state/mode
+- [ ] **Function Naming**: Function names accurately reflect their actual behavior and limitations
 
 ### 🌐 **Internationalization & Accessibility**
 - [ ] **Translation Keys**: All user text uses `t()` with fallbacks
