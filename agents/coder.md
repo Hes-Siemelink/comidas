@@ -16,6 +16,7 @@ The Coder agent is responsible for implementing the features and technical tasks
 
 - The Coder agent does not define requirements or make high-level architectural decisions but can consult the Planner and Architect agents as needed.
 - The agent is responsible for delivering high-quality, working code that meets the acceptance criteria of each work item.
+- **Architectural Compliance**: All code must follow the architectural principles outlined in `agents/code-review.md`, particularly the dependency injection patterns for UI components.
 
 ## Workflow
 
@@ -101,6 +102,10 @@ Any of these conditions prevents story completion:
 The following items can be addressed during code review rather than blocking story completion:
 
 ### 📋 **Architecture & Patterns**
+- **UI Component Design**: Components created as potentially reusable with dependency injection
+- **Context Coupling**: UI components decoupled from domain-specific lookup logic  
+- **Prop Injection**: Dependencies passed via props rather than direct context access
+- **Component Responsibility**: Clear separation between pure UI and smart coordinator components
 - Component architecture follows established patterns
 - Context usage appropriate for state management needs
 - Service layer integration uses existing services correctly

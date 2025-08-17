@@ -15,3 +15,8 @@ See [common.md](common.md) for high-level and low-level instructions that apply 
 - [Coder](coder.md) – Does the actual coding according to the tasks in the backlog directory and the spec folder
 - [Architect](architect.md) – Proposes and reviews the overall architecture of the product
 
+## Shared Guidelines
+
+- [Common](common.md) – Git workflow, commit standards, and cross-agent communication guidelines
+- [Code Review](code-review.md) – Architectural principles, component design patterns, and code quality standards
+
