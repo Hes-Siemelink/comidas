@@ -84,7 +84,7 @@ function WeekPlanner() {
 
     if (oldIndex !== newIndex) {
       try {
-        await reorderMeals(oldIndex, newIndex)
+        await reorderMeals(currentWeek.id, oldIndex, newIndex)
       } catch (error) {
         console.error('Failed to reorder meals:', error)
       }
@@ -146,16 +146,16 @@ function WeekPlanner() {
                 onChange={(e) => setEditTitle(e.target.value)}
                 onBlur={async () => {
                   const trimmed = editTitle.trim().slice(0, 50)
-                  if (trimmed) {
-                    await updateWeekTitle(trimmed)
+                  if (trimmed && currentWeek) {
+                    await updateWeekTitle(currentWeek.id, trimmed)
                   }
                   setIsEditingTitle(false)
                 }}
                 onKeyDown={async (e) => {
                   if (e.key === 'Enter') {
                     const trimmed = editTitle.trim().slice(0, 50)
-                    if (trimmed) {
-                      await updateWeekTitle(trimmed)
+                    if (trimmed && currentWeek) {
+                      await updateWeekTitle(currentWeek.id, trimmed)
                     }
                     setIsEditingTitle(false)
                     // Focus the meal input after saving title
@@ -279,7 +279,7 @@ function WeekPlanner() {
             <QuickPlanningForm 
               ref={mealInputRef} 
               week={currentWeek}
-              onAddMeal={addMeal}
+              onAddMeal={(mealTitle) => currentWeek ? addMeal(currentWeek.id, mealTitle).then(() => {}) : Promise.resolve()}
             />
           )}
         </VStack>

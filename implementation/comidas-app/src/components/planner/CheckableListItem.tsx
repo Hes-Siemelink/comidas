@@ -8,24 +8,22 @@ interface CheckableListItemProps {
   showDelete?: boolean
   onEdit?: (meal: Comida) => void
   week?: ComidasWeek
-  isCurrentWeek?: boolean
 }
 
-function CheckableListItem({ meal, showDelete = false, onEdit, week, isCurrentWeek = false }: CheckableListItemProps) {
+function CheckableListItem({ meal, showDelete = false, onEdit, week }: CheckableListItemProps) {
   const { t } = useTranslation()
   const { 
     toggleMealComplete, 
-    deleteMeal, 
-    toggleMealCompleteInWeek, 
-    deleteMealFromWeek 
+    deleteMeal 
   } = usePlanner()
 
   const handleToggle = async () => {
     try {
-      if (week && !isCurrentWeek) {
-        await toggleMealCompleteInWeek(week.id, meal.id)
+      if (week) {
+        await toggleMealComplete(week.id, meal.id)
       } else {
-        await toggleMealComplete(meal.id)
+        // This case shouldn't happen with the new API, but handle gracefully
+        console.error('No week provided for meal toggle')
       }
     } catch (error) {
       console.error('Failed to toggle meal completion:', error)
@@ -35,10 +33,11 @@ function CheckableListItem({ meal, showDelete = false, onEdit, week, isCurrentWe
   const handleDelete = async () => {
     if (window.confirm(t('planner.meal.confirmDelete', 'Delete this meal?'))) {
       try {
-        if (week && !isCurrentWeek) {
-          await deleteMealFromWeek(week.id, meal.id)
+        if (week) {
+          await deleteMeal(week.id, meal.id)
         } else {
-          await deleteMeal(meal.id)
+          // This case shouldn't happen with the new API, but handle gracefully
+          console.error('No week provided for meal deletion')
         }
       } catch (error) {
         console.error('Failed to delete meal:', error)

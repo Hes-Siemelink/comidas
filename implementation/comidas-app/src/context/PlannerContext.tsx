@@ -10,30 +10,32 @@ export interface PlannerState {
   loading: boolean;
   showCompletionCeremony: boolean;
   completedWeekData: ComidasWeek | null;
+  
+  // Week Management
   createWeek: (status?: WeekStatus, title?: string) => Promise<ComidasWeek>;
-  addMeal: (title: string) => Promise<void>;
-  toggleMealComplete: (mealId: string) => Promise<void>;
-  updateMeal: (mealId: string, updates: Partial<Comida>) => Promise<void>;
-  deleteMeal: (mealId: string) => Promise<void>;
-  reorderMeals: (startIndex: number, endIndex: number) => Promise<void>;
   completeWeek: () => Promise<void>;
   archiveWeek: (weekId: string) => Promise<void>;
-  setCurrentWeek: (week: ComidasWeek | null) => void;
-  updateWeekTitle: (title: string) => Promise<void>;
-  dismissCeremony: () => void;
-  proceedToNextWeek: () => Promise<void>;
-  // New functions for working with any week
-  addMealToWeek: (weekId: string, title: string) => Promise<ComidasWeek>;
-  toggleMealCompleteInWeek: (weekId: string, mealId: string) => Promise<ComidasWeek>;
-  updateMealInWeek: (weekId: string, mealId: string, updates: Partial<Comida>) => Promise<ComidasWeek>;
-  deleteMealFromWeek: (weekId: string, mealId: string) => Promise<ComidasWeek>;
-  reorderMealsInWeek: (weekId: string, startIndex: number, endIndex: number) => Promise<ComidasWeek>;
-  updateWeekTitleById: (weekId: string, title: string) => Promise<ComidasWeek>;
-  // Pure selectors for UI consumption
+  updateWeekTitle: (weekId: string, title: string) => Promise<ComidasWeek>;
+  
+  // Meal Operations (all require explicit weekId)
+  addMeal: (weekId: string, title: string) => Promise<ComidasWeek>;
+  updateMeal: (weekId: string, mealId: string, updates: Partial<Comida>) => Promise<ComidasWeek>;
+  deleteMeal: (weekId: string, mealId: string) => Promise<ComidasWeek>;
+  toggleMealComplete: (weekId: string, mealId: string) => Promise<ComidasWeek>;
+  reorderMeals: (weekId: string, startIndex: number, endIndex: number) => Promise<ComidasWeek>;
+  
+  // State Selectors
   getCurrentWeek: () => ComidasWeek | null;
   getPlannedWeek: () => ComidasWeek | null;
   getArchivedWeeks: () => ComidasWeek[];
   getLatestArchivedWeek: () => ComidasWeek | null;
+  
+  // Ceremony Control
+  dismissCeremony: () => void;
+  proceedToNextWeek: () => Promise<void>;
+  
+  // Internal (may be removed in future)
+  setCurrentWeek: (week: ComidasWeek | null) => void;
 }
 
 const PlannerContext = createContext<PlannerState | undefined>(undefined);
@@ -44,14 +46,6 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [showCompletionCeremony, setShowCompletionCeremony] = useState(false);
   const [completedWeekData, setCompletedWeekData] = useState<ComidasWeek | null>(null);
-
-  const updateWeekTitle = useCallback(async (title: string) => {
-    if (!currentWeek) return;
-    const newTitle = title.trim().slice(0, 50);
-    const updatedWeek = { ...currentWeek, title: newTitle || undefined, updatedAt: new Date() };
-    setCurrentWeek(updatedWeek);
-    await comidasWeekService.update(updatedWeek.id, updatedWeek);
-  }, [currentWeek]);
 
   const generateId = useCallback(() => {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -116,235 +110,31 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [currentWeek]);
 
-  const addMeal = useCallback(async (title: string): Promise<void> => {
-    if (!currentWeek) return;
+  // Load persisted weeks on mount
 
-    try {
-      const newMeal: Comida = {
-        id: generateId(),
-        title,
-        completed: false,
-        order: currentWeek.meals.length,
-      };
-
-      const updatedMeals = [...currentWeek.meals, newMeal];
-      const updatedWeek: ComidasWeek = {
-        ...currentWeek,
-        meals: updatedMeals,
-        mealCount: updatedMeals.length, // Dynamic count based on actual meals
-        updatedAt: new Date()
-      };
-
-      // Persist the update
-      await comidasWeekService.update(currentWeek.id, updatedWeek);
-      setCurrentWeek(updatedWeek);
-    } catch (error) {
-      console.error('Failed to add meal:', error);
-      throw error;
-    }
-  }, [currentWeek, generateId]);
-
-  const toggleMealComplete = useCallback(async (mealId: string): Promise<void> => {
-    if (!currentWeek) return;
-
-    try {
-      const updatedWeek: ComidasWeek = {
-        ...currentWeek,
-        meals: currentWeek.meals.map(meal =>
-          meal.id === mealId ? { ...meal, completed: !meal.completed } : meal
-        ),
-        updatedAt: new Date()
-      };
-
-      // Persist the update
-      await comidasWeekService.update(currentWeek.id, updatedWeek);
-      setCurrentWeek(updatedWeek);
-
-      // Check if this completes the week (all meals completed)
-      const allMealsCompleted = updatedWeek.meals.length > 0 && 
-        updatedWeek.meals.every(meal => meal.completed);
-      
-      if (allMealsCompleted && updatedWeek.status === 'current') {
-        // Mark the week as completed and show ceremony
-        const completedWeek = { 
-          ...updatedWeek, 
-          status: 'completed' as const,
-          completedAt: new Date()
-        };
+  // Load persisted weeks on mount
+  useEffect(() => {
+    const loadWeeks = async () => {
+      try {
+        setLoading(true);
+        const allWeeks = await comidasWeekService.getAll();
         
-        await comidasWeekService.update(currentWeek.id, completedWeek);
+        // Find current week (status: 'current')
+        const current = allWeeks.find(week => week.status === 'current') || null;
+        setCurrentWeek(current);
         
-        // Find if there's a planned week to promote
-        const plannedWeek = weekHistory.find(week => week.status === 'planned');
-        
-        if (plannedWeek) {
-          // Promote planned week to current immediately
-          const promotedWeek: ComidasWeek = {
-            ...plannedWeek,
-            status: 'current',
-            updatedAt: new Date()
-          };
-          await comidasWeekService.update(plannedWeek.id, promotedWeek);
-          setCurrentWeek(promotedWeek);
-          
-          // Update week history: remove planned week, add completed week
-          setWeekHistory(prev => [
-            ...prev.filter(week => week.id !== plannedWeek.id), 
-            completedWeek
-          ]);
-        } else {
-          // No planned week - set current to null
-          setCurrentWeek(null);
-          // Update week history: add completed week
-          setWeekHistory(prev => [...prev, completedWeek]);
-        }
-        
-        setCompletedWeekData(completedWeek);
-        setShowCompletionCeremony(true);
+        // Set history (all other weeks - planned, archived, completed)
+        const history = allWeeks.filter(week => week.status !== 'current');
+        setWeekHistory(history);
+      } catch (error) {
+        console.error('Failed to load weeks:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Failed to toggle meal completion:', error);
-      throw error;
-    }
-  }, [currentWeek]);
+    };
 
-  const updateMeal = useCallback(async (mealId: string, updates: Partial<Comida>): Promise<void> => {
-    if (!currentWeek) return;
-
-    try {
-      const updatedWeek: ComidasWeek = {
-        ...currentWeek,
-        meals: currentWeek.meals.map(meal =>
-          meal.id === mealId ? { ...meal, ...updates } : meal
-        ),
-        updatedAt: new Date()
-      };
-
-      // Persist the update
-      await comidasWeekService.update(currentWeek.id, updatedWeek);
-      setCurrentWeek(updatedWeek);
-    } catch (error) {
-      console.error('Failed to update meal:', error);
-      throw error;
-    }
-  }, [currentWeek]);
-
-  const deleteMeal = useCallback(async (mealId: string): Promise<void> => {
-    if (!currentWeek) return;
-
-    try {
-      const updatedMeals = currentWeek.meals
-        .filter(meal => meal.id !== mealId)
-        .map((meal, index) => ({ ...meal, order: index })); // Reorder after deletion
-
-      const updatedWeek: ComidasWeek = {
-        ...currentWeek,
-        meals: updatedMeals,
-        mealCount: updatedMeals.length, // Update count after deletion
-        updatedAt: new Date()
-      };
-
-      // Persist the update
-      await comidasWeekService.update(currentWeek.id, updatedWeek);
-      setCurrentWeek(updatedWeek);
-    } catch (error) {
-      console.error('Failed to delete meal:', error);
-      throw error;
-    }
-  }, [currentWeek]);
-
-  const reorderMeals = useCallback(async (startIndex: number, endIndex: number): Promise<void> => {
-    if (!currentWeek) return;
-
-    try {
-      const meals = [...currentWeek.meals].sort((a, b) => a.order - b.order);
-      
-      // Move the item from startIndex to endIndex
-      const [removed] = meals.splice(startIndex, 1);
-      meals.splice(endIndex, 0, removed);
-      
-      // Update order values
-      const reorderedMeals = meals.map((meal, index) => ({
-        ...meal,
-        order: index
-      }));
-
-      const updatedWeek: ComidasWeek = {
-        ...currentWeek,
-        meals: reorderedMeals,
-        updatedAt: new Date()
-      };
-
-      // Persist the update
-      await comidasWeekService.update(currentWeek.id, updatedWeek);
-      setCurrentWeek(updatedWeek);
-    } catch (error) {
-      console.error('Failed to reorder meals:', error);
-      throw error;
-    }
-  }, [currentWeek]);
-
-  const completeWeek = useCallback(async (): Promise<void> => {
-    if (!currentWeek) return;
-
-    try {
-      const completedWeek: ComidasWeek = {
-        ...currentWeek,
-        status: 'archived',
-        completedAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      // Find a planned week to promote to current
-      const plannedWeek = weekHistory.find(week => week.status === 'planned');
-
-      // Persist the archived week
-      await comidasWeekService.update(currentWeek.id, completedWeek);
-
-      if (plannedWeek) {
-        // Promote planned week to current
-        const promotedWeek: ComidasWeek = {
-          ...plannedWeek,
-          status: 'current',
-          updatedAt: new Date()
-        };
-        await comidasWeekService.update(plannedWeek.id, promotedWeek);
-        setCurrentWeek(promotedWeek);
-        
-        // Update week history: remove planned week, add completed week
-        setWeekHistory(prev => [...prev.filter(week => week.id !== plannedWeek.id), completedWeek]);
-      } else {
-        // No planned week to promote
-        setCurrentWeek(null);
-        
-        // Update week history: add completed week
-        setWeekHistory(prev => [...prev, completedWeek]);
-      }
-    } catch (error) {
-      console.error('Failed to complete week:', error);
-      throw error;
-    }
-  }, [currentWeek, weekHistory]);
-
-  const archiveWeek = useCallback(async (weekId: string): Promise<void> => {
-    try {
-      const weekToArchive = weekHistory.find(week => week.id === weekId);
-      if (!weekToArchive) return;
-
-      const archivedWeek = { ...weekToArchive, status: 'archived' as const, updatedAt: new Date() };
-      
-      // Persist the update
-      await comidasWeekService.update(weekId, archivedWeek);
-      setWeekHistory(prev =>
-        prev.map(week =>
-          week.id === weekId ? archivedWeek : week
-        )
-      );
-    } catch (error) {
-      console.error('Failed to archive week:', error);
-      throw error;
-    }
-  }, [weekHistory]);
+    loadWeeks();
+  }, []);
 
   const dismissCeremony = useCallback(() => {
     setShowCompletionCeremony(false);
@@ -384,6 +174,70 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       throw error;
     }
   }, [completedWeekData, currentWeek, createWeek, dismissCeremony]);
+
+  const completeWeek = useCallback(async (): Promise<void> => {
+    if (!currentWeek) return;
+
+    try {
+      const completedWeek: ComidasWeek = {
+        ...currentWeek,
+        status: 'archived',
+        completedAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      // Save the completed week
+      await comidasWeekService.update(currentWeek.id, completedWeek);
+      
+      // Update state
+      setWeekHistory(prev => [...prev, completedWeek]);
+      setCurrentWeek(null);
+      
+      // Show ceremony with the completed week data
+      setCompletedWeekData(completedWeek);
+      setShowCompletionCeremony(true);
+    } catch (error) {
+      console.error('Failed to complete week:', error);
+      throw error;
+    }
+  }, [currentWeek]);
+
+  const archiveWeek = useCallback(async (weekId: string): Promise<void> => {
+    try {
+      // Get the specific week to archive
+      const weekToArchive = currentWeek?.id === weekId ? 
+        currentWeek : 
+        weekHistory.find(week => week.id === weekId);
+      
+      if (!weekToArchive) {
+        throw new Error(`Week with ID ${weekId} not found`);
+      }
+
+      const archivedWeek: ComidasWeek = {
+        ...weekToArchive,
+        status: 'archived',
+        updatedAt: new Date()
+      };
+
+      // Save the archived week
+      await comidasWeekService.update(weekId, archivedWeek);
+      
+      // Update state based on which week was archived
+      if (currentWeek?.id === weekId) {
+        // If archiving current week, set current to null
+        setCurrentWeek(null);
+        setWeekHistory(prev => [...prev, archivedWeek]);
+      } else {
+        // If archiving a week in history, update history
+        setWeekHistory(prev => 
+          prev.map(week => week.id === weekId ? archivedWeek : week)
+        );
+      }
+    } catch (error) {
+      console.error('Failed to archive week:', error);
+      throw error;
+    }
+  }, [currentWeek, weekHistory]);
 
   // Helper function to find and update a week
   const findAndUpdateWeek = useCallback((weekId: string, updater: (week: ComidasWeek) => ComidasWeek): ComidasWeek | null => {
@@ -629,28 +483,32 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     loading,
     showCompletionCeremony,
     completedWeekData,
+    
+    // Week Management 
     createWeek,
-    addMeal,
-    toggleMealComplete,
-    updateMeal,
-    deleteMeal,
-    reorderMeals,
     completeWeek,
     archiveWeek,
-    setCurrentWeek,
-    updateWeekTitle,
-    dismissCeremony,
-    proceedToNextWeek,
-    addMealToWeek,
-    toggleMealCompleteInWeek,
-    updateMealInWeek,
-    deleteMealFromWeek,
-    reorderMealsInWeek,
-    updateWeekTitleById,
+    updateWeekTitle: updateWeekTitleById,
+    
+    // Meal Operations (all require explicit weekId)
+    addMeal: addMealToWeek,
+    updateMeal: updateMealInWeek,
+    deleteMeal: deleteMealFromWeek,
+    toggleMealComplete: toggleMealCompleteInWeek,
+    reorderMeals: reorderMealsInWeek,
+    
+    // State Selectors
     getCurrentWeek,
     getPlannedWeek,
     getArchivedWeeks,
-    getLatestArchivedWeek
+    getLatestArchivedWeek,
+    
+    // Ceremony Control
+    dismissCeremony,
+    proceedToNextWeek,
+    
+    // Internal (may be removed in future)
+    setCurrentWeek,
   };
 
   return (

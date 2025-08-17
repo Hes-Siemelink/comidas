@@ -25,7 +25,9 @@ function TestComponent() {
 
   const handleAddMeal = async () => {
     try {
-      await addMeal('Test Meal')
+      if (currentWeek) {
+        await addMeal(currentWeek.id, 'Test Meal')
+      }
     } catch (error) {
       console.error('Add meal error:', error)
     }
@@ -33,7 +35,9 @@ function TestComponent() {
 
   const handleToggleMeal = async (mealId: string) => {
     try {
-      await toggleMealComplete(mealId)
+      if (currentWeek) {
+        await toggleMealComplete(currentWeek.id, mealId)
+      }
     } catch (error) {
       console.error('Toggle meal error:', error)
     }
@@ -41,7 +45,9 @@ function TestComponent() {
 
   const handleDeleteMeal = async (mealId: string) => {
     try {
-      await deleteMeal(mealId)
+      if (currentWeek) {
+        await deleteMeal(currentWeek.id, mealId)
+      }
     } catch (error) {
       console.error('Delete meal error:', error)
     }

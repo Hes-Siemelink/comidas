@@ -12,12 +12,11 @@ interface DraggableListItemProps {
   showDelete?: boolean
   onEdit?: (meal: Comida) => void
   week?: ComidasWeek
-  isCurrentWeek?: boolean
 }
 
-function DraggableListItem({ meal, showDelete = false, onEdit, week, isCurrentWeek = false }: DraggableListItemProps) {
+function DraggableListItem({ meal, showDelete = false, onEdit, week }: DraggableListItemProps) {
   const { t } = useTranslation()
-  const { currentWeek, reorderMeals, reorderMealsInWeek } = usePlanner()
+  const { currentWeek, reorderMeals } = usePlanner()
   const [isAnimating, setIsAnimating] = useState(false)
   const [animationDirection, setAnimationDirection] = useState<'up' | 'down' | null>(null)
   
@@ -58,10 +57,8 @@ function DraggableListItem({ meal, showDelete = false, onEdit, week, isCurrentWe
       setIsAnimating(true)
       
       try {
-        if (isCurrentWeek) {
-          await reorderMeals(currentIndex, currentIndex - 1)
-        } else {
-          await reorderMealsInWeek(targetWeek.id, currentIndex, currentIndex - 1)
+        if (targetWeek) {
+          await reorderMeals(targetWeek.id, currentIndex, currentIndex - 1)
         }
         setTimeout(() => {
           setIsAnimating(false)
@@ -78,10 +75,8 @@ function DraggableListItem({ meal, showDelete = false, onEdit, week, isCurrentWe
       setIsAnimating(true)
       
       try {
-        if (isCurrentWeek) {
-          await reorderMeals(currentIndex, currentIndex + 1)
-        } else {
-          await reorderMealsInWeek(targetWeek.id, currentIndex, currentIndex + 1)
+        if (targetWeek) {
+          await reorderMeals(targetWeek.id, currentIndex, currentIndex + 1)
         }
         setTimeout(() => {
           setIsAnimating(false)
@@ -133,7 +128,6 @@ function DraggableListItem({ meal, showDelete = false, onEdit, week, isCurrentWe
             showDelete={showDelete}
             onEdit={onEdit}
             week={week}
-            isCurrentWeek={isCurrentWeek}
           />
         </Box>
       </HStack>

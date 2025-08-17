@@ -97,7 +97,8 @@ This structure creates a collaborative AI development team where each agent has 
 - When you check all meals of current week, you get the ceremony pup up and Current is moved to archive. However, then a new week is created in current, whereas we should move the week that is currently planned into current
 - If there is no Planned, Current should be empty.
 - If you press Plan Next Week, you will get a new week.
-- When you press View Archive, you first see the old week in completed under Current and it disappears when you refresh the browser.
+- When you press View Archive, you first see the old week in completed under Current and it disappears when you refresh the browser or navigate away and back.
+- The other button on the Congratulations screen still says "View archive" but goes to Current. Just remove this button, problem solved
 
 ## DEBUGGING
 
@@ -113,7 +114,7 @@ This structure creates a collaborative AI development team where each agent has 
   - Add all files.
   - Use `git status` to see the changes.
   - Distill a good commit message based on the changes. If there is not much to say, then keep it short.
-  - Ignore files from `specstory`.
+  - Ignore all files from `specstory`.
   - Ensure the commit is made from the correct directory (e.g., `comidas`).
 - If there is not much to say, then keep it short.
 
@@ -136,6 +137,11 @@ This structure creates a collaborative AI development team where each agent has 
   - Family member management
   - Meal-recipe linking improvements
   - Basic recipe database implementation
+  - refactor-planner-context-api.md - Tackles the 20+ function bloat in PlannerContext
+  - improve-component-dependency-injection.md - Addresses component coupling issues
+  - standardize-week-transition-logic.md - Fixes completion flow inconsistencies
+  - code-quality-internal-review.md - File-by-file code improvements
+  - enhance-testing-architecture.md - Aligns tests with tests with architecture
 
 - **doing/**: Tracks work in progress.
 
@@ -167,6 +173,8 @@ This structure creates a collaborative AI development team where each agent has 
   1. `import { ChakraProvider, defaultSystem } from '@chakra-ui/react'`
   2. `<ChakraProvider value={defaultSystem}>`
 - **NEVER USE 'npm test'. Always use "npm run test:run"**
+- **Always run TypeScript compilation during our build process.**
+- Add a type-check script for development. For example: `"type-check": "tsc --noEmit"`
 
 ## CODE REVIEW GUIDELINES
 - UI components should be designed as potentially reusable components that receive their dependencies through props rather than directly coupling to domain-specific contexts.
@@ -181,6 +189,7 @@ Avoid function coupling.
 *   Hard-coded dependencies on particular data instances
 *   Components that only work in certain modes/states
 *   Function names that don't accurately reflect their limitations
+*   Functions that use either a prop or a context variable to determine behavior instead of a single injected callback
 
 #### Real-World Example:
 
