@@ -3636,7 +3636,110 @@ Before we commit, this is a similar case of coupling causing bugs, but now on a 
 
 _**Assistant**_
 
-You're absolutely right! This is a perfect example of function coupling causing bugs. The `updateWeekTitle` function was tightly coupled to `currentWeek`, making it unusable for planned weeks. Let me update the code review guidelines to include function coupling patterns. 
+You're absolutely right! This is a perfect example of function coupling causing bugs. The `updateWeekTitle` function was tightly coupled to `currentWeek`, making it unusable for planned weeks. Let me update the code review guidelines to include function coupling patterns. Now let me add a section about function coupling anti-patterns: 
+```
+
+```
+Now let me add specific detection patterns to the anti-patterns section: Let me add a real-world example section showing how to detect function coupling issues: 
+```
+
+```
+Now let me add specific review questions to help catch these issues: 
+```
+
+```
+Perfect! Now let me commit these important fixes and documentation improvements: Excellent! I've successfully:
+
+## ✅ Fixed the Planned Week Title Editing Bug
+
+**Root Cause**: The `WeekDisplay` component was using `updateWeekTitle()` which is hard-coded to only update the current week, causing planned week title edits to fail silently.
+
+**Solution**: Replaced `updateWeekTitle(title)` with `updateWeekTitleById(week.id, title)` to work with any week regardless of its status.
+
+## ✅ Enhanced Code Review Guidelines
+
+I've significantly improved the `code-review.md` file with:
+
+1. **New "Function Design Principles" section** documenting coupling anti-patterns
+2. **Real-world example** using the exact bug we just fixed as a cautionary tale
+3. **Specific review questions** to catch similar coupling issues in the future
+4. **Before/after code examples** showing the problem and solution
+
+The updated guidelines now include detection patterns for:
+- Functions that assume specific context state
+- Hard-coded dependencies on particular data instances
+- Components that only work in certain modes/states
+- Function names that don't accurately reflect their limitations
+
+This documentation will help prevent similar coupling bugs in the future by making reviewers specifically look for these patterns. The planned week title editing now works correctly, and we have better architectural guidelines to catch these issues early! 🎉
+
+---
+
+_**User**_
+
+Now we still have the problem that if you check all meals of current week, when you get the congratulations screen that says "Congratulations! You've completed your week.", then the logic is off. Expected behavior is that Planned should become Current and if there is no Planned, Current should be empty. Current behavior is that when you press Plan Next Week, you will get a new week. And current Planned stays in Planned. If you press View Archive, you first see the old week in completed under Current and it disappears when you refresh the browser.
+
+---
+
+_**Assistant**_
+
+I see the issue! The week completion logic isn't properly handling the transition of states. Let me investigate the current week completion flow to understand what's happening. Now let me search for the week completion ceremony and completeWeek function to understand the current flow: Let me examine the PlannerContext's completeWeek function and the WeekCompletionCeremony component to understand the current flow: Now let me look at the WeekCompletionCeremony component to see how the "Plan Next Week" button works: Now let me examine the proceedToNextWeek function: I found the issue! The problem is in the week completion flow. There are two different functions being used:
+
+1. **`completeWeek()`** - This function correctly handles the planned→current transition when you manually complete a week (via "Complete Week" button)
+2. **`proceedToNextWeek()`** - This function is called from the ceremony "Plan Next Week" button and **always creates a new week**, ignoring any planned weeks
+
+Additionally, there's also an automatic completion detection that happens when all meals are checked off, but it's using a different path.
+
+Let me examine the completion ceremony trigger: I see the issue now! There are **TWO different paths to completion**:
+
+1. **Automatic completion** (when all meals are checked) - line 178, 444
+2. **Manual completion** (via "Complete Week" button) - uses `completeWeek()`
+
+The automatic completion path triggers the ceremony but doesn't properly handle the planned→current transition. Let me check what happens at line 444: I see the problem! The automatic completion path:
+
+1. Sets the current week to `status: 'completed'` 
+2. Shows the ceremony
+3. But **doesn't handle planned→current transition** until the user clicks "Plan Next Week"
+
+However, the `proceedToNextWeek()` function **ignores planned weeks** and always creates a new week.
+
+Let me also check what happens at line 178: The issue is clear now. I need to fix the `proceedToNextWeek()` function to use the same logic as `completeWeek()` for handling planned week promotion. Let me update it: 
+```
+
+```
+But there's still another issue. When you complete all meals (automatic completion), the current week gets marked as `status: 'completed'` but this breaks the navigation system since the week status is neither 'current' nor 'planned' nor 'archived'. Let me also fix this by making the automatic completion trigger the same flow as manual completion.
+
+However, I need to be careful here since the automatic completion already handles the ceremony trigger. Let me check how the manual completion interacts with the ceremony: I see there's already a 'completed' status in use. The issue is that automatic completion sets status to 'completed' but the ceremony "Plan Next Week" button should handle the same planned→current transition. 
+
+However, I notice that when you check "View Archive", it shows the completed week under "Current" temporarily. This suggests there's an issue with the status transition timing.
+
+Let me also check if there's a timing issue where the automatic completion creates a 'completed' status week that temporarily shows in Current before being moved to archive. Let me check the WeekNavigation component: Perfect! I can see that `getArchivedWeeks()` correctly filters for both `'completed'` and `'archived'` status. So the temporary appearance of the completed week in Current is expected since the week gets marked as 'completed' during the ceremony.
+
+But here's the real issue: **The week with status 'completed' should never show up in the Current section**. Let me check how the WeekDisplay component filters for current weeks: Let me check what the WeekDisplay component shows when viewing Current status: I found it! The issue is in the `determineWeekToDisplay()` function. When `viewingStatus` is 'current', it returns `currentWeek` from the context. But after automatic completion, `currentWeek` has status 'completed', not 'current'. This is why the completed week temporarily shows in the Current section.
+
+Let me see what `currentWeek` gets set to during automatic completion: I see! `getCurrentWeek()` is a selector function. Let me check its implementation: Ah! There's the issue. The `getCurrentWeek()` selector just returns `currentWeek`, but after automatic completion, `currentWeek` has status 'completed', not 'current'.
+
+This is a fundamental architecture problem. The `currentWeek` state variable should **always** represent the actual current week (status: 'current'), not a completed week.
+
+When automatic completion happens, the week should immediately transition through the same logic as manual completion. Let me fix this by updating the automatic completion logic to use the same flow as `completeWeek()`: I need to replace this automatic completion logic with a call to the same completion flow but **without** immediate planned→current transition. The ceremony should handle that.
+
+Let me update the automatic completion to prepare for ceremony but not do the transition: 
+```
+
+```
+I also need to fix the other instance of automatic completion in the `toggleMealCompleteInWeek` function: [object Object]
+
+---
+
+_**User**_
+
+@agent Continue: "Continue to iterate?"
+
+---
+
+_**Assistant**_
+
+I need to apply the same fix to this function as 
 
 ---
 

@@ -173,7 +173,32 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
         };
         
         await comidasWeekService.update(currentWeek.id, completedWeek);
-        setCurrentWeek(completedWeek);
+        
+        // Find if there's a planned week to promote
+        const plannedWeek = weekHistory.find(week => week.status === 'planned');
+        
+        if (plannedWeek) {
+          // Promote planned week to current immediately
+          const promotedWeek: ComidasWeek = {
+            ...plannedWeek,
+            status: 'current',
+            updatedAt: new Date()
+          };
+          await comidasWeekService.update(plannedWeek.id, promotedWeek);
+          setCurrentWeek(promotedWeek);
+          
+          // Update week history: remove planned week, add completed week
+          setWeekHistory(prev => [
+            ...prev.filter(week => week.id !== plannedWeek.id), 
+            completedWeek
+          ]);
+        } else {
+          // No planned week - set current to null
+          setCurrentWeek(null);
+          // Update week history: add completed week
+          setWeekHistory(prev => [...prev, completedWeek]);
+        }
+        
         setCompletedWeekData(completedWeek);
         setShowCompletionCeremony(true);
       }
@@ -330,7 +355,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     if (!completedWeekData) return;
 
     try {
-      // Archive the completed week
+      // Archive the completed week (update from 'completed' to 'archived')
       const archivedWeek = { 
         ...completedWeekData, 
         status: 'archived' as const, 
@@ -339,16 +364,18 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       
       await comidasWeekService.update(completedWeekData.id, archivedWeek);
       
-      // Update weekHistory
+      // Update weekHistory to replace completed week with archived week
       setWeekHistory(prev =>
         prev.map(week =>
           week.id === completedWeekData.id ? archivedWeek : week
         )
       );
 
-      // Create a new current week
-      const newWeek = await createWeek('current', 'New Week');
-      setCurrentWeek(newWeek);
+      // If there's no current week, create a new one
+      if (!currentWeek) {
+        const newWeek = await createWeek('current', 'New Week');
+        setCurrentWeek(newWeek);
+      }
       
       // Dismiss ceremony
       dismissCeremony();
@@ -356,7 +383,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       console.error('Failed to proceed to next week:', error);
       throw error;
     }
-  }, [completedWeekData, createWeek, dismissCeremony]);
+  }, [completedWeekData, currentWeek, createWeek, dismissCeremony]);
 
   // Helper function to find and update a week
   const findAndUpdateWeek = useCallback((weekId: string, updater: (week: ComidasWeek) => ComidasWeek): ComidasWeek | null => {
@@ -439,7 +466,32 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
           };
           
           await comidasWeekService.update(weekId, completedWeek);
-          setCurrentWeek(completedWeek);
+          
+          // Find if there's a planned week to promote
+          const plannedWeek = weekHistory.find(week => week.status === 'planned');
+          
+          if (plannedWeek) {
+            // Promote planned week to current immediately
+            const promotedWeek: ComidasWeek = {
+              ...plannedWeek,
+              status: 'current',
+              updatedAt: new Date()
+            };
+            await comidasWeekService.update(plannedWeek.id, promotedWeek);
+            setCurrentWeek(promotedWeek);
+            
+            // Update week history: remove planned week, add completed week
+            setWeekHistory(prev => [
+              ...prev.filter(week => week.id !== plannedWeek.id), 
+              completedWeek
+            ]);
+          } else {
+            // No planned week - set current to null
+            setCurrentWeek(null);
+            // Update week history: add completed week
+            setWeekHistory(prev => [...prev, completedWeek]);
+          }
+          
           setCompletedWeekData(completedWeek);
           setShowCompletionCeremony(true);
           return completedWeek;

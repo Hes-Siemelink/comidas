@@ -94,6 +94,10 @@ This structure creates a collaborative AI development team where each agent has 
 - The Meal List must be editable on Planned. It should be editable.
 - On Planned, the Meal List editor must add meals. If you type a name and press enter, the behavior should be the same as on Current
 - Remove the badges from Current and Planned. There is always at most 1, so it doesn't add value
+- When you check all meals of current week, you get the ceremony pup up and Current is moved to archive. However, then a new week is created in current, whereas we should move the week that is currently planned into current
+- If there is no Planned, Current should be empty.
+- If you press Plan Next Week, you will get a new week.
+- When you press View Archive, you first see the old week in completed under Current and it disappears when you refresh the browser.
 
 ## DEBUGGING
 
@@ -163,3 +167,52 @@ This structure creates a collaborative AI development team where each agent has 
   1. `import { ChakraProvider, defaultSystem } from '@chakra-ui/react'`
   2. `<ChakraProvider value={defaultSystem}>`
 - **NEVER USE 'npm test'. Always use "npm run test:run"**
+
+## CODE REVIEW GUIDELINES
+- UI components should be designed as potentially reusable components that receive their dependencies through props rather than directly coupling to domain-specific contexts.
+
+### Function Design Principles
+
+Avoid function coupling.
+
+#### Detection Patterns:
+
+*   Functions that assume specific context state
+*   Hard-coded dependencies on particular data instances
+*   Components that only work in certain modes/states
+*   Function names that don't accurately reflect their limitations
+
+#### Real-World Example:
+
+The `updateWeekTitle` function was tightly coupled to `currentWeek`, making it unusable for planned weeks.
+
+```typescript
+// ❌ Anti-pattern: Function only works for current week
+const updateWeekTitle = async (title: string) => {
+  if (currentWeek) {
+    const updatedWeek = { ...currentWeek, title };
+    await comidasWeekService.update(currentWeek.id, updatedWeek);
+    setCurrentWeek(updatedWeek);
+  }
+};
+
+// ✅ Good: Function works for any week
+const updateWeekTitleById = async (weekId: string, title: string) => {
+  const weekToUpdate = weekHistory.find((week) => week.id === weekId) || currentWeek;
+  if (weekToUpdate) {
+    const updatedWeek = { ...weekToUpdate, title };
+    await comidasWeekService.update(weekId, updatedWeek);
+    setCurrentWeek(updatedWeek);
+    setWeekHistory((prev) =>
+      prev.map((w) => (w.id === weekId ? { ...w, title } : w))
+    );
+  }
+};
+```
+
+#### Review Questions:
+
+*   Does the function assume it's only operating on the current week?
+*   Can this function work with any week object, or is it limited to a specific week?
+*   Is the function name misleading or too specific, given its actual behavior?
+*   Does a component use multiple functions, when a single injected callback would be preferable?
