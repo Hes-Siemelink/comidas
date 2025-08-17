@@ -95,7 +95,8 @@ const resources = {
           "markIncomplete": "Mark meal as incomplete",
           "assignedTo": "Assigned to: {{name}}",
           "delete": "Delete meal",
-          "confirmDelete": "Delete this meal?"
+          "confirmDelete": "Delete this meal?",
+          "dragHandle": "Drag to reorder meal"
         }
       },
       "cooking": {
@@ -196,7 +197,8 @@ const resources = {
           "markIncomplete": "Marcar comida como incompleta",
           "assignedTo": "Asignada a: {{name}}",
           "delete": "Eliminar comida",
-          "confirmDelete": "¿Eliminar esta comida?"
+          "confirmDelete": "¿Eliminar esta comida?",
+          "dragHandle": "Arrastrar para reordenar comida"
         }
       },
       "cooking": {
@@ -297,7 +299,8 @@ const resources = {
           "markIncomplete": "Maaltijd als onvoltooid markeren",
           "assignedTo": "Toegewezen aan: {{name}}",
           "delete": "Maaltijd verwijderen",
-          "confirmDelete": "Deze maaltijd verwijderen?"
+          "confirmDelete": "Deze maaltijd verwijderen?",
+          "dragHandle": "Sleep om maaltijd te herordenen"
         }
       },
       "cooking": {

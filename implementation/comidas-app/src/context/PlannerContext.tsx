@@ -13,6 +13,7 @@ export interface PlannerState {
   toggleMealComplete: (mealId: string) => Promise<void>;
   updateMeal: (mealId: string, updates: Partial<Comida>) => Promise<void>;
   deleteMeal: (mealId: string) => Promise<void>;
+  reorderMeals: (startIndex: number, endIndex: number) => Promise<void>;
   completeWeek: () => Promise<void>;
   archiveWeek: (weekId: string) => Promise<void>;
   setCurrentWeek: (week: ComidasWeek | null) => void;
@@ -175,6 +176,37 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [currentWeek]);
 
+  const reorderMeals = useCallback(async (startIndex: number, endIndex: number): Promise<void> => {
+    if (!currentWeek) return;
+
+    try {
+      const meals = [...currentWeek.meals].sort((a, b) => a.order - b.order);
+      
+      // Move the item from startIndex to endIndex
+      const [removed] = meals.splice(startIndex, 1);
+      meals.splice(endIndex, 0, removed);
+      
+      // Update order values
+      const reorderedMeals = meals.map((meal, index) => ({
+        ...meal,
+        order: index
+      }));
+
+      const updatedWeek: ComidasWeek = {
+        ...currentWeek,
+        meals: reorderedMeals,
+        updatedAt: new Date()
+      };
+
+      // Persist the update
+      await comidasWeekService.update(currentWeek.id, updatedWeek);
+      setCurrentWeek(updatedWeek);
+    } catch (error) {
+      console.error('Failed to reorder meals:', error);
+      throw error;
+    }
+  }, [currentWeek]);
+
   const completeWeek = useCallback(async (): Promise<void> => {
     if (!currentWeek) return;
 
@@ -225,6 +257,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     toggleMealComplete,
     updateMeal,
     deleteMeal,
+    reorderMeals,
     completeWeek,
     archiveWeek,
     setCurrentWeek

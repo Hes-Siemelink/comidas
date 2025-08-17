@@ -7,14 +7,35 @@ import {
   Badge
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import type { DragEndEvent } from '@dnd-kit/core'
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 import { usePlanner } from '../../context/PlannerContext'
 import AccessibleButton from '../ui/AccessibleButton'
 import QuickPlanningForm from './QuickPlanningForm'
-import CheckableListItem from './CheckableListItem'
+import DraggableListItem from './DraggableListItem'
 
 function WeekPlanner() {
   const { t } = useTranslation()
-  const { currentWeek, loading, createWeek, completeWeek } = usePlanner()
+  const { currentWeek, loading, createWeek, completeWeek, reorderMeals } = usePlanner()
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
 
   const handleCreateWeek = async () => {
     try {
@@ -30,6 +51,23 @@ function WeekPlanner() {
         await completeWeek()
       } catch (error) {
         console.error('Failed to complete week:', error)
+      }
+    }
+  }
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (!over || !currentWeek) return
+
+    const oldIndex = currentWeek.meals.findIndex((meal) => meal.id === active.id)
+    const newIndex = currentWeek.meals.findIndex((meal) => meal.id === over.id)
+
+    if (oldIndex !== newIndex) {
+      try {
+        await reorderMeals(oldIndex, newIndex)
+      } catch (error) {
+        console.error('Failed to reorder meals:', error)
       }
     }
   }
@@ -134,16 +172,27 @@ function WeekPlanner() {
           {t('planner.week.mealList', 'Meal List')}
         </Heading>
         <VStack gap={3} align="stretch">
-          {/* Existing meals */}
-          {currentWeek.meals
-            .sort((a, b) => a.order - b.order)
-            .map((meal) => (
-              <CheckableListItem
-                key={meal.id}
-                meal={meal}
-                showDelete={true}
-              />
-            ))}
+          {/* Existing meals with drag-and-drop */}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={currentWeek.meals.map(meal => meal.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {currentWeek.meals
+                .sort((a, b) => a.order - b.order)
+                .map((meal) => (
+                  <DraggableListItem
+                    key={meal.id}
+                    meal={meal}
+                    showDelete={true}
+                  />
+                ))}
+            </SortableContext>
+          </DndContext>
           
           {/* Quick entry form at the bottom */}
           <QuickPlanningForm />
