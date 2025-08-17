@@ -82,10 +82,10 @@ This structure creates a collaborative AI development team where each agent has 
 - In "Browse weeks" make the order Completed (Archived) - Current - Planned. Ensure translations are available for Spanish and Dutch.
 - The Plan Ahead button must be removed.
 - The week browser ("Current weeks", "Planned weeks") should only be on Completed (Archived).
-- The Create new week button must be displayed if there is no week in Current / Planned.
+- Make sure Create new week button is displayed if there is no week in Current / Planned
 - The Planned week must be editable, just like the Current week. It should be the same behavior to avoid surprises by the user and simplify implementation. That means that you can also check meals (although they are in the future!).
 - After completing the current week, the planned week should become the current week.
-- The "No current week available" message should be removed from Archive and Planned.
+- Remove the message "No current week available" from Archive and Planned.
 - On Planned, show the "Create New Week" button if there is currently no Planned week
 - When completing the current week, I want to stay on the current week and I want to see the week that was previously in Planned and is now current.
 - The archived section should be named Completed. Check all code and UI to use Completed.

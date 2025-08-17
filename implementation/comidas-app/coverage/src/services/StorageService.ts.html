@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">6.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>2/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">6.45% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>2/31</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -131,39 +131,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span></td><td class="text"><pre class="prettyprint lang-js">// Generic storage service interface for CRUD operations
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Generic storage service interface for CRUD operations
 // Designed to support easy migration from localStorage to backend API
 &nbsp;
 export interface StorageService&lt;T&gt; {
@@ -180,47 +180,47 @@ export interface StorageServiceWithSearch&lt;T&gt; extends StorageService&lt;T&g
 }
 &nbsp;
 // Error types for storage operations
-export class StorageError extends Error {
-  public readonly operation: string
-  public readonly storageKey: string
-  public readonly cause?: Error
+export <span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >class StorageError extends Error {</span></span>
+<span class="cstat-no" title="statement not covered" >  public readonly operation: string</span>
+<span class="cstat-no" title="statement not covered" >  public readonly storageKey: string</span>
+<span class="cstat-no" title="statement not covered" >  public readonly cause?: Error</span>
 &nbsp;
-  constructor(
-    message: string,
-    operation: string,
-    storageKey: string,
-    cause?: Error
-  ) {
-    super(message)
-    this.name = 'StorageError'
-    this.operation = operation
-    this.storageKey = storageKey
-    this.cause = cause
-  }
-}
+<span class="cstat-no" title="statement not covered" >  constructor(</span>
+<span class="cstat-no" title="statement not covered" >    message: string,</span>
+<span class="cstat-no" title="statement not covered" >    operation: string,</span>
+<span class="cstat-no" title="statement not covered" >    storageKey: string,</span>
+<span class="cstat-no" title="statement not covered" >    cause?: Error</span>
+<span class="cstat-no" title="statement not covered" >  ) {</span>
+<span class="cstat-no" title="statement not covered" >    super(message)</span>
+<span class="cstat-no" title="statement not covered" >    this.name = 'StorageError'</span>
+<span class="cstat-no" title="statement not covered" >    this.operation = operation</span>
+<span class="cstat-no" title="statement not covered" >    this.storageKey = storageKey</span>
+<span class="cstat-no" title="statement not covered" >    this.cause = cause</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
-export class ValidationError extends Error {
-  public readonly field?: string
-  public readonly value?: unknown
+export <span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >class ValidationError extends Error {</span></span>
+<span class="cstat-no" title="statement not covered" >  public readonly field?: string</span>
+<span class="cstat-no" title="statement not covered" >  public readonly value?: unknown</span>
 &nbsp;
-  constructor(
-    message: string,
-    field?: string,
-    value?: unknown
-  ) {
-    super(message)
-    this.name = 'ValidationError'
-    this.field = field
-    this.value = value
-  }
-}</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >  constructor(</span>
+<span class="cstat-no" title="statement not covered" >    message: string,</span>
+<span class="cstat-no" title="statement not covered" >    field?: string,</span>
+<span class="cstat-no" title="statement not covered" >    value?: unknown</span>
+<span class="cstat-no" title="statement not covered" >  ) {</span>
+<span class="cstat-no" title="statement not covered" >    super(message)</span>
+<span class="cstat-no" title="statement not covered" >    this.name = 'ValidationError'</span>
+<span class="cstat-no" title="statement not covered" >    this.field = field</span>
+<span class="cstat-no" title="statement not covered" >    this.value = value</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-17T19:13:39.486Z
+                at 2025-08-17T19:48:31.459Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

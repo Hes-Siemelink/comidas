@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -85,58 +85,58 @@
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import { Routes, Route } from 'react-router-dom'
-import { Box } from '@chakra-ui/react'
-import Navigation from './Navigation'
-import HomePage from './HomePage'
-import RecipesPage from './RecipesPage'
-import PlannerPage from './PlannerPage'
-import CookingPage from './CookingPage'
+<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { Routes, Route } from 'react-router-dom'<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cstat-no" title="statement not covered" >import { Box } from '@chakra-ui/react'</span>
+<span class="cstat-no" title="statement not covered" >import Navigation from './Navigation'</span>
+<span class="cstat-no" title="statement not covered" >import HomePage from './HomePage'</span>
+<span class="cstat-no" title="statement not covered" >import RecipesPage from './RecipesPage'</span>
+<span class="cstat-no" title="statement not covered" >import PlannerPage from './PlannerPage'</span>
+<span class="cstat-no" title="statement not covered" >import CookingPage from './CookingPage'</span>
 &nbsp;
-function AppRoutes() {
-  return (
-    &lt;Box minH="100vh"&gt;
-      &lt;Navigation /&gt;
-      &lt;Routes&gt;
-        &lt;Route path="/" element={&lt;HomePage /&gt;} /&gt;
-        &lt;Route path="/recipes" element={&lt;RecipesPage /&gt;} /&gt;
-        &lt;Route path="/planner" element={&lt;PlannerPage /&gt;} /&gt;
-        &lt;Route path="/cooking" element={&lt;CookingPage /&gt;} /&gt;
-      &lt;/Routes&gt;
-    &lt;/Box&gt;
+<span class="cstat-no" title="statement not covered" >function AppRoutes() {</span>
+<span class="cstat-no" title="statement not covered" >  return (</span>
+<span class="cstat-no" title="statement not covered" >    &lt;Box minH="100vh"&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;Navigation /&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;Routes&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;Route path="/" element={&lt;HomePage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;Route path="/recipes" element={&lt;RecipesPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;Route path="/planner" element={&lt;PlannerPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >        &lt;Route path="/cooking" element={&lt;CookingPage /&gt;} /&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;/Routes&gt;</span>
+<span class="cstat-no" title="statement not covered" >    &lt;/Box&gt;</span>
   )
-}
+<span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;
-export default AppRoutes</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >export default AppRoutes</span></pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-17T19:13:39.486Z
+                at 2025-08-17T19:48:31.459Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
