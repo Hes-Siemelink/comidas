@@ -17,7 +17,7 @@ function TestComponent() {
 
   const handleCreateWeek = async () => {
     try {
-      await createWeek('Test Week')
+      await createWeek('current', 'Test Week')
     } catch (error) {
       console.error('Create week error:', error)
     }

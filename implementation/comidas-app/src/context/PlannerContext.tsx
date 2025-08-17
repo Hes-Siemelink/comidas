@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { ComidasWeek, Comida } from '../types/schemas';
+import type { ComidasWeek, Comida, WeekStatus } from '../types/schemas';
 import { comidasWeekService } from '../services';
 
 // Define the shape of the planner state
@@ -8,7 +8,7 @@ export interface PlannerState {
   currentWeek: ComidasWeek | null;
   weekHistory: ComidasWeek[];
   loading: boolean;
-  createWeek: (title?: string) => Promise<ComidasWeek>;
+  createWeek: (status?: WeekStatus, title?: string) => Promise<ComidasWeek>;
   addMeal: (title: string) => Promise<void>;
   toggleMealComplete: (mealId: string) => Promise<void>;
   updateMeal: (mealId: string, updates: Partial<Comida>) => Promise<void>;
@@ -64,10 +64,10 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     loadWeeks();
   }, []);
 
-  const createWeek = useCallback(async (title?: string): Promise<ComidasWeek> => {
+  const createWeek = useCallback(async (status: WeekStatus = 'current', title?: string): Promise<ComidasWeek> => {
     try {
-      // Archive any existing current week first
-      if (currentWeek) {
+      // Only archive existing current week if we're creating a new current week
+      if (status === 'current' && currentWeek) {
         const archivedWeek = { ...currentWeek, status: 'archived' as const };
         await comidasWeekService.update(currentWeek.id, archivedWeek);
         setWeekHistory(prev => [...prev, archivedWeek]);
@@ -75,15 +75,22 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
 
       // Create week data without ID (service will generate it)
       const newWeekData = {
-        title: title || `Week ${new Date().toLocaleDateString()}`,
-        status: 'current' as const,
+        title: title || `${status.charAt(0).toUpperCase() + status.slice(1)} Week ${new Date().toLocaleDateString()}`,
+        status: status,
         meals: [],
         mealCount: 0, // Dynamic count, will grow with meals
       };
       
       // Persist the new week and get the complete object with generated ID
       const createdWeek = await comidasWeekService.create(newWeekData);
-      setCurrentWeek(createdWeek);
+      
+      if (status === 'current') {
+        setCurrentWeek(createdWeek);
+      } else {
+        // Add to week history for planned/archived weeks
+        setWeekHistory(prev => [...prev, createdWeek]);
+      }
+      
       return createdWeek;
     } catch (error) {
       console.error('Failed to create week:', error);

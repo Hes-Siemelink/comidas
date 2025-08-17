@@ -1,6 +1,6 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { WeekPlanner } from './planner'
+import { WeekManager } from './planner'
 
 function PlannerPage() {
   const { t } = useTranslation()
@@ -16,8 +16,8 @@ function PlannerPage() {
           </Text>
         </Box>
 
-        {/* Week Planner Component */}
-        <WeekPlanner />
+        {/* Week Manager Component */}
+        <WeekManager />
       </VStack>
     </Box>
   )

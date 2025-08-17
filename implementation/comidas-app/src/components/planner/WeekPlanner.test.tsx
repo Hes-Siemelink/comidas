@@ -1,8 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
-import { I18nextProvider } from 'react-i18next'
 import { PlannerProvider } from '../../context/PlannerContext'
-import i18n from '../../i18n'
 import WeekPlanner from './WeekPlanner'
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (

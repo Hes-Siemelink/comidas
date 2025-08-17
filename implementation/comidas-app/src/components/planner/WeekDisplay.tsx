@@ -27,10 +27,16 @@ import { usePlanner } from '../../context/PlannerContext'
 import AccessibleButton from '../ui/AccessibleButton'
 import QuickPlanningForm from './QuickPlanningForm'
 import DraggableListItem from './DraggableListItem'
+import type { ComidasWeek } from '../../types/schemas'
 
-function WeekPlanner() {
+interface WeekDisplayProps {
+  week: ComidasWeek | null
+  isCurrentWeek: boolean
+}
+
+function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
   const { t } = useTranslation()
-  const { currentWeek, loading, createWeek, completeWeek, reorderMeals, updateWeekTitle } = usePlanner()
+  const { loading, createWeek, completeWeek, reorderMeals, updateWeekTitle } = usePlanner()
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const titleInputRef = useRef<HTMLInputElement>(null)
@@ -39,7 +45,6 @@ function WeekPlanner() {
   // Auto-select text when entering title edit mode
   useEffect(() => {
     if (isEditingTitle && titleInputRef.current) {
-      // Small delay to ensure input is focused before selecting
       setTimeout(() => {
         titleInputRef.current?.select()
       }, 0)
@@ -56,7 +61,6 @@ function WeekPlanner() {
   const handleCreateWeek = async () => {
     try {
       const newWeek = await createWeek()
-      // Automatically enter title edit mode for new weeks
       setEditTitle(newWeek.title || t('planner.week.current', 'Current Week'))
       setIsEditingTitle(true)
     } catch (error) {
@@ -65,7 +69,7 @@ function WeekPlanner() {
   }
 
   const handleCompleteWeek = async () => {
-    if (currentWeek && window.confirm(t('planner.week.confirmComplete', 'Complete this week and archive it?'))) {
+    if (week && window.confirm(t('planner.week.confirmComplete', 'Complete this week and archive it?'))) {
       try {
         await completeWeek()
       } catch (error) {
@@ -77,10 +81,10 @@ function WeekPlanner() {
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (!over || !currentWeek) return
+    if (!over || !week || !isCurrentWeek) return
 
-    const oldIndex = currentWeek.meals.findIndex((meal) => meal.id === active.id)
-    const newIndex = currentWeek.meals.findIndex((meal) => meal.id === over.id)
+    const oldIndex = week.meals.findIndex((meal) => meal.id === active.id)
+    const newIndex = week.meals.findIndex((meal) => meal.id === over.id)
 
     if (oldIndex !== newIndex) {
       try {
@@ -91,8 +95,8 @@ function WeekPlanner() {
     }
   }
 
-  const completedMeals = currentWeek?.meals.filter(meal => meal.completed).length || 0
-  const totalMeals = currentWeek?.mealCount || 0
+  const completedMeals = week?.meals.filter(meal => meal.completed).length || 0
+  const totalMeals = week?.mealCount || 0
   const progressPercent = totalMeals > 0 ? (completedMeals / totalMeals) * 100 : 0
 
   if (loading) {
@@ -105,7 +109,7 @@ function WeekPlanner() {
     )
   }
 
-  if (!currentWeek) {
+  if (!week) {
     return (
       <VStack gap={6} align="stretch">
         <Box textAlign="center">
@@ -138,8 +142,8 @@ function WeekPlanner() {
       <Box bg="white" p={6} borderRadius="lg" border="1px solid" borderColor="gray.200">
         <HStack justify="space-between" align="center" mb={4}>
           <Box>
-            {/* Editable week title */}
-            {isEditingTitle ? (
+            {/* Editable week title - only for current weeks */}
+            {isEditingTitle && isCurrentWeek ? (
               <Input
                 ref={titleInputRef}
                 value={editTitle}
@@ -158,13 +162,12 @@ function WeekPlanner() {
                       await updateWeekTitle(trimmed)
                     }
                     setIsEditingTitle(false)
-                    // Focus the meal input after saving title
                     setTimeout(() => {
                       mealInputRef.current?.focus()
                     }, 100)
                   } else if (e.key === 'Escape') {
                     setIsEditingTitle(false)
-                    setEditTitle(currentWeek.title || t('planner.week.current', 'Current Week'))
+                    setEditTitle(week.title || t('planner.week.current', 'Current Week'))
                   }
                 }}
                 autoFocus
@@ -176,13 +179,13 @@ function WeekPlanner() {
               <HStack 
                 justifyContent="space-between" 
                 alignItems="center"
-                onClick={() => {
-                  setEditTitle(currentWeek.title || t('planner.week.current', 'Current Week'))
+                onClick={isCurrentWeek ? () => {
+                  setEditTitle(week.title || t('planner.week.current', 'Current Week'))
                   setIsEditingTitle(true)
-                }}
-                cursor="pointer"
-                _hover={{ opacity: 0.8 }}
-                title={t('planner.week.editTitle', 'Click to edit title')}
+                } : undefined}
+                cursor={isCurrentWeek ? "pointer" : "default"}
+                _hover={isCurrentWeek ? { opacity: 0.8 } : undefined}
+                title={isCurrentWeek ? t('planner.week.editTitle', 'Click to edit title') : undefined}
                 width="100%"
               >
                 <Heading
@@ -190,23 +193,33 @@ function WeekPlanner() {
                   color="inherit"
                   flex="1"
                 >
-                  {currentWeek.title || t('planner.week.current', 'Current Week')}
+                  {week.title || t('planner.week.current', 'Current Week')}
                 </Heading>
-                <Box
-                  fontSize="lg"
-                  color="gray.500"
-                  _groupHover={{ color: 'gray.700' }}
-                  ml={2}
-                >
-                  ✎
-                </Box>
+                {isCurrentWeek && (
+                  <Box
+                    fontSize="lg"
+                    color="gray.500"
+                    _groupHover={{ color: 'gray.700' }}
+                    ml={2}
+                  >
+                    ✎
+                  </Box>
+                )}
               </HStack>
             )}
-            <Text color="gray.600" fontSize="sm">
-              {t('planner.week.created', 'Created {{date}}', { 
-                date: currentWeek.createdAt.toLocaleDateString() 
-              })}
-            </Text>
+            <HStack gap={2} align="center">
+              <Text color="gray.600" fontSize="sm">
+                {t('planner.week.created', 'Created {{date}}', { 
+                  date: week.createdAt.toLocaleDateString() 
+                })}
+              </Text>
+              <Badge colorScheme={
+                week.status === 'current' ? 'blue' : 
+                week.status === 'planned' ? 'orange' : 'gray'
+              } size="sm">
+                {week.status}
+              </Badge>
+            </HStack>
           </Box>
           
           <Badge 
@@ -236,50 +249,87 @@ function WeekPlanner() {
         </Box>
 
         <HStack gap={3}>
-          <AccessibleButton
-            variant="outline"
-            onClick={handleCompleteWeek}
-            disabled={totalMeals === 0}
-          >
-            {t('planner.week.complete', 'Complete Week')}
-          </AccessibleButton>
+          {isCurrentWeek && (
+            <AccessibleButton
+              variant="outline"
+              onClick={handleCompleteWeek}
+              disabled={totalMeals === 0}
+            >
+              {t('planner.week.complete', 'Complete Week')}
+            </AccessibleButton>
+          )}
+          {week.status === 'archived' && (
+            <Text fontSize="sm" color="gray.500" fontStyle="italic">
+              {t('planner.week.archived', 'This week has been completed and archived')}
+            </Text>
+          )}
+          {week.status === 'planned' && (
+            <Text fontSize="sm" color="orange.600" fontStyle="italic">
+              {t('planner.week.planned', 'This is a planned week for the future')}
+            </Text>
+          )}
         </HStack>
       </Box>
 
-      {/* Combined Meal List with Quick Entry */}
+      {/* Meal List */}
       <Box bg="white" p={6} borderRadius="lg" border="1px solid" borderColor="gray.200">
         <Heading as="h3" size="md" mb={4}>
           {t('planner.week.mealList', 'Meal List')}
         </Heading>
         <VStack gap={3} align="stretch">
-          {/* Existing meals with drag-and-drop */}
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={currentWeek.meals.map(meal => meal.id)}
-              strategy={verticalListSortingStrategy}
+          {/* Existing meals with drag-and-drop (only for current weeks) */}
+          {isCurrentWeek ? (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              {currentWeek.meals
+              <SortableContext
+                items={week.meals.map(meal => meal.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                {week.meals
+                  .sort((a, b) => a.order - b.order)
+                  .map((meal) => (
+                    <DraggableListItem
+                      key={meal.id}
+                      meal={meal}
+                      showDelete={true}
+                    />
+                  ))}
+              </SortableContext>
+            </DndContext>
+          ) : (
+            // Read-only view for planned/archived weeks
+            <>
+              {week.meals
                 .sort((a, b) => a.order - b.order)
                 .map((meal) => (
                   <DraggableListItem
                     key={meal.id}
                     meal={meal}
-                    showDelete={true}
+                    showDelete={false}
                   />
                 ))}
-            </SortableContext>
-          </DndContext>
+            </>
+          )}
           
-          {/* Quick entry form at the bottom */}
-          <QuickPlanningForm ref={mealInputRef} />
+          {/* Quick entry form only for current weeks */}
+          {isCurrentWeek && <QuickPlanningForm ref={mealInputRef} />}
+          
+          {/* Empty state for non-current weeks */}
+          {!isCurrentWeek && week.meals.length === 0 && (
+            <Text color="gray.500" textAlign="center" py={4} fontStyle="italic">
+              {week.status === 'planned' 
+                ? t('planner.week.emptyPlanned', 'No meals planned yet') 
+                : t('planner.week.emptyArchived', 'No meals were recorded')
+              }
+            </Text>
+          )}
         </VStack>
       </Box>
     </VStack>
   )
 }
 
-export default WeekPlanner
+export default WeekDisplay

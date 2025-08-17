@@ -944,3 +944,111 @@ The Product Owner can now quickly validate the feature's key functionality and u
 
 ---
 
+_**User**_
+
+Accepted
+
+---
+
+_**Assistant**_
+
+Great! The editable week titles feature has been accepted by the Product Owner. Let me move the story from "doing" to "done" and commit the changes following the project guidelines. Let me now move the story file to the done folder: Now let me commit all the changes with a proper commit message following the project guidelines: Perfect! 🎉 The editable week titles feature has been successfully completed and accepted! 
+
+## ✅ Story Completion Summary
+
+### What was accomplished:
+- **Full feature implementation** with enhanced user experience
+- **Comprehensive testing** with 106/106 tests passing
+- **Product Owner acceptance** after high-level validation
+- **Story moved to done** following project workflow
+
+### Key deliverables:
+- **Click-to-edit functionality** with monochrome pencil icon
+- **Auto-edit mode** when creating new weeks
+- **Focus management** from title to meal input
+- **Visual consistency** with proper font sizing
+- **Robust validation** and error handling
+- **Complete test coverage** including dedicated editable title tests
+
+### Technical achievements:
+- **Custom editable component** (Chakra UI v3 compatible)
+- **Enhanced UX flow** based on user feedback
+- **Professional styling** with monochrome outline icon
+- **Seamless integration** with existing context and persistence layers
+- **TypeScript compliance** with proper type definitions
+
+The feature is now ready for users to enjoy a much more intuitive and efficient week planning experience! 🍽️✨
+
+---
+
+_**User**_
+
+Let's pick up the week navigation story
+
+---
+
+_**Assistant**_
+
+Great! Let's pick up the week navigation and archive story. First, let me examine the current story to understand the requirements and then move it to the doing folder. Let me see the rest of the story: Now let me move this story to the doing folder to start working on it: Now let me examine the current state of the codebase to understand how weeks are currently managed, particularly looking at the PlannerContext and related services: Let me continue reading the PlannerContext to understand the current week management: Let me continue reading and also check the ComidasWeek type and service to understand the current structure: Now let me check the services directory to understand the current week management: Now let me examine the current WeekPlanner component to see how weeks are currently displayed and managed: Now I understand the current state. Let me analyze what needs to be implemented for week navigation and archive functionality. Looking at the story requirements, I need to:
+
+1. **Week Navigation**: Navigate between current, planned, and archived weeks
+2. **Week Status Management**: Support 'current', 'planned', 'archived' statuses
+3. **Week Completion**: When last meal is completed, move week to archive with ceremony
+4. **Archive Browsing**: Interface to browse archived weeks
+5. **Always ensure there's a "next" planned week available**
+
+Let me start by implementing the core navigation component. First, let me check if there are any existing navigation patterns in the app: Perfect! Now I have a good understanding of the existing navigation patterns. I can see there's already an `AccessibleButton` component with a `navigation` variant that handles active states. Now let me examine the planner-specific components to understand the current week display structure: Now let me look at the complete week header section to understand the current structure: Perfect! Now I have a good understanding of the current structure. Let me create the `WeekNavigation` component that will add navigation functionality while preserving the existing week header. 
+
+Based on the story requirements, I need to:
+
+1. Create a navigation component that allows browsing between current, planned, and archived weeks
+2. Extend PlannerContext to support selecting different weeks to view
+3. Ensure there's always a "next" planned week available
+4. Add completion ceremony when the last meal is completed
+
+Let me start by creating the WeekNavigation component: Let me fix the lint errors by removing unused import and fixing the Select component usage: 
+```
+
+```
+Let me check what select components are available in Chakra UI v3: I see the issue. In Chakra UI v3, the Select component doesn't exist in the way I was trying to use it. Let me simplify the approach and use a native HTML select element styled appropriately, or use a different approach. Let me replace it with a simpler solution using buttons for week selection: 
+```
+
+```
+Good! Now I need to check if the PlannerContext already supports the `createWeek` function with a status parameter. Let me check the current implementation: I see that the current `createWeek` function always creates weeks with 'current' status and archives the previous current week. I need to modify this to support creating weeks with different statuses. Let me examine the rest of the context to understand the full interface: I need to modify the PlannerState interface and createWeek function to support different statuses. Let me also check if there are any type errors I need to fix: Great! The WeekNavigation component is error-free. Now let me update the PlannerContext to support creating weeks with different statuses. I'll modify the interface and implementation: 
+```
+
+```
+Now let me update the createWeek function implementation: 
+```
+
+```
+Now I need to update the existing WeekPlanner calls to createWeek to maintain backward compatibility. Let me check where createWeek is called: I see that the current calls to `createWeek()` without parameters will work with my new signature since I set a default value for the status parameter. Let me now create a new component that integrates the WeekNavigation with the existing WeekPlanner. 
+
+I need to create a higher-level component that manages the selected week state and displays either the navigation or the week details. Let me first modify the PlannerPage to include week navigation: I need to create a new component that manages the navigation and week display. Let me create a `WeekManager` component that integrates both: I need to create the WeekDisplay component. Let me fix the imports first, then create WeekDisplay by extracting functionality from the existing WeekPlanner: [object Object]
+
+---
+
+_**User**_
+
+@agent Continue: "Continue to iterate?"
+
+---
+
+_**Assistant**_
+
+
+```
+
+```
+Now let me create the WeekDisplay component by extracting the display logic from WeekPlanner: Let me continue reading the WeekPlanner to understand the complete structure: Now I understand the complete structure. Let me create the WeekDisplay component by extracting the main display logic from WeekPlanner: I need to check the DraggableListItem interface and fix the errors. Let me first remove the unused variable and check the DraggableListItem props: 
+```
+
+```
+Let me fix these issues. First, let me remove the `setIsNewWeek` calls and check the DraggableListItem interface: 
+```
+
+```
+
+
+---
+

@@ -3,8 +3,7 @@ import {
   HStack, 
   Heading, 
   Text, 
-  Box,
-  Badge
+  Box
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { usePlanner } from '../../context/PlannerContext'
