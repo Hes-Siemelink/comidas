@@ -4,8 +4,10 @@ import {
   Heading, 
   Text, 
   Box,
-  Badge
+  Badge,
+  Input
 } from '@chakra-ui/react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   DndContext,
@@ -28,7 +30,22 @@ import DraggableListItem from './DraggableListItem'
 
 function WeekPlanner() {
   const { t } = useTranslation()
-  const { currentWeek, loading, createWeek, completeWeek, reorderMeals } = usePlanner()
+  const { currentWeek, loading, createWeek, completeWeek, reorderMeals, updateWeekTitle } = usePlanner()
+  const [isEditingTitle, setIsEditingTitle] = useState(false)
+  const [editTitle, setEditTitle] = useState('')
+  const [isNewWeek, setIsNewWeek] = useState(false)
+  const titleInputRef = useRef<HTMLInputElement>(null)
+  const mealInputRef = useRef<HTMLInputElement>(null)
+
+  // Auto-select text when entering title edit mode
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      // Small delay to ensure input is focused before selecting
+      setTimeout(() => {
+        titleInputRef.current?.select()
+      }, 0)
+    }
+  }, [isEditingTitle])
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -39,7 +56,11 @@ function WeekPlanner() {
 
   const handleCreateWeek = async () => {
     try {
-      await createWeek()
+      const newWeek = await createWeek()
+      // Automatically enter title edit mode for new weeks
+      setEditTitle(newWeek.title || t('planner.week.current', 'Current Week'))
+      setIsEditingTitle(true)
+      setIsNewWeek(true)
     } catch (error) {
       console.error('Failed to create week:', error)
     }
@@ -119,9 +140,73 @@ function WeekPlanner() {
       <Box bg="white" p={6} borderRadius="lg" border="1px solid" borderColor="gray.200">
         <HStack justify="space-between" align="center" mb={4}>
           <Box>
-            <Heading as="h2" size="lg">
-              {currentWeek.title || t('planner.week.current', 'Current Week')}
-            </Heading>
+            {/* Editable week title */}
+            {isEditingTitle ? (
+              <Input
+                ref={titleInputRef}
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                onBlur={async () => {
+                  const trimmed = editTitle.trim().slice(0, 50)
+                  if (trimmed) {
+                    await updateWeekTitle(trimmed)
+                  }
+                  setIsEditingTitle(false)
+                  setIsNewWeek(false)
+                }}
+                onKeyDown={async (e) => {
+                  if (e.key === 'Enter') {
+                    const trimmed = editTitle.trim().slice(0, 50)
+                    if (trimmed) {
+                      await updateWeekTitle(trimmed)
+                    }
+                    setIsEditingTitle(false)
+                    setIsNewWeek(false)
+                    // Focus the meal input after saving title
+                    setTimeout(() => {
+                      mealInputRef.current?.focus()
+                    }, 100)
+                  } else if (e.key === 'Escape') {
+                    setIsEditingTitle(false)
+                    setIsNewWeek(false)
+                    setEditTitle(currentWeek.title || t('planner.week.current', 'Current Week'))
+                  }
+                }}
+                autoFocus
+                maxLength={50}
+                fontSize="lg"
+                variant="flushed"
+              />
+            ) : (
+              <HStack 
+                justifyContent="space-between" 
+                alignItems="center"
+                onClick={() => {
+                  setEditTitle(currentWeek.title || t('planner.week.current', 'Current Week'))
+                  setIsEditingTitle(true)
+                }}
+                cursor="pointer"
+                _hover={{ opacity: 0.8 }}
+                title={t('planner.week.editTitle', 'Click to edit title')}
+                width="100%"
+              >
+                <Heading
+                  size="lg"
+                  color="inherit"
+                  flex="1"
+                >
+                  {currentWeek.title || t('planner.week.current', 'Current Week')}
+                </Heading>
+                <Box
+                  fontSize="lg"
+                  color="gray.500"
+                  _groupHover={{ color: 'gray.700' }}
+                  ml={2}
+                >
+                  ✎
+                </Box>
+              </HStack>
+            )}
             <Text color="gray.600" fontSize="sm">
               {t('planner.week.created', 'Created {{date}}', { 
                 date: currentWeek.createdAt.toLocaleDateString() 
@@ -195,7 +280,7 @@ function WeekPlanner() {
           </DndContext>
           
           {/* Quick entry form at the bottom */}
-          <QuickPlanningForm />
+          <QuickPlanningForm ref={mealInputRef} />
         </VStack>
       </Box>
     </VStack>

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, forwardRef } from 'react'
 import { VStack, Input, Text, Box } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { usePlanner } from '../../context/PlannerContext'
@@ -8,23 +8,27 @@ interface QuickPlanningFormProps {
   placeholder?: string
 }
 
-function QuickPlanningForm({ 
-  onComplete, 
-  placeholder 
-}: QuickPlanningFormProps) {
-  const { t } = useTranslation()
-  const { currentWeek, addMeal } = usePlanner()
-  const [currentInput, setCurrentInput] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
+const QuickPlanningForm = forwardRef<HTMLInputElement, QuickPlanningFormProps>(
+  function QuickPlanningForm({ 
+    onComplete, 
+    placeholder 
+  }, externalRef) {
+    const { t } = useTranslation()
+    const { currentWeek, addMeal } = usePlanner()
+    const [currentInput, setCurrentInput] = useState('')
+    const internalRef = useRef<HTMLInputElement>(null)
+    
+    // Use external ref if provided, otherwise use internal ref
+    const inputRef = externalRef || internalRef
 
-  const canAddMore = !!currentWeek // Can always add more meals in dynamic mode
+    const canAddMore = !!currentWeek // Can always add more meals in dynamic mode
 
-  useEffect(() => {
-    // Auto-focus input when component mounts
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [])
+    useEffect(() => {
+      // Auto-focus input when component mounts
+      if (inputRef && 'current' in inputRef && inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, [inputRef])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,7 +40,7 @@ function QuickPlanningForm({
       setCurrentInput('')
       
       // Keep focus on input for rapid entry
-      if (inputRef.current) {
+      if (inputRef && 'current' in inputRef && inputRef.current) {
         inputRef.current.focus()
       }
 
@@ -92,6 +96,6 @@ function QuickPlanningForm({
       </Box>
     </VStack>
   )
-}
+})
 
 export default QuickPlanningForm

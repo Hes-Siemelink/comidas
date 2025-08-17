@@ -66,6 +66,9 @@ This structure creates a collaborative AI development team where each agent has 
 - The Product Owner is not required to review code for acceptance. Acceptance focuses on context integration and TypeScript typing.
 - All tests must pass before acceptance (this is assumed).
 - Architect Agent review is optional.
+- When creating a new week in the meal planner, the user should automatically be placed in title edit mode with the auto-generated title selected. Pressing Enter should save the title and focus should then move to the 'add meal' input box.
+- The week title should not be a blue hyperlink. Instead, a right-aligned pencil icon (✎) should be used for editing.
+- When editing the week title, the text size and style must be the same as in display mode, and the font weight should not be bold.
 
 ## DEBUGGING
 
@@ -75,6 +78,12 @@ This structure creates a collaborative AI development team where each agent has 
 - When committing, use the `--author` flag to identify the agent.
 - When the Coder Agent needs to amend a commit, they should keep the original message.
 - When moving a story to "done", commit all files from the root directory.
+- When committing, the Coder Agent must:
+  - Add all files.
+  - Use `git status` to see the changes.
+  - Distill a good commit message based on the changes.
+  - Ignore files from `specstory`.
+  - Ensure the commit is made from the correct directory (e.g., `comidas`).
 
 ## AGILE INTEGRATION
 
@@ -94,12 +103,10 @@ This structure creates a collaborative AI development team where each agent has 
 - **todo/**: Contains upcoming features and enhancements, such as:
   - Family member management
   - Week navigation and archive
-  - Comidas week planning
   - Meal-recipe linking improvements
   - Basic recipe database implementation
 
-- **doing/**: Tracks work in progress. Example:
-  - Setting up React context state management (current focus)
+- **doing/**: Tracks work in progress.
 
 - **done/**: Lists completed stories, including:
   - Chakra UI and i18next integration
@@ -108,6 +115,7 @@ This structure creates a collaborative AI development team where each agent has 
   - Project structure initialization
   - Basic routing, data persistence, icon system, and testing setup
   - Drag and drop meal ordering feature
+  - Add editable week titles
 
 - **later/**: Holds deferred or lower-priority ideas, such as:
   - Cooking assistant home section
@@ -117,3 +125,13 @@ This structure creates a collaborative AI development team where each agent has 
 ## TESTING
 
 - When implementing new context functionality, ensure existing tests cover the new functionality by updating test wrappers to include the relevant context providers. New test files may not be needed if existing tests can be adapted.
+- Before marking a story as complete, ensure that new features have dedicated tests covering their functionality. For example, the editable week title feature requires tests for:
+    - Rendering the editable week title
+    - Editing the title and saving
+    - Validation (length, fallback)
+    - Persistence via PlannerContext
+- New features must have dedicated tests covering their functionality.
+- When writing tests that use Chakra UI components and the `ChakraProvider`, tests should import WeekPlanner from the index file, just like PlannerPage does. For example: `import WeekPlanner from './planner'`
+- When using `ChakraProvider` in tests, use the following pattern:
+  1. `import { ChakraProvider, defaultSystem } from '@chakra-ui/react'`
+  2. `<ChakraProvider value={defaultSystem}>`

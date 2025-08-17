@@ -17,6 +17,7 @@ export interface PlannerState {
   completeWeek: () => Promise<void>;
   archiveWeek: (weekId: string) => Promise<void>;
   setCurrentWeek: (week: ComidasWeek | null) => void;
+  updateWeekTitle: (title: string) => Promise<void>;
 }
 
 const PlannerContext = createContext<PlannerState | undefined>(undefined);
@@ -25,6 +26,14 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
   const [currentWeek, setCurrentWeek] = useState<ComidasWeek | null>(null);
   const [weekHistory, setWeekHistory] = useState<ComidasWeek[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const updateWeekTitle = useCallback(async (title: string) => {
+    if (!currentWeek) return;
+    const newTitle = title.trim().slice(0, 50);
+    const updatedWeek = { ...currentWeek, title: newTitle || undefined, updatedAt: new Date() };
+    setCurrentWeek(updatedWeek);
+    await comidasWeekService.update(updatedWeek.id, updatedWeek);
+  }, [currentWeek]);
 
   const generateId = useCallback(() => {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -260,7 +269,8 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     reorderMeals,
     completeWeek,
     archiveWeek,
-    setCurrentWeek
+    setCurrentWeek,
+    updateWeekTitle
   };
 
   return (
