@@ -44,9 +44,8 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
     createWeek, 
     completeWeek, 
     reorderMeals, 
-    updateWeekTitleById,
-    addMeal,
-    addMealToWeek
+    updateWeekTitle,
+    addMeal
   } = usePlanner()
   
   // For archived section, we need to track which week is selected
@@ -124,7 +123,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
 
     if (oldIndex !== newIndex) {
       try {
-        await reorderMeals(oldIndex, newIndex)
+        await reorderMeals(week.id, oldIndex, newIndex)
       } catch (error) {
         console.error('Failed to reorder meals:', error)
       }
@@ -219,7 +218,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                 onBlur={async () => {
                   const trimmed = editTitle.trim().slice(0, 50)
                   if (trimmed && week) {
-                    await updateWeekTitleById(week.id, trimmed)
+                    await updateWeekTitle(week.id, trimmed)
                   }
                   setIsEditingTitle(false)
                 }}
@@ -227,7 +226,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                   if (e.key === 'Enter') {
                     const trimmed = editTitle.trim().slice(0, 50)
                     if (trimmed && week) {
-                      await updateWeekTitleById(week.id, trimmed)
+                      await updateWeekTitle(week.id, trimmed)
                     }
                     setIsEditingTitle(false)
                     setTimeout(() => {
@@ -388,11 +387,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
               ref={mealInputRef} 
               week={week}
               onAddMeal={async (mealTitle: string) => {
-                if (isCurrentWeek) {
-                  await addMeal(mealTitle)
-                } else {
-                  await addMealToWeek(week.id, mealTitle)
-                }
+                await addMeal(week.id, mealTitle)
               }}
             />
           )}
