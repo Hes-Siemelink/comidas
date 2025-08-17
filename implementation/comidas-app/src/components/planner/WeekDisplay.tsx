@@ -27,7 +27,7 @@ import { usePlanner } from '../../context/PlannerContext'
 import AccessibleButton from '../ui/AccessibleButton'
 import QuickPlanningForm from './QuickPlanningForm'
 import DraggableListItem from './DraggableListItem'
-import type { ComidasWeek, WeekStatus } from '../../types/schemas'
+import type { ComidasWeek, WeekStatus, Comida } from '../../types/schemas'
 
 interface WeekDisplayProps {
   viewingStatus: WeekStatus
@@ -45,7 +45,9 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
     completeWeek, 
     reorderMeals, 
     updateWeekTitle,
-    addMeal
+    addMeal,
+    toggleMealComplete,
+    deleteMeal
   } = usePlanner()
   
   // For archived section, we need to track which week is selected
@@ -110,6 +112,25 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
       } catch (error) {
         console.error('Failed to complete week:', error)
       }
+    }
+  }
+
+  // Callback functions for meal operations
+  const handleMealToggleComplete = async (meal: Comida) => {
+    if (week) {
+      await toggleMealComplete(week.id, meal.id)
+    }
+  }
+
+  const handleMealDelete = async (meal: Comida) => {
+    if (week) {
+      await deleteMeal(week.id, meal.id)
+    }
+  }
+
+  const handleMealReorder = async (fromIndex: number, toIndex: number) => {
+    if (week) {
+      await reorderMeals(week.id, fromIndex, toIndex)
     }
   }
 
@@ -357,12 +378,16 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
               >
                 {week.meals
                   .sort((a, b) => a.order - b.order)
-                  .map((meal) => (
+                  .map((meal, index) => (
                     <DraggableListItem
                       key={meal.id}
                       meal={meal}
-                      week={week}
                       showDelete={true}
+                      onToggleComplete={handleMealToggleComplete}
+                      onDelete={handleMealDelete}
+                      onReorder={handleMealReorder}
+                      currentIndex={index}
+                      totalItems={week.meals.length}
                     />
                   ))}
               </SortableContext>
@@ -372,12 +397,14 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
             <>
               {week.meals
                 .sort((a, b) => a.order - b.order)
-                .map((meal) => (
+                .map((meal, index) => (
                   <DraggableListItem
                     key={meal.id}
                     meal={meal}
-                    week={week}
                     showDelete={false}
+                    currentIndex={index}
+                    totalItems={week.meals.length}
+                    // No callbacks for read-only mode
                   />
                 ))}
             </>

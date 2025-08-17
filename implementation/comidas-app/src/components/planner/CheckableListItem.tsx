@@ -1,44 +1,38 @@
 import { HStack, Text, Box, IconButton } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { usePlanner } from '../../context/PlannerContext'
-import type { Comida, ComidasWeek } from '../../types/schemas'
+import type { Comida } from '../../types/schemas'
 
 interface CheckableListItemProps {
   meal: Comida
   showDelete?: boolean
   onEdit?: (meal: Comida) => void
-  week?: ComidasWeek
+  onToggleComplete?: (meal: Comida) => Promise<void>
+  onDelete?: (meal: Comida) => Promise<void>
 }
 
-function CheckableListItem({ meal, showDelete = false, onEdit, week }: CheckableListItemProps) {
+function CheckableListItem({ 
+  meal, 
+  showDelete = false, 
+  onEdit, 
+  onToggleComplete,
+  onDelete 
+}: CheckableListItemProps) {
   const { t } = useTranslation()
-  const { 
-    toggleMealComplete, 
-    deleteMeal 
-  } = usePlanner()
 
   const handleToggle = async () => {
-    try {
-      if (week) {
-        await toggleMealComplete(week.id, meal.id)
-      } else {
-        // This case shouldn't happen with the new API, but handle gracefully
-        console.error('No week provided for meal toggle')
+    if (onToggleComplete) {
+      try {
+        await onToggleComplete(meal)
+      } catch (error) {
+        console.error('Failed to toggle meal completion:', error)
       }
-    } catch (error) {
-      console.error('Failed to toggle meal completion:', error)
     }
   }
 
   const handleDelete = async () => {
-    if (window.confirm(t('planner.meal.confirmDelete', 'Delete this meal?'))) {
+    if (onDelete && window.confirm(t('planner.meal.confirmDelete', 'Delete this meal?'))) {
       try {
-        if (week) {
-          await deleteMeal(week.id, meal.id)
-        } else {
-          // This case shouldn't happen with the new API, but handle gracefully
-          console.error('No week provided for meal deletion')
-        }
+        await onDelete(meal)
       } catch (error) {
         console.error('Failed to delete meal:', error)
       }
@@ -66,6 +60,7 @@ function CheckableListItem({ meal, showDelete = false, onEdit, week }: Checkable
         type="checkbox"
         checked={meal.completed}
         onChange={handleToggle}
+        disabled={!onToggleComplete}
         aria-label={
           meal.completed 
             ? t('planner.meal.markIncomplete', 'Mark meal as incomplete')
@@ -74,7 +69,7 @@ function CheckableListItem({ meal, showDelete = false, onEdit, week }: Checkable
         style={{
           width: '20px',
           height: '20px',
-          cursor: 'pointer'
+          cursor: onToggleComplete ? 'pointer' : 'default'
         }}
       />
       
@@ -102,7 +97,7 @@ function CheckableListItem({ meal, showDelete = false, onEdit, week }: Checkable
         )}
       </Box>
 
-      {showDelete && (
+      {showDelete && onDelete && (
         <IconButton
           aria-label={t('planner.meal.delete', 'Delete meal')}
           size="sm"
