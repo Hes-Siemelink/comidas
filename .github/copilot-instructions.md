@@ -100,8 +100,6 @@ This structure creates a collaborative AI development team where each agent has 
 - When you press View Archive, you first see the old week in completed under Current and it disappears when you refresh the browser or navigate away and back.
 - The other button on the Congratulations screen still says "View archive" but goes to Current. Just remove this button, problem solved
 - If I hit Complet week button, I first get a plain popup and then the celebration screen. Just use the celebration screen. Then, most importantly, the week in Planned is supposed to become Current. But instead we get a new week in current and the old one stays in planned
-- If I hit Complet week button, I first get a plain popup and then the celebration screen. Just use the celebration screen. Then, most importantly, the week in Planned is supposed to become Current. But instead we get a new week in current and the old one stays in planned
-- If I hit Complet week button, I first get a plain popup and then the celebration screen. Just use the celebration screen. Then, most importantly, the week in Planned is supposed to become Current. But instead we get a new week in current and the old one stays in planned
 
 ## DEBUGGING
 
@@ -142,7 +140,6 @@ This structure creates a collaborative AI development team where each agent has 
   - code-review.md serves as an epic.
 
 - **todo/**: Contains upcoming features and enhancements, such as:
-  - refactor-planner-context-api.md - Tackles the 20+ function bloat in PlannerContext
   - improve-component-dependency-injection.md - Addresses component coupling issues
   - standardize-week-transition-logic.md - Fixes completion flow inconsistencies
   - code-quality-internal-review.md - File-by-file code improvements
@@ -158,6 +155,7 @@ This structure creates a collaborative AI development team where each agent has 
   - Basic routing, data persistence, icon system, and testing setup
   - Drag and drop meal ordering feature
   - Add editable week titles
+  - Refactor PlannerContext API
 
 - **later/**: Holds deferred or lower-priority ideas, such as:
   - Cooking assistant home section
