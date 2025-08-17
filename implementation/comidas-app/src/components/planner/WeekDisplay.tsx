@@ -104,7 +104,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
   }
 
   const handleCompleteWeek = async () => {
-    if (week && window.confirm(t('planner.week.confirmComplete', 'Complete this week and archive it?'))) {
+    if (week) {
       try {
         await completeWeek()
       } catch (error) {
@@ -361,6 +361,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                     <DraggableListItem
                       key={meal.id}
                       meal={meal}
+                      week={week}
                       showDelete={true}
                     />
                   ))}
@@ -375,6 +376,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                   <DraggableListItem
                     key={meal.id}
                     meal={meal}
+                    week={week}
                     showDelete={false}
                   />
                 ))}

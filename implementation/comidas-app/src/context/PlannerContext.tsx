@@ -161,11 +161,9 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
         )
       );
 
-      // If there's no current week, create a new one
-      if (!currentWeek) {
-        const newWeek = await createWeek('current', 'New Week');
-        setCurrentWeek(newWeek);
-      }
+      // Note: We don't create a new week here anymore since completeWeek 
+      // already handles promoting planned week to current. If there's no 
+      // current week after completion, the user can create one manually.
       
       // Dismiss ceremony
       dismissCeremony();
@@ -173,7 +171,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       console.error('Failed to proceed to next week:', error);
       throw error;
     }
-  }, [completedWeekData, currentWeek, createWeek, dismissCeremony]);
+  }, [completedWeekData, dismissCeremony]);
 
   const completeWeek = useCallback(async (): Promise<void> => {
     if (!currentWeek) return;
@@ -186,12 +184,32 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: new Date()
       };
 
+      // Check if there's a planned week to promote
+      const plannedWeek = weekHistory.find(week => week.status === 'planned');
+
       // Save the completed week
       await comidasWeekService.update(currentWeek.id, completedWeek);
-      
-      // Update state
-      setWeekHistory(prev => [...prev, completedWeek]);
-      setCurrentWeek(null);
+
+      if (plannedWeek) {
+        // Promote planned week to current
+        const promotedWeek: ComidasWeek = {
+          ...plannedWeek,
+          status: 'current',
+          updatedAt: new Date()
+        };
+        await comidasWeekService.update(plannedWeek.id, promotedWeek);
+        setCurrentWeek(promotedWeek);
+        
+        // Update week history: remove planned week, add completed week
+        setWeekHistory(prev => [
+          ...prev.filter(week => week.id !== plannedWeek.id),
+          completedWeek
+        ]);
+      } else {
+        // No planned week to promote - set current to null
+        setCurrentWeek(null);
+        setWeekHistory(prev => [...prev, completedWeek]);
+      }
       
       // Show ceremony with the completed week data
       setCompletedWeekData(completedWeek);
@@ -200,7 +218,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       console.error('Failed to complete week:', error);
       throw error;
     }
-  }, [currentWeek]);
+  }, [currentWeek, weekHistory]);
 
   const archiveWeek = useCallback(async (weekId: string): Promise<void> => {
     try {

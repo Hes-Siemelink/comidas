@@ -9,7 +9,6 @@ Implement navigation between current, planned, and archived comidas weeks with c
 - [ ] User can browse archived weeks to see previous meal plans
 - [ ] Clear visual indicators for week status (current/planned/archived)
 - [ ] "Nice animation" for week completion ceremony
-- [ ] Always ensure there's a "next" planned week available
 
 ## Technical Requirements
 - Implement week status transitions in `ComidasWeekService`
@@ -31,3 +30,5 @@ Implement navigation between current, planned, and archived comidas weeks with c
 - Week completion feels celebratory and satisfying
 - Archive browsing helps with future meal planning ideas
 - Navigation between weeks feels intuitive
+
+✅ Old story, seems to be covered now
