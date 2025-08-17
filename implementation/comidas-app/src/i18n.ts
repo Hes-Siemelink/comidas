@@ -71,6 +71,14 @@ const resources = {
         "planThisWeek": "Plan This Week",
         "viewFullAriaLabel": "View the complete meal planning interface",
         "planThisWeekAriaLabel": "Start planning meals for this week",
+        "navigation": {
+          "browseWeeks": "Browse Weeks",
+          "current": "Current",
+          "planned": "Planned", 
+          "archived": "Archived",
+          "weeks": "Weeks",
+          "createPlanned": "+ Plan Ahead"
+        },
         "quickForm": {
           "noWeek": "Create a new week to start planning meals",
           "placeholder": "Type meal and press Enter...",
@@ -174,6 +182,14 @@ const resources = {
         "planThisWeek": "Planificar esta semana",
         "viewFullAriaLabel": "Ver la interfaz completa de planificación de comidas",
         "planThisWeekAriaLabel": "Comenzar a planificar comidas para esta semana",
+        "navigation": {
+          "browseWeeks": "Explorar semanas",
+          "current": "Actual",
+          "planned": "Planificada",
+          "archived": "Archivada",
+          "weeks": "Semanas",
+          "createPlanned": "+ Planificar adelante"
+        },
         "quickForm": {
           "noWeek": "Crear una nueva semana para comenzar a planificar comidas",
           "placeholder": "Escriba la comida y presione Enter...",
@@ -277,6 +293,14 @@ const resources = {
         "planThisWeek": "Deze week plannen",
         "viewFullAriaLabel": "De volledige maaltijdplannings-interface bekijken",
         "planThisWeekAriaLabel": "Begin met het plannen van maaltijden voor deze week",
+        "navigation": {
+          "browseWeeks": "Weken bladeren",
+          "current": "Huidig",
+          "planned": "Gepland",
+          "archived": "Gearchiveerd", 
+          "weeks": "Weken",
+          "createPlanned": "+ Vooruit plannen"
+        },
         "quickForm": {
           "noWeek": "Maak een nieuwe week aan om maaltijden te plannen",
           "placeholder": "Typ maaltijd en druk op Enter...",

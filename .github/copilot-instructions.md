@@ -69,6 +69,8 @@ This structure creates a collaborative AI development team where each agent has 
 - When creating a new week in the meal planner, the user should automatically be placed in title edit mode with the auto-generated title selected. Pressing Enter should save the title and focus should then move to the 'add meal' input box.
 - The week title should not be a blue hyperlink. Instead, a right-aligned monochrome outline pencil icon (✎) should be used for editing.
 - When editing the week title, the text size and style must be the same as in display mode, and the font weight should not be bold.
+- Badges should only be displayed on the archived weeks button.
+- The order of "Browse weeks" should be Archived - Current - Planned. Ensure translations are available for Spanish and Dutch.
 
 ## DEBUGGING
 
@@ -102,7 +104,6 @@ This structure creates a collaborative AI development team where each agent has 
 
 - **todo/**: Contains upcoming features and enhancements, such as:
   - Family member management
-  - Week navigation and archive
   - Meal-recipe linking improvements
   - Basic recipe database implementation
 

@@ -96,36 +96,6 @@ function WeekNavigation({ onWeekSelect, selectedWeek }: WeekNavigationProps) {
         <HStack gap={2} flexWrap="wrap">
           <AccessibleButton
             variant="navigation"
-            isActive={selectedWeek?.status === 'current'}
-            onClick={() => handleStatusNavigation('current')}
-            disabled={currentWeeks.length === 0}
-            size="sm"
-          >
-            {getStatusLabel('current')} 
-            {currentWeeks.length > 0 && (
-              <Badge ml={2} colorScheme={getStatusBadgeColor('current')} size="sm">
-                {currentWeeks.length}
-              </Badge>
-            )}
-          </AccessibleButton>
-
-          <AccessibleButton
-            variant="navigation"
-            isActive={selectedWeek?.status === 'planned'}
-            onClick={() => handleStatusNavigation('planned')}
-            disabled={plannedWeeks.length === 0}
-            size="sm"
-          >
-            {getStatusLabel('planned')}
-            {plannedWeeks.length > 0 && (
-              <Badge ml={2} colorScheme={getStatusBadgeColor('planned')} size="sm">
-                {plannedWeeks.length}
-              </Badge>
-            )}
-          </AccessibleButton>
-
-          <AccessibleButton
-            variant="navigation"
             isActive={selectedWeek?.status === 'archived'}
             onClick={() => handleStatusNavigation('archived')}
             disabled={archivedWeeks.length === 0}
@@ -137,6 +107,26 @@ function WeekNavigation({ onWeekSelect, selectedWeek }: WeekNavigationProps) {
                 {archivedWeeks.length}
               </Badge>
             )}
+          </AccessibleButton>
+
+          <AccessibleButton
+            variant="navigation"
+            isActive={selectedWeek?.status === 'current'}
+            onClick={() => handleStatusNavigation('current')}
+            disabled={currentWeeks.length === 0}
+            size="sm"
+          >
+            {getStatusLabel('current')}
+          </AccessibleButton>
+
+          <AccessibleButton
+            variant="navigation"
+            isActive={selectedWeek?.status === 'planned'}
+            onClick={() => handleStatusNavigation('planned')}
+            disabled={plannedWeeks.length === 0}
+            size="sm"
+          >
+            {getStatusLabel('planned')}
           </AccessibleButton>
 
           {/* Create planned week button */}
