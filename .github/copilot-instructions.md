@@ -80,13 +80,13 @@ This structure creates a collaborative AI development team where each agent has 
 - The week title should not be a blue hyperlink. Instead, a right-aligned monochrome outline pencil icon (✎) should be used for editing.
 - When editing the week title, the text size and style must be the same as in display mode, and the font weight should not be bold.
 - Badges should only be displayed on the Completed (Archived) weeks button.
-- In "Browse weeks" make the order Completed - Current - Planned. Ensure translations are available for Spanish and Dutch.
+- In "Browse weeks" make the order Archived - Current - Planned. Ensure translations are available for Spanish and Dutch.
 - The Plan Ahead button must be removed.
 - The week browser ("Current weeks", "Planned weeks") should only be on Completed.
 - Make sure Create new week button is displayed if there is no week in Current / Planned
 - The Planned week must be editable, just like the Current week. It should be the same behavior to avoid surprises by the user and simplify implementation. That means that you can also check meals (although they are in the future!).
 - After completing the current week, the planned week should become the current week.
-- Remove the message "No current week available" from Completed and Planned.
+- Remove the message "No current week available" from Archive and Planned.
 - On Planned, show the "Create New Week" button if there is currently no Planned week
 - When completing the current week, I want to stay on the current week and I want to see the week that was previously in Planned and is now current.
 - The archived section should be named Completed. Check all code and UI to use Completed.

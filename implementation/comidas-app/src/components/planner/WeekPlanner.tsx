@@ -264,12 +264,13 @@ function WeekPlanner() {
             >
               {currentWeek.meals
                 .sort((a, b) => a.order - b.order)
-                .map((meal) => (
+                .map((meal, index) => (
                   <DraggableListItem
                     key={meal.id}
                     meal={meal}
-                    week={currentWeek}
                     showDelete={true}
+                    currentIndex={index}
+                    totalItems={currentWeek.meals.length}
                   />
                 ))}
             </SortableContext>

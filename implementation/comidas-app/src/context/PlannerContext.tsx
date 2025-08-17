@@ -3,6 +3,11 @@ import type { ReactNode } from 'react';
 import type { ComidasWeek, Comida, WeekStatus } from '../types/schemas';
 import { comidasWeekService } from '../services';
 
+// Constants
+const ID_RANDOM_LENGTH = 9;
+const MAX_TITLE_LENGTH = 50;
+const INITIAL_MEAL_COUNT = 0;
+
 // Define the shape of the planner state
 export interface PlannerState {
   currentWeek: ComidasWeek | null;
@@ -48,7 +53,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
   const [completedWeekData, setCompletedWeekData] = useState<ComidasWeek | null>(null);
 
   const generateId = useCallback(() => {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}-${Math.random().toString(36).substr(2, ID_RANDOM_LENGTH)}`;
   }, []);
 
   // Load persisted weeks on mount
@@ -76,30 +81,41 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     loadWeeks();
   }, []);
 
+  // Helper to generate default week title
+  const generateWeekTitle = useCallback((status: WeekStatus, title?: string): string => {
+    return title || `${status.charAt(0).toUpperCase() + status.slice(1)} Week ${new Date().toLocaleDateString()}`;
+  }, []);
+
+  // Helper to archive current week when creating new current week
+  const archiveCurrentWeek = useCallback(async (): Promise<void> => {
+    if (!currentWeek) return;
+    
+    const archivedWeek = { ...currentWeek, status: 'archived' as const };
+    await comidasWeekService.update(currentWeek.id, archivedWeek);
+    setWeekHistory(prev => [...prev, archivedWeek]);
+  }, [currentWeek]);
+
   const createWeek = useCallback(async (status: WeekStatus = 'current', title?: string): Promise<ComidasWeek> => {
     try {
-      // Only archive existing current week if we're creating a new current week
+      // Archive existing current week if creating new current week
       if (status === 'current' && currentWeek) {
-        const archivedWeek = { ...currentWeek, status: 'archived' as const };
-        await comidasWeekService.update(currentWeek.id, archivedWeek);
-        setWeekHistory(prev => [...prev, archivedWeek]);
+        await archiveCurrentWeek();
       }
 
-      // Create week data without ID (service will generate it)
+      // Create week data
       const newWeekData = {
-        title: title || `${status.charAt(0).toUpperCase() + status.slice(1)} Week ${new Date().toLocaleDateString()}`,
+        title: generateWeekTitle(status, title),
         status: status,
         meals: [],
-        mealCount: 0, // Dynamic count, will grow with meals
+        mealCount: INITIAL_MEAL_COUNT,
       };
       
-      // Persist the new week and get the complete object with generated ID
       const createdWeek = await comidasWeekService.create(newWeekData);
       
+      // Update state based on week status
       if (status === 'current') {
         setCurrentWeek(createdWeek);
       } else {
-        // Add to week history for planned/archived weeks
         setWeekHistory(prev => [...prev, createdWeek]);
       }
       
@@ -108,33 +124,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       console.error('Failed to create week:', error);
       throw error;
     }
-  }, [currentWeek]);
-
-  // Load persisted weeks on mount
-
-  // Load persisted weeks on mount
-  useEffect(() => {
-    const loadWeeks = async () => {
-      try {
-        setLoading(true);
-        const allWeeks = await comidasWeekService.getAll();
-        
-        // Find current week (status: 'current')
-        const current = allWeeks.find(week => week.status === 'current') || null;
-        setCurrentWeek(current);
-        
-        // Set history (all other weeks - planned, archived, completed)
-        const history = allWeeks.filter(week => week.status !== 'current');
-        setWeekHistory(history);
-      } catch (error) {
-        console.error('Failed to load weeks:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadWeeks();
-  }, []);
+  }, [currentWeek, generateWeekTitle, archiveCurrentWeek]);
 
   const dismissCeremony = useCallback(() => {
     setShowCompletionCeremony(false);
@@ -173,52 +163,66 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [completedWeekData, dismissCeremony]);
 
+  // Helper function to create a completed week
+  const createCompletedWeek = useCallback((week: ComidasWeek): ComidasWeek => ({
+    ...week,
+    status: 'archived' as const,
+    completedAt: new Date(),
+    updatedAt: new Date()
+  }), []);
+
+  // Helper function to promote planned week to current
+  const promoteWeekToCurrent = useCallback(async (plannedWeek: ComidasWeek): Promise<ComidasWeek> => {
+    const promotedWeek: ComidasWeek = {
+      ...plannedWeek,
+      status: 'current',
+      updatedAt: new Date()
+    };
+    await comidasWeekService.update(plannedWeek.id, promotedWeek);
+    return promotedWeek;
+  }, []);
+
+  // Helper function to update state after week completion
+  const updateStateAfterCompletion = useCallback((
+    completedWeek: ComidasWeek, 
+    plannedWeek: ComidasWeek | null,
+    promotedWeek?: ComidasWeek
+  ) => {
+    if (plannedWeek && promotedWeek) {
+      setCurrentWeek(promotedWeek);
+      setWeekHistory(prev => [
+        ...prev.filter(week => week.id !== plannedWeek.id),
+        completedWeek
+      ]);
+    } else {
+      setCurrentWeek(null);
+      setWeekHistory(prev => [...prev, completedWeek]);
+    }
+    
+    setCompletedWeekData(completedWeek);
+    setShowCompletionCeremony(true);
+  }, []);
+
   const completeWeek = useCallback(async (): Promise<void> => {
     if (!currentWeek) return;
 
     try {
-      const completedWeek: ComidasWeek = {
-        ...currentWeek,
-        status: 'archived',
-        completedAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      // Check if there's a planned week to promote
-      const plannedWeek = weekHistory.find(week => week.status === 'planned');
+      const completedWeek = createCompletedWeek(currentWeek);
+      const plannedWeek = weekHistory.find(week => week.status === 'planned') || null;
 
       // Save the completed week
       await comidasWeekService.update(currentWeek.id, completedWeek);
 
-      if (plannedWeek) {
-        // Promote planned week to current
-        const promotedWeek: ComidasWeek = {
-          ...plannedWeek,
-          status: 'current',
-          updatedAt: new Date()
-        };
-        await comidasWeekService.update(plannedWeek.id, promotedWeek);
-        setCurrentWeek(promotedWeek);
-        
-        // Update week history: remove planned week, add completed week
-        setWeekHistory(prev => [
-          ...prev.filter(week => week.id !== plannedWeek.id),
-          completedWeek
-        ]);
-      } else {
-        // No planned week to promote - set current to null
-        setCurrentWeek(null);
-        setWeekHistory(prev => [...prev, completedWeek]);
-      }
+      // Promote planned week if exists
+      const promotedWeek = plannedWeek ? await promoteWeekToCurrent(plannedWeek) : undefined;
       
-      // Show ceremony with the completed week data
-      setCompletedWeekData(completedWeek);
-      setShowCompletionCeremony(true);
+      // Update all state
+      updateStateAfterCompletion(completedWeek, plannedWeek, promotedWeek);
     } catch (error) {
       console.error('Failed to complete week:', error);
       throw error;
     }
-  }, [currentWeek, weekHistory]);
+  }, [currentWeek, weekHistory, createCompletedWeek, promoteWeekToCurrent, updateStateAfterCompletion]);
 
   const archiveWeek = useCallback(async (weekId: string): Promise<void> => {
     try {
@@ -461,7 +465,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     const targetWeek = currentWeek?.id === weekId ? currentWeek : weekHistory.find(week => week.id === weekId);
     if (!targetWeek) throw new Error('Week not found');
 
-    const newTitle = title.trim().slice(0, 50);
+    const newTitle = title.trim().slice(0, MAX_TITLE_LENGTH);
     const updatedWeek = { ...targetWeek, title: newTitle || undefined, updatedAt: new Date() };
     
     try {

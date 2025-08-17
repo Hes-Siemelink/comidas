@@ -29,8 +29,65 @@ import QuickPlanningForm from './QuickPlanningForm'
 import DraggableListItem from './DraggableListItem'
 import type { ComidasWeek, WeekStatus, Comida } from '../../types/schemas'
 
+// Constants
+const MAX_TITLE_LENGTH = 50
+const TITLE_INPUT_FOCUS_DELAY = 100
+
 interface WeekDisplayProps {
   viewingStatus: WeekStatus
+}
+
+// Helper functions
+const calculateProgress = (week: ComidasWeek | null) => {
+  if (!week) return { completedMeals: 0, totalMeals: 0, progressPercent: 0 }
+  
+  const completedMeals = week.meals.filter(meal => meal.completed).length
+  const totalMeals = week.mealCount || 0
+  const progressPercent = totalMeals > 0 ? (completedMeals / totalMeals) * 100 : 0
+  
+  return { completedMeals, totalMeals, progressPercent }
+}
+
+const handleTitleUpdate = async (
+  editTitle: string,
+  week: ComidasWeek | null,
+  updateWeekTitle: (weekId: string, title: string) => Promise<any>
+) => {
+  const trimmed = editTitle.trim().slice(0, MAX_TITLE_LENGTH)
+  if (trimmed && week) {
+    await updateWeekTitle(week.id, trimmed)
+  }
+}
+
+const renderMealItems = (
+  week: ComidasWeek,
+  isEditable: boolean,
+  handleMealToggleComplete: (meal: Comida) => Promise<void>,
+  handleMealDelete: (meal: Comida) => Promise<void>,
+  handleMealReorder: (fromIndex: number, toIndex: number) => Promise<void>
+) => {
+  const sortedMeals = week.meals.sort((a, b) => a.order - b.order)
+  
+  return sortedMeals.map((meal, index) => (
+    <DraggableListItem
+      key={meal.id}
+      meal={meal}
+      showDelete={isEditable}
+      onToggleComplete={isEditable ? handleMealToggleComplete : undefined}
+      onDelete={isEditable ? handleMealDelete : undefined}
+      onReorder={isEditable ? handleMealReorder : undefined}
+      currentIndex={index}
+      totalItems={week.meals.length}
+    />
+  ))
+}
+
+const getStatusBadgeColor = (status: WeekStatus): string => {
+  switch (status) {
+    case 'current': return 'blue'
+    case 'planned': return 'orange'
+    default: return 'gray'
+  }
 }
 
 function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
@@ -151,9 +208,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
     }
   }
 
-  const completedMeals = week?.meals.filter(meal => meal.completed).length || 0
-  const totalMeals = week?.mealCount || 0
-  const progressPercent = totalMeals > 0 ? (completedMeals / totalMeals) * 100 : 0
+  const { completedMeals, totalMeals, progressPercent } = calculateProgress(week)
 
   if (loading) {
     return (
@@ -237,29 +292,23 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 onBlur={async () => {
-                  const trimmed = editTitle.trim().slice(0, 50)
-                  if (trimmed && week) {
-                    await updateWeekTitle(week.id, trimmed)
-                  }
+                  await handleTitleUpdate(editTitle, week, updateWeekTitle)
                   setIsEditingTitle(false)
                 }}
                 onKeyDown={async (e) => {
                   if (e.key === 'Enter') {
-                    const trimmed = editTitle.trim().slice(0, 50)
-                    if (trimmed && week) {
-                      await updateWeekTitle(week.id, trimmed)
-                    }
+                    await handleTitleUpdate(editTitle, week, updateWeekTitle)
                     setIsEditingTitle(false)
                     setTimeout(() => {
                       mealInputRef.current?.focus()
-                    }, 100)
+                    }, TITLE_INPUT_FOCUS_DELAY)
                   } else if (e.key === 'Escape') {
                     setIsEditingTitle(false)
                     setEditTitle(week.title || t('planner.week.current', 'Current Week'))
                   }
                 }}
                 autoFocus
-                maxLength={50}
+                maxLength={MAX_TITLE_LENGTH}
                 fontSize="lg"
                 variant="flushed"
               />
@@ -301,10 +350,7 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                   date: week.createdAt.toLocaleDateString() 
                 })}
               </Text>
-              <Badge colorScheme={
-                week.status === 'current' ? 'blue' : 
-                week.status === 'planned' ? 'orange' : 'gray'
-              } size="sm">
+              <Badge colorScheme={getStatusBadgeColor(week.status)} size="sm">
                 {week.status}
               </Badge>
             </HStack>
@@ -376,37 +422,13 @@ function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
                 items={week.meals.map(meal => meal.id)}
                 strategy={verticalListSortingStrategy}
               >
-                {week.meals
-                  .sort((a, b) => a.order - b.order)
-                  .map((meal, index) => (
-                    <DraggableListItem
-                      key={meal.id}
-                      meal={meal}
-                      showDelete={true}
-                      onToggleComplete={handleMealToggleComplete}
-                      onDelete={handleMealDelete}
-                      onReorder={handleMealReorder}
-                      currentIndex={index}
-                      totalItems={week.meals.length}
-                    />
-                  ))}
+                {renderMealItems(week, isEditable, handleMealToggleComplete, handleMealDelete, handleMealReorder)}
               </SortableContext>
             </DndContext>
           ) : (
             // Read-only view for completed weeks only
             <>
-              {week.meals
-                .sort((a, b) => a.order - b.order)
-                .map((meal, index) => (
-                  <DraggableListItem
-                    key={meal.id}
-                    meal={meal}
-                    showDelete={false}
-                    currentIndex={index}
-                    totalItems={week.meals.length}
-                    // No callbacks for read-only mode
-                  />
-                ))}
+              {renderMealItems(week, isEditable, handleMealToggleComplete, handleMealDelete, handleMealReorder)}
             </>
           )}
           
