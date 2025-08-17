@@ -96,7 +96,8 @@ const resources = {
           "assignedTo": "Assigned to: {{name}}",
           "delete": "Delete meal",
           "confirmDelete": "Delete this meal?",
-          "dragHandle": "Drag to reorder meal"
+          "dragHandle": "Drag to reorder meal",
+          "dragHandleTooltip": "Drag to reorder or use arrow keys to move up/down"
         }
       },
       "cooking": {
@@ -198,7 +199,8 @@ const resources = {
           "assignedTo": "Asignada a: {{name}}",
           "delete": "Eliminar comida",
           "confirmDelete": "¿Eliminar esta comida?",
-          "dragHandle": "Arrastrar para reordenar comida"
+          "dragHandle": "Arrastrar para reordenar comida",
+          "dragHandleTooltip": "Arrastra para reordenar o usa las flechas para mover arriba/abajo"
         }
       },
       "cooking": {
@@ -300,7 +302,8 @@ const resources = {
           "assignedTo": "Toegewezen aan: {{name}}",
           "delete": "Maaltijd verwijderen",
           "confirmDelete": "Deze maaltijd verwijderen?",
-          "dragHandle": "Sleep om maaltijd te herordenen"
+          "dragHandle": "Sleep om maaltijd te herordenen",
+          "dragHandleTooltip": "Sleep om te herordenen of gebruik pijltjestoetsen om omhoog/omlaag te verplaatsen"
         }
       },
       "cooking": {
