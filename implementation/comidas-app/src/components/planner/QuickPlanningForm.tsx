@@ -1,27 +1,30 @@
 import { useState, useRef, useEffect, forwardRef } from 'react'
 import { VStack, Input, Text, Box } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { usePlanner } from '../../context/PlannerContext'
+import type { ComidasWeek } from '../../types/schemas'
 
 interface QuickPlanningFormProps {
+  week: ComidasWeek
+  onAddMeal: (mealTitle: string) => Promise<void>
   onComplete?: () => void
   placeholder?: string
 }
 
 const QuickPlanningForm = forwardRef<HTMLInputElement, QuickPlanningFormProps>(
   function QuickPlanningForm({ 
+    week,
+    onAddMeal,
     onComplete, 
-    placeholder 
+    placeholder
   }, externalRef) {
     const { t } = useTranslation()
-    const { currentWeek, addMeal } = usePlanner()
     const [currentInput, setCurrentInput] = useState('')
     const internalRef = useRef<HTMLInputElement>(null)
     
     // Use external ref if provided, otherwise use internal ref
     const inputRef = externalRef || internalRef
 
-    const canAddMore = !!currentWeek // Can always add more meals in dynamic mode
+    const canAddMore = !!week // Can always add more meals in dynamic mode
 
     useEffect(() => {
       // Auto-focus input when component mounts
@@ -36,7 +39,7 @@ const QuickPlanningForm = forwardRef<HTMLInputElement, QuickPlanningFormProps>(
     if (!currentInput.trim() || !canAddMore) return
 
     try {
-      await addMeal(currentInput.trim())
+      await onAddMeal(currentInput.trim())
       setCurrentInput('')
       
       // Keep focus on input for rapid entry
@@ -60,7 +63,7 @@ const QuickPlanningForm = forwardRef<HTMLInputElement, QuickPlanningFormProps>(
     }
   }
 
-  if (!currentWeek) {
+  if (!week) {
     return (
       <Box p={4} bg="gray.50" borderRadius="md">
         <Text color="gray.600">

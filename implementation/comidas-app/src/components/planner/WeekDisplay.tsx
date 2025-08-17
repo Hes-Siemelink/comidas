@@ -27,16 +27,52 @@ import { usePlanner } from '../../context/PlannerContext'
 import AccessibleButton from '../ui/AccessibleButton'
 import QuickPlanningForm from './QuickPlanningForm'
 import DraggableListItem from './DraggableListItem'
-import type { ComidasWeek } from '../../types/schemas'
+import type { ComidasWeek, WeekStatus } from '../../types/schemas'
 
 interface WeekDisplayProps {
-  week: ComidasWeek | null
-  isCurrentWeek: boolean
+  viewingStatus: WeekStatus
 }
 
-function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
+function WeekDisplay({ viewingStatus }: WeekDisplayProps) {
   const { t } = useTranslation()
-  const { loading, createWeek, completeWeek, reorderMeals, updateWeekTitle } = usePlanner()
+  const { 
+    loading,
+    getCurrentWeek,
+    getPlannedWeek,
+    getArchivedWeeks,
+    getLatestArchivedWeek,
+    createWeek, 
+    completeWeek, 
+    reorderMeals, 
+    updateWeekTitle,
+    addMeal,
+    addMealToWeek
+  } = usePlanner()
+  
+  // For archived section, we need to track which week is selected
+  const [selectedArchivedWeekId, setSelectedArchivedWeekId] = useState<string | null>(null)
+
+  // Determine which week to display based on viewing status
+  const determineWeekToDisplay = (): ComidasWeek | null => {
+    switch (viewingStatus) {
+      case 'current':
+        return getCurrentWeek()
+      case 'planned':
+        return getPlannedWeek()
+      case 'archived':
+        const archivedWeeks = getArchivedWeeks()
+        if (selectedArchivedWeekId) {
+          return archivedWeeks.find(week => week.id === selectedArchivedWeekId) || null
+        }
+        return getLatestArchivedWeek()
+      default:
+        return null
+    }
+  }
+
+  const week = determineWeekToDisplay()
+  const isCurrentWeek = week?.status === 'current'
+  const isEditable = week?.status === 'current' || week?.status === 'planned'
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const titleInputRef = useRef<HTMLInputElement>(null)
@@ -60,7 +96,7 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
 
   const handleCreateWeek = async () => {
     try {
-      const newWeek = await createWeek()
+      const newWeek = await createWeek(viewingStatus)
       setEditTitle(newWeek.title || t('planner.week.current', 'Current Week'))
       setIsEditingTitle(true)
     } catch (error) {
@@ -81,7 +117,7 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
 
-    if (!over || !week || !isCurrentWeek) return
+    if (!over || !week || !isEditable) return
 
     const oldIndex = week.meals.findIndex((meal) => meal.id === active.id)
     const newIndex = week.meals.findIndex((meal) => meal.id === over.id)
@@ -138,12 +174,44 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
 
   return (
     <VStack gap={6} align="stretch">
+      {/* Week Selector for Completed section */}
+      {viewingStatus === 'archived' && (
+        <Box bg="white" p={4} borderRadius="lg" border="1px solid" borderColor="gray.200">
+          <VStack gap={3}>
+            <Text fontSize="sm" fontWeight="medium" color="gray.700">
+              {t('planner.week.selectCompleted', 'Select Completed Week')}
+            </Text>
+            <select
+              value={selectedArchivedWeekId || ''}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedArchivedWeekId(e.target.value || null)}
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                border: '1px solid #e2e8f0',
+                fontSize: '14px',
+                backgroundColor: 'white'
+              }}
+            >
+              <option value="">
+                {t('planner.week.selectCompletedPlaceholder', 'Choose a completed week...')}
+              </option>
+              {getArchivedWeeks().map((archivedWeek) => (
+                <option key={archivedWeek.id} value={archivedWeek.id}>
+                  {archivedWeek.title || t('planner.week.untitled', 'Untitled Week')} - {new Date(archivedWeek.createdAt).toLocaleDateString()}
+                </option>
+              ))}
+            </select>
+          </VStack>
+        </Box>
+      )}
+
       {/* Week Header */}
       <Box bg="white" p={6} borderRadius="lg" border="1px solid" borderColor="gray.200">
         <HStack justify="space-between" align="center" mb={4}>
           <Box>
-            {/* Editable week title - only for current weeks */}
-            {isEditingTitle && isCurrentWeek ? (
+            {/* Editable week title - for current and planned weeks */}
+            {isEditingTitle && isEditable ? (
               <Input
                 ref={titleInputRef}
                 value={editTitle}
@@ -179,13 +247,13 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
               <HStack 
                 justifyContent="space-between" 
                 alignItems="center"
-                onClick={isCurrentWeek ? () => {
+                onClick={isEditable ? () => {
                   setEditTitle(week.title || t('planner.week.current', 'Current Week'))
                   setIsEditingTitle(true)
                 } : undefined}
-                cursor={isCurrentWeek ? "pointer" : "default"}
-                _hover={isCurrentWeek ? { opacity: 0.8 } : undefined}
-                title={isCurrentWeek ? t('planner.week.editTitle', 'Click to edit title') : undefined}
+                cursor={isEditable ? "pointer" : "default"}
+                _hover={isEditable ? { opacity: 0.8 } : undefined}
+                title={isEditable ? t('planner.week.editTitle', 'Click to edit title') : undefined}
                 width="100%"
               >
                 <Heading
@@ -195,7 +263,7 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
                 >
                   {week.title || t('planner.week.current', 'Current Week')}
                 </Heading>
-                {isCurrentWeek && (
+                {isEditable && (
                   <Box
                     fontSize="lg"
                     color="gray.500"
@@ -260,7 +328,7 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
           )}
           {week.status === 'archived' && (
             <Text fontSize="sm" color="gray.500" fontStyle="italic">
-              {t('planner.week.archived', 'This week has been completed and archived')}
+              {t('planner.week.completed', 'This week has been completed')}
             </Text>
           )}
           {week.status === 'planned' && (
@@ -277,8 +345,8 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
           {t('planner.week.mealList', 'Meal List')}
         </Heading>
         <VStack gap={3} align="stretch">
-          {/* Existing meals with drag-and-drop (only for current weeks) */}
-          {isCurrentWeek ? (
+          {/* Existing meals with drag-and-drop (for current and planned weeks) */}
+          {isEditable ? (
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -300,7 +368,7 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
               </SortableContext>
             </DndContext>
           ) : (
-            // Read-only view for planned/archived weeks
+            // Read-only view for completed weeks only
             <>
               {week.meals
                 .sort((a, b) => a.order - b.order)
@@ -314,16 +382,25 @@ function WeekDisplay({ week, isCurrentWeek }: WeekDisplayProps) {
             </>
           )}
           
-          {/* Quick entry form only for current weeks */}
-          {isCurrentWeek && <QuickPlanningForm ref={mealInputRef} />}
+          {/* Quick entry form for current and planned weeks */}
+          {isEditable && week && (
+            <QuickPlanningForm 
+              ref={mealInputRef} 
+              week={week}
+              onAddMeal={async (mealTitle: string) => {
+                if (isCurrentWeek) {
+                  await addMeal(mealTitle)
+                } else {
+                  await addMealToWeek(week.id, mealTitle)
+                }
+              }}
+            />
+          )}
           
-          {/* Empty state for non-current weeks */}
-          {!isCurrentWeek && week.meals.length === 0 && (
+          {/* Empty state for completed weeks only */}
+          {week.status === 'archived' && week.meals.length === 0 && (
             <Text color="gray.500" textAlign="center" py={4} fontStyle="italic">
-              {week.status === 'planned' 
-                ? t('planner.week.emptyPlanned', 'No meals planned yet') 
-                : t('planner.week.emptyArchived', 'No meals were recorded')
-              }
+              {t('planner.week.emptyCompleted', 'No meals were recorded')}
             </Text>
           )}
         </VStack>

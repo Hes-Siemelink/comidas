@@ -32,3 +32,45 @@ Properties of each meal (comida)
 * Day 
 
 
+## Meal Planner Page Logic
+
+The Meal planner has three sections
+
+1. Current
+2. Planned
+3. Completed (formerly "Archived")
+ 
+When we land on the page we see the Current section. User can navigate freely between the three section.
+
+### Current
+
+This will display the currently active week. There can at most one active week. There can also be no active week.
+
+If there is no currentlty active week, the Create New Week button is shown and nothing else on the page.
+
+When you press the button, a new week is created and displayed. The title is in edit mode and selected so the user can replace the generated title with a better one right away. When pressing return on the title, focus is on the Add meal input line so we can populate the week right away.
+
+If there is a currently active week, it is shown. The Create New Week button is not visible in this case
+
+If the currently active week is completed, the following happens.
+* The week is marked is completed and is no longer shown on the Current section. It is now part of the Completed section.
+* If there is a week in Planned state, it now becomes the Current one (state is changed) and it will be displayed. This release is no longer displayed on Planned section then.
+
+
+
+### Planned
+
+This will display the week that is coming up. The page behaves like Current, but the week is not active and can not be completed. There is no Complete Week button and when you check all meals nothing happens.
+There can be only one Planned week, or none at all.
+
+If there is no planned week, the Create New Week button is shown and nothing else on the page.
+
+If there is a planned week, it is shown. The Create New Week button is not visible in this case
+
+### Completed
+
+On this page you can browse all completed weeks. This was used to be called "Archived" but tpo avoid confusion and align terminology we will use 'Completed' now in UI and code.
+
+There can be multiple completed weeks. Only one is shown on the page. By default this is the week the was completed last. There is a component on top (before the week) that shows the list of all weeks. You can select a week from the list and it will be displayed below.
+There is a rudimentary component in place that we can use for prototyping. Later we will implement a dropdown with search.
+

@@ -30,7 +30,7 @@ import DraggableListItem from './DraggableListItem'
 
 function WeekPlanner() {
   const { t } = useTranslation()
-  const { currentWeek, loading, createWeek, completeWeek, reorderMeals, updateWeekTitle } = usePlanner()
+  const { currentWeek, loading, createWeek, completeWeek, reorderMeals, updateWeekTitle, addMeal } = usePlanner()
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editTitle, setEditTitle] = useState('')
   const titleInputRef = useRef<HTMLInputElement>(null)
@@ -275,7 +275,13 @@ function WeekPlanner() {
           </DndContext>
           
           {/* Quick entry form at the bottom */}
-          <QuickPlanningForm ref={mealInputRef} />
+          {currentWeek && (
+            <QuickPlanningForm 
+              ref={mealInputRef} 
+              week={currentWeek}
+              onAddMeal={addMeal}
+            />
+          )}
         </VStack>
       </Box>
     </VStack>

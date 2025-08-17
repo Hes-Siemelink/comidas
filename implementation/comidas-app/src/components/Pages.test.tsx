@@ -153,8 +153,8 @@ describe('Page Components', () => {
       expect(screen.getByText(/plan your weekly family meals/i)).toBeInTheDocument()
       
       // Wait for loading to complete and content to appear
-      await screen.findByText(/Create New Comidas Week/i, {}, { timeout: 3000 })
-      expect(screen.getByRole('button', { name: /Create Week/i })).toBeInTheDocument()
+      // With the new behavior, when no current week exists, shows "Create Week" button
+      await screen.findByText(/Create Week/i, {}, { timeout: 3000 })
     })
 
     it('has proper heading structure', () => {

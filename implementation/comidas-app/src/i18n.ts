@@ -76,8 +76,13 @@ const resources = {
           "current": "Current",
           "planned": "Planned", 
           "archived": "Archived",
+          "completed": "Completed",
           "weeks": "Weeks",
-          "createPlanned": "+ Plan Ahead"
+          "available": "available",
+          "noCurrentWeek": "No current week available",
+          "noPlannedWeek": "No planned week available",
+          "createCurrent": "Create Current Week",
+          "createPlanned": "Create Planned Week"
         },
         "quickForm": {
           "noWeek": "Create a new week to start planning meals",
@@ -96,7 +101,13 @@ const resources = {
           "complete": "Complete Week",
           "confirmComplete": "Complete this week and archive it?",
           "addMeals": "Add Meals",
-          "mealList": "Meal List"
+          "mealList": "Meal List",
+          "editTitle": "Click to edit title",
+          "archived": "This week has been completed and archived",
+          "planned": "This is a planned week for the future",
+          "plannedEditable": "This is a planned week - you can add and check off meals",
+          "emptyPlanned": "No meals planned yet",
+          "emptyArchived": "No meals were recorded"
         },
         "meal": {
           "markComplete": "Mark meal as complete",
@@ -187,8 +198,13 @@ const resources = {
           "current": "Actual",
           "planned": "Planificada",
           "archived": "Archivada",
+          "completed": "Completada",
           "weeks": "Semanas",
-          "createPlanned": "+ Planificar adelante"
+          "available": "disponible",
+          "noCurrentWeek": "No hay semana actual disponible",
+          "noPlannedWeek": "No hay semana planificada disponible",
+          "createCurrent": "Crear semana actual",
+          "createPlanned": "Crear semana planificada"
         },
         "quickForm": {
           "noWeek": "Crear una nueva semana para comenzar a planificar comidas",
@@ -207,7 +223,13 @@ const resources = {
           "complete": "Completar semana",
           "confirmComplete": "¿Completar esta semana y archivarla?",
           "addMeals": "Agregar comidas",
-          "mealList": "Lista de comidas"
+          "mealList": "Lista de comidas",
+          "editTitle": "Haga clic para editar el título",
+          "archived": "Esta semana ha sido completada y archivada",
+          "planned": "Esta es una semana planificada para el futuro",
+          "plannedEditable": "Esta es una semana planificada - puedes agregar y marcar comidas",
+          "emptyPlanned": "Aún no hay comidas planificadas",
+          "emptyArchived": "No se registraron comidas"
         },
         "meal": {
           "markComplete": "Marcar comida como completada",
@@ -297,9 +319,14 @@ const resources = {
           "browseWeeks": "Weken bladeren",
           "current": "Huidig",
           "planned": "Gepland",
-          "archived": "Gearchiveerd", 
+          "archived": "Gearchiveerd",
+          "completed": "Voltooid",
           "weeks": "Weken",
-          "createPlanned": "+ Vooruit plannen"
+          "available": "beschikbaar",
+          "noCurrentWeek": "Geen huidige week beschikbaar",
+          "noPlannedWeek": "Geen geplande week beschikbaar",
+          "createCurrent": "Huidige week maken",
+          "createPlanned": "Geplande week maken"
         },
         "quickForm": {
           "noWeek": "Maak een nieuwe week aan om maaltijden te plannen",
@@ -318,7 +345,13 @@ const resources = {
           "complete": "Week voltooien",
           "confirmComplete": "Deze week voltooien en archiveren?",
           "addMeals": "Maaltijden toevoegen",
-          "mealList": "Maaltijdlijst"
+          "mealList": "Maaltijdlijst",
+          "editTitle": "Klik om de titel te bewerken",
+          "archived": "Deze week is voltooid en gearchiveerd",
+          "planned": "Dit is een geplande week voor de toekomst",
+          "plannedEditable": "Dit is een geplande week - je kunt maaltijden toevoegen en afvinken",
+          "emptyPlanned": "Nog geen maaltijden gepland",
+          "emptyArchived": "Geen maaltijden geregistreerd"
         },
         "meal": {
           "markComplete": "Maaltijd als voltooid markeren",

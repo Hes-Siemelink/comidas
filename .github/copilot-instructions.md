@@ -25,6 +25,12 @@ This project uses a multi-agent approach where different AI agents have specific
   - Tracks progress by moving stories through backlog stages
   - Requests acceptance from the Product Owner when work is complete
   - Follows testing best practices and git workflow guidelines
+  - When committing, the Coder Agent must:
+    - Add all files.
+    - Use `git status` to see the changes.
+    - Distill a good commit message based on the changes. If there is not much to say, then keep it short.
+    - Ignore files from `specstory`.
+    - Ensure the commit is made from the correct directory (e.g., `comidas`).
 
 ### 3. Architect Agent 🏗️
 - **Role**: Technical architecture advisor
@@ -42,6 +48,7 @@ This project uses a multi-agent approach where different AI agents have specific
   - Prioritizes backlog based on business value
   - Reviews and accepts completed stories
   - Currently implemented as **human-in-the-loop** (manual review)
+  - The Product Owner is not required to review code for acceptance. Acceptance focuses on context integration and TypeScript typing.
 
 ### 5. Common Guidelines 📜
 All agents must follow the shared guidelines from `common.md`:
@@ -58,21 +65,38 @@ This structure creates a collaborative AI development team where each agent has 
 
 ## CODING STANDARDS
 
+- UI components must be created as potentially reusable in principle and decoupled from domain-specific lookup logic, in favor of property injection. See `code-review.md` for more details.
+
 ## WORKFLOW & RELEASE RULES
 
 - The Coder Agent must request Product Owner approval before moving a story to "done".
 - When working in Agent mode, the Coder Agent must request Product Owner approval before moving a story to "done".
 - When a story implementation is complete, the Coder Agent must add a "Ready for Acceptance" section to the story file with instructions for the Product Owner.
-- The Product Owner is not required to review code for acceptance. Acceptance focuses on context integration and TypeScript typing.
 - All tests must pass before acceptance (this is assumed).
 - Architect Agent review is optional.
 - When creating a new week in the meal planner, the user should automatically be placed in title edit mode with the auto-generated title selected. Pressing Enter should save the title and focus should then move to the 'add meal' input box.
 - The week title should not be a blue hyperlink. Instead, a right-aligned monochrome outline pencil icon (✎) should be used for editing.
 - When editing the week title, the text size and style must be the same as in display mode, and the font weight should not be bold.
-- Badges should only be displayed on the archived weeks button.
-- The order of "Browse weeks" should be Archived - Current - Planned. Ensure translations are available for Spanish and Dutch.
+- Badges should only be displayed on the Completed (Archived) weeks button.
+- In "Browse weeks" make the order Completed (Archived) - Current - Planned. Ensure translations are available for Spanish and Dutch.
+- The Plan Ahead button must be removed.
+- The week browser ("Current weeks", "Planned weeks") should only be on Completed (Archived).
+- The Create new week button must be displayed if there is no week in Current / Planned.
+- The Planned week must be editable, just like the Current week. It should be the same behavior to avoid surprises by the user and simplify implementation. That means that you can also check meals (although they are in the future!).
+- After completing the current week, the planned week should become the current week.
+- The "No current week available" message should be removed from Archive and Planned.
+- On Planned, show the "Create New Week" button if there is currently no Planned week
+- When completing the current week, I want to stay on the current week and I want to see the week that was previously in Planned and is now current.
+- The archived section should be named Completed. Check all code and UI to use Completed.
+- If I am on Current and Planner and I edit the week title or add or remove a meal, the UI must update.
+- The Current section must show the current week right away, not only after navigation.
+- The Meal List must be editable on Planned. It should be editable.
+- On Planned, the Meal List editor must add meals. If you type a name and press enter, the behavior should be the same as on Current
+- Remove the badges from Current and Planned. There is always at most 1, so it doesn't add value
 
 ## DEBUGGING
+
+- **NEVER USE 'npm test'. Always use "npm run test:run"**
 
 ## GIT GUIDELINES
 - Specific git commit message format with agent attribution
@@ -83,9 +107,10 @@ This structure creates a collaborative AI development team where each agent has 
 - When committing, the Coder Agent must:
   - Add all files.
   - Use `git status` to see the changes.
-  - Distill a good commit message based on the changes.
+  - Distill a good commit message based on the changes. If there is not much to say, then keep it short.
   - Ignore files from `specstory`.
   - Ensure the commit is made from the correct directory (e.g., `comidas`).
+- If there is not much to say, then keep it short.
 
 ## AGILE INTEGRATION
 
@@ -136,3 +161,4 @@ This structure creates a collaborative AI development team where each agent has 
 - When using `ChakraProvider` in tests, use the following pattern:
   1. `import { ChakraProvider, defaultSystem } from '@chakra-ui/react'`
   2. `<ChakraProvider value={defaultSystem}>`
+- **NEVER USE 'npm test'. Always use "npm run test:run"**

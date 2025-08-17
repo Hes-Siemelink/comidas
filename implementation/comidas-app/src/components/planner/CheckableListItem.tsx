@@ -1,21 +1,32 @@
 import { HStack, Text, Box, IconButton } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { usePlanner } from '../../context/PlannerContext'
-import type { Comida } from '../../types/schemas'
+import type { Comida, ComidasWeek } from '../../types/schemas'
 
 interface CheckableListItemProps {
   meal: Comida
   showDelete?: boolean
   onEdit?: (meal: Comida) => void
+  week?: ComidasWeek
+  isCurrentWeek?: boolean
 }
 
-function CheckableListItem({ meal, showDelete = false, onEdit }: CheckableListItemProps) {
+function CheckableListItem({ meal, showDelete = false, onEdit, week, isCurrentWeek = false }: CheckableListItemProps) {
   const { t } = useTranslation()
-  const { toggleMealComplete, deleteMeal } = usePlanner()
+  const { 
+    toggleMealComplete, 
+    deleteMeal, 
+    toggleMealCompleteInWeek, 
+    deleteMealFromWeek 
+  } = usePlanner()
 
   const handleToggle = async () => {
     try {
-      await toggleMealComplete(meal.id)
+      if (week && !isCurrentWeek) {
+        await toggleMealCompleteInWeek(week.id, meal.id)
+      } else {
+        await toggleMealComplete(meal.id)
+      }
     } catch (error) {
       console.error('Failed to toggle meal completion:', error)
     }
@@ -24,7 +35,11 @@ function CheckableListItem({ meal, showDelete = false, onEdit }: CheckableListIt
   const handleDelete = async () => {
     if (window.confirm(t('planner.meal.confirmDelete', 'Delete this meal?'))) {
       try {
-        await deleteMeal(meal.id)
+        if (week && !isCurrentWeek) {
+          await deleteMealFromWeek(week.id, meal.id)
+        } else {
+          await deleteMeal(meal.id)
+        }
       } catch (error) {
         console.error('Failed to delete meal:', error)
       }

@@ -5,19 +5,24 @@ import { Box, HStack, IconButton } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { usePlanner } from '../../context/PlannerContext'
 import CheckableListItem from './CheckableListItem'
-import type { Comida } from '../../types/schemas'
+import type { Comida, ComidasWeek } from '../../types/schemas'
 
 interface DraggableListItemProps {
   meal: Comida
   showDelete?: boolean
   onEdit?: (meal: Comida) => void
+  week?: ComidasWeek
+  isCurrentWeek?: boolean
 }
 
-function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListItemProps) {
+function DraggableListItem({ meal, showDelete = false, onEdit, week, isCurrentWeek = false }: DraggableListItemProps) {
   const { t } = useTranslation()
-  const { currentWeek, reorderMeals } = usePlanner()
+  const { currentWeek, reorderMeals, reorderMealsInWeek } = usePlanner()
   const [isAnimating, setIsAnimating] = useState(false)
   const [animationDirection, setAnimationDirection] = useState<'up' | 'down' | null>(null)
+  
+  // Use provided week or fall back to currentWeek
+  const targetWeek = week || currentWeek
   
   const {
     attributes,
@@ -41,21 +46,23 @@ function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListIt
   }
 
   const handleKeyDown = async (event: React.KeyboardEvent) => {
-    if (!currentWeek) return
+    if (!targetWeek) return
     
-    const currentIndex = currentWeek.meals
+    const currentIndex = targetWeek.meals
       .sort((a, b) => a.order - b.order)
       .findIndex(m => m.id === meal.id)
     
     if (event.key === 'ArrowUp' && currentIndex > 0) {
       event.preventDefault()
-      // Trigger animation before reordering
       setAnimationDirection('up')
       setIsAnimating(true)
       
       try {
-        await reorderMeals(currentIndex, currentIndex - 1)
-        // Clear animation after reorder completes
+        if (isCurrentWeek) {
+          await reorderMeals(currentIndex, currentIndex - 1)
+        } else {
+          await reorderMealsInWeek(targetWeek.id, currentIndex, currentIndex - 1)
+        }
         setTimeout(() => {
           setIsAnimating(false)
           setAnimationDirection(null)
@@ -65,15 +72,17 @@ function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListIt
         setIsAnimating(false)
         setAnimationDirection(null)
       }
-    } else if (event.key === 'ArrowDown' && currentIndex < currentWeek.meals.length - 1) {
+    } else if (event.key === 'ArrowDown' && currentIndex < targetWeek.meals.length - 1) {
       event.preventDefault()
-      // Trigger animation before reordering
       setAnimationDirection('down')
       setIsAnimating(true)
       
       try {
-        await reorderMeals(currentIndex, currentIndex + 1)
-        // Clear animation after reorder completes
+        if (isCurrentWeek) {
+          await reorderMeals(currentIndex, currentIndex + 1)
+        } else {
+          await reorderMealsInWeek(targetWeek.id, currentIndex, currentIndex + 1)
+        }
         setTimeout(() => {
           setIsAnimating(false)
           setAnimationDirection(null)
@@ -123,6 +132,8 @@ function DraggableListItem({ meal, showDelete = false, onEdit }: DraggableListIt
             meal={meal}
             showDelete={showDelete}
             onEdit={onEdit}
+            week={week}
+            isCurrentWeek={isCurrentWeek}
           />
         </Box>
       </HStack>

@@ -1,0 +1,2 @@
+- Architect reviews code. See instructions in agents/architect.md (check if they are here)
+- Pay special attention to the Planner / WeekNavigation domain model and logic. Please make sure business logic is decoupled from UI logic.
