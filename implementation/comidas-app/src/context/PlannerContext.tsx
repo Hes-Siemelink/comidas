@@ -163,66 +163,69 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [completedWeekData, dismissCeremony]);
 
-  // Helper function to create a completed week
-  const createCompletedWeek = useCallback((week: ComidasWeek): ComidasWeek => ({
-    ...week,
-    status: 'archived' as const,
-    completedAt: new Date(),
-    updatedAt: new Date()
-  }), []);
-
-  // Helper function to promote planned week to current
-  const promoteWeekToCurrent = useCallback(async (plannedWeek: ComidasWeek): Promise<ComidasWeek> => {
-    const promotedWeek: ComidasWeek = {
-      ...plannedWeek,
-      status: 'current',
-      updatedAt: new Date()
-    };
-    await comidasWeekService.update(plannedWeek.id, promotedWeek);
-    return promotedWeek;
-  }, []);
-
-  // Helper function to update state after week completion
-  const updateStateAfterCompletion = useCallback((
-    completedWeek: ComidasWeek, 
-    plannedWeek: ComidasWeek | null,
-    promotedWeek?: ComidasWeek
-  ) => {
-    if (plannedWeek && promotedWeek) {
-      setCurrentWeek(promotedWeek);
-      setWeekHistory(prev => [
-        ...prev.filter(week => week.id !== plannedWeek.id),
-        completedWeek
-      ]);
-    } else {
-      setCurrentWeek(null);
-      setWeekHistory(prev => [...prev, completedWeek]);
+  // ✅ UNIFIED COMPLETION LOGIC - Single source of truth for week completion
+  const handleWeekCompletion = useCallback(async (weekToComplete: ComidasWeek): Promise<void> => {
+    if (!weekToComplete || weekToComplete.status !== 'current') {
+      throw new Error('Only current weeks can be completed');
     }
-    
-    setCompletedWeekData(completedWeek);
-    setShowCompletionCeremony(true);
-  }, []);
-
-  const completeWeek = useCallback(async (): Promise<void> => {
-    if (!currentWeek) return;
 
     try {
-      const completedWeek = createCompletedWeek(currentWeek);
+      // 1. Create completed week (archived status with completion metadata)
+      const completedWeek: ComidasWeek = {
+        ...weekToComplete,
+        status: 'archived' as const,
+        completedAt: new Date(),
+        updatedAt: new Date()
+      };
+
+      // 2. Find planned week for potential promotion
       const plannedWeek = weekHistory.find(week => week.status === 'planned') || null;
 
-      // Save the completed week
-      await comidasWeekService.update(currentWeek.id, completedWeek);
+      // 3. Save completed week to persistence
+      await comidasWeekService.update(weekToComplete.id, completedWeek);
 
-      // Promote planned week if exists
-      const promotedWeek = plannedWeek ? await promoteWeekToCurrent(plannedWeek) : undefined;
-      
-      // Update all state
-      updateStateAfterCompletion(completedWeek, plannedWeek, promotedWeek);
+      // 4. Promote planned week to current (atomic operation)
+      let promotedWeek: ComidasWeek | undefined;
+      if (plannedWeek) {
+        promotedWeek = {
+          ...plannedWeek,
+          status: 'current',
+          updatedAt: new Date()
+        };
+        await comidasWeekService.update(plannedWeek.id, promotedWeek);
+      }
+
+      // 5. Update all state atomically (no intermediate states)
+      if (plannedWeek && promotedWeek) {
+        setCurrentWeek(promotedWeek);
+        setWeekHistory(prev => [
+          ...prev.filter(week => week.id !== plannedWeek.id),
+          completedWeek
+        ]);
+      } else {
+        setCurrentWeek(null);
+        setWeekHistory(prev => [...prev, completedWeek]);
+      }
+
+      // 6. Trigger ceremony (consistent across all completion flows)
+      // For ceremony display, show the week with 'completed' status
+      const ceremonyData: ComidasWeek = {
+        ...completedWeek,
+        status: 'completed' as const
+      };
+      setCompletedWeekData(ceremonyData);
+      setShowCompletionCeremony(true);
     } catch (error) {
       console.error('Failed to complete week:', error);
       throw error;
     }
-  }, [currentWeek, weekHistory, createCompletedWeek, promoteWeekToCurrent, updateStateAfterCompletion]);
+  }, [weekHistory]);
+
+  // ✅ SIMPLIFIED MANUAL COMPLETION - Uses unified logic
+  const completeWeek = useCallback(async (): Promise<void> => {
+    if (!currentWeek) return;
+    await handleWeekCompletion(currentWeek);
+  }, [currentWeek, handleWeekCompletion]);
 
   const archiveWeek = useCallback(async (weekId: string): Promise<void> => {
     try {
@@ -329,48 +332,16 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       const result = findAndUpdateWeek(weekId, () => updatedWeek);
       if (!result) throw new Error('Failed to update week');
 
-      // Check if this completes the week (only for current weeks)
+      // ✅ UNIFIED AUTOMATIC COMPLETION - Check if this completes the week (only for current weeks)
       if (targetWeek.status === 'current') {
         const allMealsCompleted = updatedWeek.meals.length > 0 && 
           updatedWeek.meals.every(meal => meal.completed);
         
         if (allMealsCompleted) {
-          const completedWeek = { 
-            ...updatedWeek, 
-            status: 'completed' as const,
-            completedAt: new Date()
-          };
-          
-          await comidasWeekService.update(weekId, completedWeek);
-          
-          // Find if there's a planned week to promote
-          const plannedWeek = weekHistory.find(week => week.status === 'planned');
-          
-          if (plannedWeek) {
-            // Promote planned week to current immediately
-            const promotedWeek: ComidasWeek = {
-              ...plannedWeek,
-              status: 'current',
-              updatedAt: new Date()
-            };
-            await comidasWeekService.update(plannedWeek.id, promotedWeek);
-            setCurrentWeek(promotedWeek);
-            
-            // Update week history: remove planned week, add completed week
-            setWeekHistory(prev => [
-              ...prev.filter(week => week.id !== plannedWeek.id), 
-              completedWeek
-            ]);
-          } else {
-            // No planned week - set current to null
-            setCurrentWeek(null);
-            // Update week history: add completed week
-            setWeekHistory(prev => [...prev, completedWeek]);
-          }
-          
-          setCompletedWeekData(completedWeek);
-          setShowCompletionCeremony(true);
-          return completedWeek;
+          // Use unified completion logic instead of duplicate implementation
+          await handleWeekCompletion(updatedWeek);
+          // Return the completed week with 'completed' status for ceremony display
+          return { ...updatedWeek, status: 'completed' as const, completedAt: new Date() };
         }
       }
 
@@ -379,7 +350,7 @@ export const PlannerProvider = ({ children }: { children: ReactNode }) => {
       console.error('Failed to toggle meal completion in week:', error);
       throw error;
     }
-  }, [currentWeek, weekHistory, findAndUpdateWeek]);
+  }, [currentWeek, weekHistory, findAndUpdateWeek, handleWeekCompletion]);
 
   const updateMealInWeek = useCallback(async (weekId: string, mealId: string, updates: Partial<Comida>): Promise<ComidasWeek> => {
     const targetWeek = currentWeek?.id === weekId ? currentWeek : weekHistory.find(week => week.id === weekId);

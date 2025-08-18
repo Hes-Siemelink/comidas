@@ -16,6 +16,7 @@ This project uses a multi-agent approach where different AI agents have specific
   - Breaks down requirements into actionable user stories and technical tasks
   - Manages the backlog organization (`todo` → `doing` → `done`)
   - Prioritizes work items based on importance and dependencies
+- Read instructions in agents/planner.md when session starts or when you are asked to pick up this role.
 
 ### 2. Coder Agent 👩‍💻
 - **Role**: Software developer and implementer
@@ -32,6 +33,7 @@ This project uses a multi-agent approach where different AI agents have specific
     - Ignore files from `specstory`.
     - Ensure the commit is made from the correct directory (e.g., `comidas`).
     - When the Coder Agent needs to amend a commit, they should keep the original message.
+- Read instructions in agents/coder.md when session starts or when you are asked to pick up this role.
 
 ### 3. Architect Agent 🏗️
 - **Role**: Technical architecture advisor
@@ -41,6 +43,7 @@ This project uses a multi-agent approach where different AI agents have specific
   - Reviews code for architectural improvements
   - Documents architectural decisions and rationale
   - Consulted on-demand for technical guidance
+- Read instructions in agents/architect.md when session starts or when you are asked to pick up this role.
 
 ### 4. Product Owner Agent 🎯
 - **Role**: Requirements definer and quality gatekeeper
@@ -50,6 +53,7 @@ This project uses a multi-agent approach where different AI agents have specific
   - Reviews and accepts completed stories
   - Currently implemented as **human-in-the-loop** (manual review)
   - The Product Owner is not required to review code for acceptance. Acceptance focuses on context integration and TypeScript typing.
+- Read instructions in agents/product-owner.md when session starts
 
 ### 5. Common Guidelines 📜
 All agents must follow the shared guidelines from `common.md`:
@@ -58,7 +62,11 @@ All agents must follow the shared guidelines from `common.md`:
 - File movement protocols using `git mv`
 - Focus on value and intent rather than mechanical actions
 
-This structure creates a collaborative AI development team where each agent has clear responsibilities and workflows, ensuring organized development with proper quality gates and progress tracking.
+Our project implements a **multi-agent AI development approach** that distributes development work across specialized AI agents, each with distinct responsibilities similar to a real software team. The Planner Agent analyzes requirements and organizes the backlog. The Coder Agent implements features and manages git workflow. The Architect Agent provides technical guidance and reviews architecture decisions. This creates a collaborative AI ecosystem where human oversight focuses on high-value Product Owner decisions rather than mechanical implementation tasks.
+
+Stories flow through structured directories: `todo` → `doing` → `done`, with additional `epic` and `later` sections. Each agent follows specific protocols for moving work items and requesting approvals.
+
+This approach creates clear accountability since each agent knows exactly what they're responsible for and when they make decisions. Quality stays high because the Product Owner still gates what gets shipped, but now they focus on the important stuff rather than nitpicky details. Everything gets tracked properly through git commits that show which agent did what, making it easy to trace how features evolved. The whole thing scales better because humans only need to weigh in on strategic decisions while the agents handle the routine implementation work. Most importantly, it brings consistency to what used to be chaotic AI interactions and transforms AI development from ad-hoc chaos into structured, collaborative teamwork.
 
 ## TECH STACK
 
@@ -101,6 +109,7 @@ This structure creates a collaborative AI development team where each agent has 
 - When you press View Archive, you first see the old week in completed under Current and it disappears when you refresh the browser or navigate away and back.
 - The other button on the Congratulations screen still says "View archive" but goes to Current. Just remove this button, problem solved
 - If I hit Complet week button, I first get a plain popup and then the celebration screen. Just use the celebration screen. Then, most importantly, the week in Planned is supposed to become Current. But instead we get a new week in current and the old one stays in planned
+- When picking up a story, the Coder Agent must move the story to `doing` before starting implementation.
 
 ## DEBUGGING
 
@@ -137,6 +146,8 @@ This structure creates a collaborative AI development team where each agent has 
   ```
 
 ## BACKLOG STRUCTURE
+
+The backlog is organized into five main directories that represent the flow of work: `epic` for high-level stories, `todo` for upcoming features, `doing` for work in progress, `done` for completed items, and `later` for deferred ideas. Stories move through the structured pipeline from `todo` → `doing` → `done` as agents complete their work, with each agent following specific protocols for moving items between stages. Each section includes a `README.md` for guidance, and agents must request Product Owner approval before moving stories to the "done" stage.
 
 - **epic/**: Contains epic-level stories such as:
   - code-review.md serves as an epic.
@@ -179,12 +190,15 @@ This structure creates a collaborative AI development team where each agent has 
   2. `<ChakraProvider value={defaultSystem}>`
 - **NEVER USE 'npm test'. Always use "npm run test:run"**
 - **Always run TypeScript compilation during our build process.**
+- Add a type-check script for development. For example: `"type-check": "tsc --noEmit"`
 - Add a type-check script for development. For example: `"type-check": "tsc -b --noEmit"`
 
 ## CODE REVIEW GUIDELINES
 - UI components should be designed as potentially reusable components that receive their dependencies through props rather than directly coupling to domain-specific contexts.
 
 ### Function Design Principles
+
+This approach creates clear accountability since each agent knows exactly what they're responsible for and when they make decisions. Quality stays high because the Product Owner still gates what gets shipped, but now they focus on the important stuff rather than nitpicky details. Everything gets tracked properly through git commits that show which agent did what, making it easy to trace how features evolved. The whole thing scales better because humans only need to weigh in on strategic decisions while the agents handle the routine implementation work. Most importantly, it brings consistency to what used to be chaotic AI interactions by establishing standardized workflows that everyone follows.
 
 Avoid function coupling.
 
@@ -232,3 +246,11 @@ const updateWeekTitleById = async (weekId: string, title: string) => {
 *   Is the function name misleading or too specific, given its actual behavior?
 *   Does a component use multiple functions, when a single injected callback would be preferable?
 * Does the function exhibit parameter coupling?
+
+## BACKLOG
+
+- The `standardize-week-transition-logic.md` story in the `todo` directory addresses business logic patterns and state machine consistency, focusing on the internal logic flow of week transitions rather than just the API structure. It should remain in the `todo` directory with a 🔥 Critical priority until the following are addressed:
+    - **Multiple Completion Paths**: Verify if `handleWeekCompletion()` exists and is used by both automatic (`toggleMealComplete`) and manual (`completeWeek`) completion flows.
+    - **State transition consistency**: Verify no temporary 'completed' status in currentWeek.
+    - **Atomic state updates**: Ensure week transitions are single operations.
+    - **Comprehensive transition tests**: Story-specific validation coverage.

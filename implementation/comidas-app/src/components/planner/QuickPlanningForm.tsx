@@ -3,9 +3,6 @@ import { VStack, Input, Text, Box } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import type { ComidasWeek } from '../../types/schemas'
 
-// Constants
-const INPUT_FOCUS_DELAY = 0
-
 // Helper functions
 const focusInput = (inputRef: React.RefObject<HTMLInputElement> | React.ForwardedRef<HTMLInputElement>) => {
   if (inputRef && 'current' in inputRef && inputRef.current) {

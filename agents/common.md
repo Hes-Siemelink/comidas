@@ -14,6 +14,7 @@
 - Avoid saying "All tests are passing". This is implied.
 - Stage with `git add`, commit with `git commit -m`. Amend with `git commit --amend -m`.
 - **Never include AI tool references** in commit messages (e.g., "Generated with Claude Code", "Co-Authored-By: Claude").
+- Mention at most 5 comments in the Git commit body. Pick the most important ones.
 
 **Examples:**
 - ✅ Good: "Complete story add-chakra-ui-i18next"
