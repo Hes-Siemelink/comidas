@@ -131,6 +131,11 @@ This approach creates clear accountability since each agent knows exactly what t
   - Ignore all files from `specstory`.
   - Ensure the commit is made from the correct directory (e.g., `comidas`).
 - If there is not much to say, then keep it short.
+- Use concise commit messages (≤50 characters for title)
+- Focus on value and intent, not mechanical actions
+- Avoid mentioning test passing (it's implied)
+- Use bullet points for the most important changes (max 5)
+- Never include AI tool references
 
 ## AGILE INTEGRATION
 

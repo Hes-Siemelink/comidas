@@ -235,7 +235,52 @@ Good catch! Let me check the TypeScript compilation status by running the build:
 ```
 
 ```
+Now let me run the build again to confirm TypeScript is happy: Perfect! TypeScript compilation is now successful. Let me commit these changes and then commit the main standardized transition logic implementation: 
 
+---
+
+_**User**_
+
+I have updated git commit instructions in agents/common.md. Read and commit again
+
+---
+
+_**Assistant**_
+
+Let me read the updated git commit instructions in `common.md`: I can see the updated instructions emphasize keeping commits concise and focused. Let me check if there's more content below: Perfect! I can see the updated git commit guidelines. Based on the new instructions, I should:
+
+1. Use concise commit messages (≤50 characters for title)
+2. Focus on value and intent, not mechanical actions
+3. Avoid mentioning test passing (it's implied)
+4. Use bullet points for the most important changes (max 5)
+5. Never include AI tool references
+
+Let me commit with the updated format: Perfect! The commit was successful with the new concise format. The implementation of the standardized week transition logic is now complete and committed. 
+
+## Summary
+
+✅ **Story Complete**: `standardize-week-transition-logic.md` has been fully implemented with:
+
+- **Unified completion logic** using single `handleWeekCompletion()` function
+- **Eliminated temporary statuses** - no 'completed' status in UI contexts
+- **Atomic state updates** for week transitions and planned week promotion
+- **Centralized ceremony management** across all completion flows
+- **Comprehensive test coverage** with 13 new transition-specific tests
+- **TypeScript compliance** with successful build verification
+
+The story is now **ready for Product Owner acceptance** with all acceptance criteria met and comprehensive testing in place.
+
+---
+
+_**User**_
+
+Story accepted
+
+---
+
+_**Assistant**_
+
+Excellent! The story has been accepted by the Product Owner. Following the Coder Agent workflow, I need to move the story to the `done` directory using `git mv` and commit the change. 
 
 ---
 

@@ -106,3 +106,5 @@ Start the development server with `npm run dev` and:
    - Complete empty weeks (no meals) → should still trigger ceremony
    - Complete weeks with no planned week → should set current to null
    - Toggle meals in planned weeks → should NOT trigger completion ceremony
+
+✅ Accepted by Hes
