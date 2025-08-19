@@ -1,6 +1,80 @@
 # Recipe Database Page
 
-This document talks about the UI to browse and add recipes, not the actual databse implementation.
+# Recipe Database Page Specification
+
+## Goal
+The Recipe Database page enables users to manage, browse, and search for recipes. It provides access to recipe details and supports linking recipes to meals in the meal planner.
+
+## Sections and Functional Behavior
+
+### 1. Recipe List Section
+- Displays a list of recipes available in the database.
+- Recipes are shown with their name and key summary information.
+- The list updates automatically when recipes are added, edited, or deleted.
+- Selecting a recipe displays its details in the Recipe Details section.
+
+### 2. Search and Filter Section
+- Allows users to search for recipes by name, ingredient, or tag.
+- Search results update dynamically as the user types or changes filter criteria.
+- Filtering options may include tags (e.g., vegetarian, quick) and ingredient inclusion/exclusion.
+
+### 3. Recipe Details Section
+- Shows detailed information for the selected recipe, including name, ingredients, instructions, and tags.
+- Provides options to edit or delete the recipe.
+- If the recipe is linked to a meal in the planner, this relationship is indicated.
+
+### 4. Recipe Creation and Editing Section
+- Allows users to create a new recipe or edit an existing one.
+- Users can enter or modify the recipe name, ingredients, instructions, and tags.
+- Changes are saved and reflected immediately in the Recipe List section.
+
+### 5. Linking to Meal Planner Section
+- Provides functionality to link a recipe to a meal in the meal planner.
+- When a recipe is linked, the corresponding meal entry is updated to reference the recipe.
+- Users can navigate to the Meal Planner page from a recipe to view or manage linked meals.
+
+### 6. Accessibility and Responsiveness
+- All interactive elements are accessible via keyboard and screen readers.
+- The page layout adapts to different screen sizes and devices, ensuring usability on desktop and mobile.
+
+## General Behavior
+- All sections update dynamically in response to user actions and context changes.
+- Navigation between sections and pages is seamless and preserves user context.
+- The Recipe Database page does not expose domain-specific logic; it only provides entry points and summary information.
+
+- All sections update dynamically in response to user actions and context changes.
+- Navigation between sections and pages is seamless and preserves user context.
+- The Recipe Database page does not expose domain-specific logic; it only provides entry points and summary information.
+
+## User Flow: Adding a New Recipe
+
+1. The user presses the "Add New Recipe" button.
+2. The Recipe Creation section is displayed, showing input fields for recipe name, ingredients, instructions, and tags.
+3. The user enters the required information into the input fields.
+4. The user can optionally add or remove ingredients and tags using dedicated controls.
+5. When the user presses the Save button:
+	- The new recipe is validated (e.g., required fields must be filled).
+	- If validation passes, the recipe is added to the database and immediately appears in the Recipe List section.
+	- The Recipe Details section displays the newly created recipe.
+	- If validation fails, an error message is shown and the user can correct the input.
+6. The user can cancel the creation process at any time, which closes the Recipe Creation section without saving changes.
+
+## User Flow: Editing a Recipe
+
+1. The user selects a recipe from the Recipe List section or through search results.
+2. The Recipe Details section displays the selected recipe's information.
+3. The user presses the "Edit" button in the Recipe Details section.
+4. The Recipe Creation and Editing section is displayed, pre-populated with the current recipe data (name, ingredients, instructions, and tags).
+5. The user modifies any of the recipe information using the input fields and controls.
+6. The user can add or remove ingredients and tags using dedicated controls.
+7. When the user presses the Save button:
+   - The modified recipe is validated (e.g., required fields must be filled).
+   - If validation passes, the recipe is updated in the database and changes are immediately reflected in the Recipe List and Recipe Details sections.
+   - If validation fails, an error message is shown and the user can correct the input.
+8. The user can cancel the editing process at any time, which closes the Recipe Creation and Editing section without saving changes and returns to the Recipe Details view.
+
+---
+This specification is intended for implementation by any agent or builder app, focusing on functional requirements and user interactions rather than specific UI details.
 
 We start with simple CRUD functionality. 
 

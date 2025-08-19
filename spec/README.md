@@ -10,7 +10,7 @@ Record recipes, plan family meals and have a handy assistant while cooking!
 
 ## Main app structure
 
-When opening the application, you land at the home page and there are three main sections
+When opening the application, you land at the [home page](home-page.md) and there are three main sections
 
 ### 1. "Start cooking"
 

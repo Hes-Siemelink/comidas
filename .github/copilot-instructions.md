@@ -72,6 +72,19 @@ This approach creates clear accountability since each agent knows exactly what t
 
 ## PROJECT DOCUMENTATION & CONTEXT SYSTEM
 
+- When creating page specifications, focus on functional behavior and logical grouping of UI components. Descriptions should avoid specific UI or layout details.
+- Page specifications should be written in a way that another LLM agent or builder app can pick up the spec and reimplement the page. For example:
+  - Good: "The selected language is highlighted."
+  - Bad: "The select language is a blue button with white text."
+- Behavior should also be described. For example: "When you click on the Meal planner button, you navigate to the Meal planner page".
+- Describing other pages is out of scope when creating a page specification.
+- The main logical entities (domain objects) in the comidas application are:
+  - **Week**: Represents a planning period for meals. Contains metadata (title, status), a list of meals, and tracks completion.
+  - **Meal**: Represents a single meal entry within a week. Contains a name, completion status, and may link to a recipe.
+  - **Recipe**: Represents a recipe in the database. Contains a name, ingredients, instructions, and may be linked to meals.
+  - **Language**: Represents the user's selected language for localization.
+  - **User Preferences**: Represents persistent user settings, such as selected language and possibly other configuration.
+
 ## CODING STANDARDS
 
 - UI components must be created as potentially reusable in principle and decoupled from domain-specific lookup logic, in favor of property injection. See `code-review.md` for more details.
@@ -259,3 +272,23 @@ const updateWeekTitleById = async (weekId: string, title: string) => {
     - **State transition consistency**: Verify no temporary 'completed' status in currentWeek.
     - **Atomic state updates**: Ensure week transitions are single operations.
     - **Comprehensive transition tests**: Story-specific validation coverage.
+
+## DIGITAL.AI RELEASE TEMPLATE PHASE COLORS MAPPING
+
+| Color | Hex Code | Semantic Term |
+|-------|----------|---------------|
+| **Green** | `#68b749` | **Cleanup** |
+| **Light Blue** | `#0099CC` | **Infrastructure** |
+| **Orange** | `#ff9e3b` | **Configuration** |
+| **Red** | `#dd4b39` | **Build** |
+| **Dark Green** | `#08B153` | **Testing** |
+| **Blue** | `#0079BC` | **Setup** |
+| **Dark Blue** | `#3d6c9e` | **Operations** |
+
+This mapping provides:
+- **Clear distinction** between each color's purpose
+- **High-level categories** applicable across different teams and use cases
+- **Logical workflow progression** from setup → build → test → deploy → operations → cleanup
+- **Universal terminology** that works for various Digital.ai Release implementations
+
+The color scheme follows DevOps best practices where cooler colors (blues/greens) represent stable operations, while warmer colors (red/orange) indicate active development and modification phases.
