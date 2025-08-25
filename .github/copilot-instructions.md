@@ -292,3 +292,106 @@ This mapping provides:
 - **Universal terminology** that works for various Digital.ai Release implementations
 
 The color scheme follows DevOps best practices where cooler colors (blues/greens) represent stable operations, while warmer colors (red/orange) indicate active development and modification phases.
+
+## SPECIFICATION GUIDELINES
+
+- When creating page specifications, focus on functional behavior and logical grouping of UI components. Descriptions should avoid specific UI or layout details.
+- Page specifications should be written in a way that another LLM agent or builder app can pick up the spec and reimplement the page. For example:
+  - Good: "The selected language is highlighted."
+  - Bad: "The select language is a blue button with white text."
+- Behavior should also be described. For example "When you click on the Meal planner button, you navigate to the Meal planner page".
+- Describing other pages is out of scope when creating a page specification.
+
+## SPECIFICATION FILES
+
+The following specification files are located in the `spec` directory:
+
+1.  **`README.md`** - Overall app description and key features
+2.  **`domain-objects.md`** - Core entities (Week, Meal, Recipe, Language, User Preferences)
+3.  **`home-page.md`** - Entry point with navigation and status
+4.  **`meal-planner-page.md`** - Weekly meal planning functionality
+5.  **`recipe-database-page.md`** - Recipe management and browsing
+6.  **`navigation-and-routing.md`** - Covers URL structure, navigation patterns, state preservation, accessibility, and error handling for both current web and future mobile implementations.
+7.  **`internationalization.md`** - Addresses the multilingual requirements for the Mexican-Dutch family, including Spanish, Dutch, and English support with cultural adaptations and technical considerations.
+
+## DIGITAL.AI RELEASE INTEGRATION
+
+- The AI can connect to Digital.ai Release to load and analyze failed releases.
+- The AI can group failed releases by their original template.
+- The AI can provide an overview of main causes and root causes per template for failed releases.
+
+### Failed Release Analysis: Template Patterns and Root Causes
+
+#### Template Categories Identified:
+
+1.  **Docker Images Template** (Multiple instances)
+    -   **Pattern**: `Docker Images : XL Deploy nightly : XL DevOps Platform Nightly`
+    -   **Failed Releases**: Multiple releases across different dates
+    -   **Root Cause**: Docker container management failures during parallel build processes
+        -   Docker slaves becoming unavailable or timing out
+        -   Image building failures for Ubuntu and other Linux distributions
+        -   Container orchestration issues during parallel task execution
+        -   Resource constraints during Docker builds
+        -   Registry/repository uniqueness errors (Redhat Connect API 400)
+
+2.  **XLD Upgrade Template** (Multiple instances)
+    -   **Pattern**: `XLD Upgrade: [version] to [version]`
+    -   **Failed Releases**: Multiple failed upgrade processes
+    -   **Root Causes**:
+        -   **Jenkins Integration Failures**:
+            -   Authentication issues (401 Unauthorized errors)
+            -   Build timeout failures
+            -   Jenkins server connectivity problems
+            -   SystemExit(1) exceptions during build execution
+        -   **Database Compatibility Issues**:
+            -   Oracle database connection problems
+            -   Database upgrade script failures
+        -   **Multiple Retry Failures**: Tasks failing after 6+ retry attempts
+
+3.  **XL Release Nightly Template**
+    -   **Pattern**: `XL Release nightly : XL DevOps Platform Nightly`
+    -   **Failed Releases**: Regular nightly deployment failures
+    -   **Root Causes**:
+        -   **Deployment Package Issues**:
+            -   Invalid Package/Environment name errors (`Applications/XL Release/XL Release/25.1.0-102.113`)
+            -   Missing or corrupted deployment packages
+        -   **Environment Setup Failures**:
+            -   Security environment shutdown failures (AccessControlException)
+            -   Performance environment deployment failures
+            -   UAT environment setup dependencies failing
+        -   **Gate Task Dependencies**: Failed releases causing dependent gate tasks to fail
+
+4.  **XL DevOps Platform Nightly Template**
+    -   **Pattern**: `XL DevOps Platform Nightly`
+    -   **Failed Releases**: Regular nightly deployment failures
+    -   **Root Causes**:
+        -   Jenkins build failures (HTTP 500, invalid job parameters)
+        -   Docker image build errors (resource constraints, slave unavailability)
+        -   Environment setup failures (security/performance/UAT)
+        -   Package/environment name errors (invalid or missing)
+
+5.  **General Release XL-CLI**
+    -   **Pattern**: `General Release XL-CLI`
+    -   **Failed Releases**: Moderate
+    -   **Root Causes**:
+        -   SSH connection errors (cannot connect to remote host)
+        -   Build script failures (invalid parameters, missing dependencies)
+
+6.  **Release xlr-confluence-integration / xlr-slack-integration**
+    -   **Pattern**: `Release xlr-confluence-integration / xlr-slack-integration`
+    -   **Failed Releases**: Moderate
+    -   **Root Causes**:
+        -   Integration task failures (API errors, invalid credentials)
+        -   Jenkins build failures (job not found, parameter errors)
+
+#### Addressing Common Failure Patterns:
+
+The majority of failures are related to CI/CD pipeline integration issues, especially Jenkins authentication/build errors and Docker orchestration problems.
+
+To address these issues, prioritize:
+
+- **Jenkins authentication and job configuration errors.**
+  - These are the most frequent and foundational root cause, affecting multiple templates and release types.
+  - Fixing Jenkins connectivity, credentials, and job parameter validation will reduce failures across nightly, upgrade, and integration releases.
+- Audit Jenkins server configuration, credentials, and job definitions in your release templates.
+- Implement error handling and validation for Jenkins tasks to catch and report misconfigurations early.
